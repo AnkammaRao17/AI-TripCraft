@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: aitripcraft-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - aitripcraft-network
+
+  backend:
+    build: ./backend
+    container_name: aitripcraft-api
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/aitripcraft
+      - JWT_SECRET=supersecretjwtkeyforaitripcraft
+      - REFRESH_SECRET=supersecretrefreshkeyforaitripcraft
+      - ACCESS_TOKEN_EXPIRY=1h
+      - REFRESH_TOKEN_EXPIRY=7d
+      - GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
+    depends_on:
+      - mongo
+    networks:
+      - aitripcraft-network
+
+  frontend:
+    build: ./frontend
+    container_name: aitripcraft-client
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - aitripcraft-network
+
+volumes:
+  mongo-data:
+
+networks:
+  aitripcraft-network:
+    driver: bridge

@@ -1,0 +1,307 @@
+<div class="itinerary-wrapper" *ngIf="!isLoading(); else loadingSpinner">
+  <!-- Header Bar -->
+  <div class="itinerary-header">
+    <div class="header-left">
+      <a mat-button routerLink="/dashboard" class="back-btn">
+        <mat-icon>arrow_back</mat-icon> Back to Dashboard
+      </a>
+      <h1 class="trip-title">
+        Plan for {{ trip()?.destination }}, <span class="country-sub">{{ trip()?.country }}</span>
+      </h1>
+      <p class="trip-meta">
+        <span><mat-icon>calendar_today</mat-icon> {{ trip()?.startDate | date:'longDate' }}</span>
+        <span class="divider-dot">•</span>
+        <span><mat-icon>schedule</mat-icon> {{ trip()?.numberOfDays }} Days</span>
+        <span class="divider-dot">•</span>
+        <span><mat-icon>groups</mat-icon> {{ trip()?.numberOfTravelers }} Traveler(s)</span>
+      </p>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Favorite/Bookmark Button -->
+      <button mat-icon-button (click)="toggleFavorite()" class="fav-icon-btn" [color]="isFavorited() ? 'warn' : ''">
+        <mat-icon>{{ isFavorited() ? 'favorite' : 'favorite_border' }}</mat-icon>
+      </button>
+
+      <!-- PDF Download Button -->
+      <button mat-raised-button (click)="downloadPDF()" class="btn-primary">
+        <mat-icon>download</mat-icon> Export PDF
+      </button>
+
+      <!-- Manage Options -->
+      <button mat-icon-button [matMenuTriggerFor]="actionMenu" class="more-btn">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #actionMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="duplicateTrip()">
+          <mat-icon>content_copy</mat-icon> Duplicate Itinerary
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="deleteTrip()" class="text-danger">
+          <mat-icon class="text-danger">delete</mat-icon> Delete Trip
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Main Responsive Grid -->
+  <div class="itinerary-grid">
+    <!-- Left Column: Day-by-Day Itinerary Plans -->
+    <div class="itinerary-main">
+      <div class="glass-card plans-card">
+        <h2 class="card-heading"><mat-icon>route</mat-icon> Day-by-Day Schedule</h2>
+        
+        <mat-tab-group class="days-tab-group" animationDuration="250ms">
+          <mat-tab *ngFor="let day of itinerary()?.days" [label]="'Day ' + day.dayNumber">
+            <div class="day-plan-content">
+              <!-- Morning Plan -->
+              <div class="plan-block morning">
+                <div class="block-icon bg-amber">
+                  <mat-icon>light_mode</mat-icon>
+                </div>
+                <div class="block-details">
+                  <h4 class="block-title">Morning</h4>
+                  <p class="block-desc">{{ day.morningPlan }}</p>
+                </div>
+              </div>
+
+              <!-- Afternoon Plan -->
+              <div class="plan-block afternoon">
+                <div class="block-icon bg-orange">
+                  <mat-icon>wb_twilight</mat-icon>
+                </div>
+                <div class="block-details">
+                  <h4 class="block-title">Afternoon</h4>
+                  <p class="block-desc">{{ day.afternoonPlan }}</p>
+                </div>
+              </div>
+
+              <!-- Evening Plan -->
+              <div class="plan-block evening">
+                <div class="block-icon bg-indigo-dark">
+                  <mat-icon>dark_mode</mat-icon>
+                </div>
+                <div class="block-details">
+                  <h4 class="block-title">Evening</h4>
+                  <p class="block-desc">{{ day.eveningPlan }}</p>
+                </div>
+              </div>
+
+              <mat-divider class="my-md"></mat-divider>
+
+              <!-- Food & Dining -->
+              <div class="features-section">
+                <h4 class="sub-section-title"><mat-icon>restaurant</mat-icon> Dining & Local Delicacies</h4>
+                <div class="restaurants-list">
+                  <div class="restaurant-tag" *ngFor="let rest of day.restaurants">
+                    <mat-icon>storefront</mat-icon> <span>{{ rest }}</span>
+                  </div>
+                </div>
+                <div class="chips-row">
+                  <span class="food-chip" *ngFor="let food of day.localFood">💡 Try: {{ food }}</span>
+                </div>
+              </div>
+
+              <!-- Attractions list -->
+              <div class="features-section">
+                <h4 class="sub-section-title"><mat-icon>museum</mat-icon> Recommended Attractions</h4>
+                <div class="attractions-row">
+                  <span class="attraction-badge" *ngFor="let attr of day.recommendedAttractions">
+                    <mat-icon>explore</mat-icon> {{ attr }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Daily Transportation Tips -->
+              <div class="plan-footer-notes" *ngIf="day.transportationTips">
+                <mat-icon>commute</mat-icon>
+                <div>
+                  <span class="note-label">Transit Note:</span>
+                  <p class="note-desc">{{ day.transportationTips }}</p>
+                </div>
+              </div>
+
+              <!-- Daily Estimated Budget -->
+              <div class="day-cost-badge">
+                <span>Estimated Daily Budget:</span>
+                <strong>\${{ day.estimatedDailyBudget }}</strong>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+
+      <!-- General AI Travel Tips Card -->
+      <div class="glass-card travel-tips-card" *ngIf="itinerary()?.travelTips?.length">
+        <h3 class="card-heading"><mat-icon>tips_and_updates</mat-icon> AI Travel Recommendations</h3>
+        <ul class="tips-list">
+          <li class="tip-item" *ngFor="let tip of itinerary()?.travelTips">
+            <mat-icon>check_circle</mat-icon>
+            <span>{{ tip }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right Column: Map, Budget Breakdown, Weather Forecast -->
+    <div class="itinerary-sidebar">
+      
+      <!-- Interactive Maps Mockup -->
+      <div class="glass-card map-card">
+        <h3 class="card-heading"><mat-icon>map</mat-icon> Live Interactive Map</h3>
+        
+        <!-- Category Toggles -->
+        <div class="map-toggles">
+          <button mat-button class="toggle-btn" 
+                  [class.active]="activeMapCategory() === 'attractions'" 
+                  (click)="activeMapCategory.set('attractions')">
+            Attractions
+          </button>
+          <button mat-button class="toggle-btn" 
+                  [class.active]="activeMapCategory() === 'hotels'" 
+                  (click)="activeMapCategory.set('hotels')">
+            Hotels
+          </button>
+          <button mat-button class="toggle-btn" 
+                  [class.active]="activeMapCategory() === 'restaurants'" 
+                  (click)="activeMapCategory.set('restaurants')">
+            Eats
+          </button>
+          <button mat-button class="toggle-btn" 
+                  [class.active]="activeMapCategory() === 'airports'" 
+                  (click)="activeMapCategory.set('airports')">
+            Airports
+          </button>
+        </div>
+
+        <!-- High Fidelity Map Grid mockup -->
+        <div class="map-viewport">
+          <div class="map-grid-lines"></div>
+          
+          <!-- Mock Markers Render -->
+          <div class="map-marker-node" 
+               *ngFor="let marker of mapMarkers(); let idx = index"
+               [ngStyle]="{'top': (30 + (idx * 20)) + '%', 'left': (25 + (idx * 30)) + '%'}"
+               [title]="marker.name">
+            <mat-icon class="marker-pin" [color]="activeMapCategory() === 'hotels' ? 'primary' : 'warn'">
+              {{ activeMapCategory() === 'hotels' ? 'hotel' : activeMapCategory() === 'restaurants' ? 'restaurant' : activeMapCategory() === 'airports' ? 'flight_land' : 'location_on' }}
+            </mat-icon>
+            <div class="marker-popup">
+              <p class="popup-name">{{ marker.name }}</p>
+              <p class="popup-desc">{{ marker.details }}</p>
+            </div>
+          </div>
+
+          <span class="map-location-tag">Map centered on {{ trip()?.destination }}</span>
+        </div>
+      </div>
+
+      <!-- Estimated Cost Budget Planner Card -->
+      <div class="glass-card budget-planner-card" *ngIf="trip()?.estimatedBudgetBreakdown">
+        <h3 class="card-heading"><mat-icon>calculate</mat-icon> Budget Cost Calculator</h3>
+        
+        <div class="budget-items-list">
+          <!-- Lodging -->
+          <div class="budget-item-row">
+            <div class="item-label-group">
+              <mat-icon>hotel</mat-icon>
+              <span>Accommodations</span>
+            </div>
+            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.hotelCost | number }}</span>
+          </div>
+
+          <!-- Food -->
+          <div class="budget-item-row">
+            <div class="item-label-group">
+              <mat-icon>restaurant</mat-icon>
+              <span>Meals & Dining</span>
+            </div>
+            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.foodCost | number }}</span>
+          </div>
+
+          <!-- Transport -->
+          <div class="budget-item-row">
+            <div class="item-label-group">
+              <mat-icon>commute</mat-icon>
+              <span>Transportation</span>
+            </div>
+            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.transportCost | number }}</span>
+          </div>
+
+          <!-- Attractions -->
+          <div class="budget-item-row">
+            <div class="item-label-group">
+              <mat-icon>local_activity</mat-icon>
+              <span>Attractions & Sights</span>
+            </div>
+            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.attractionsCost | number }}</span>
+          </div>
+
+          <mat-divider class="my-sm"></mat-divider>
+
+          <!-- Total -->
+          <div class="budget-total-row">
+            <span>Total Estimated Budget</span>
+            <span class="total-cost">\${{ trip()?.estimatedBudgetBreakdown?.total | number }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Destination Weather Forecast -->
+      <div class="glass-card weather-card">
+        <h3 class="card-heading"><mat-icon>thermostat</mat-icon> Local Weather Forecast</h3>
+        
+        <div *ngIf="isWeatherLoading()" class="weather-loader">
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>Syncing weather...</span>
+        </div>
+
+        <div *ngIf="!isWeatherLoading() && weatherData()">
+          <!-- Current Weather Conditions -->
+          <div class="current-weather-box">
+            <div class="weather-main-row">
+              <mat-icon class="weather-big-icon" 
+                        [color]="weatherData().current.temp > 20 ? 'accent' : 'primary'">
+                {{ weatherData().current.rain > 0 ? 'rainy' : weatherData().current.temp > 23 ? 'wb_sunny' : 'cloudy' }}
+              </mat-icon>
+              <div>
+                <h2 class="current-temp">{{ weatherData().current.temp }}°C</h2>
+                <p class="current-condition">{{ weatherData().current.condition }}</p>
+              </div>
+            </div>
+            
+            <div class="weather-meta-row">
+              <span>Feels like: {{ weatherData().current.feelsLike }}°C</span>
+              <span>Wind: {{ weatherData().current.windSpeed }} km/h</span>
+            </div>
+          </div>
+
+          <!-- 5-Day Forecast Grid -->
+          <h4 class="forecast-title">5-Day Outlook</h4>
+          <div class="forecast-list">
+            <div class="forecast-day-row" *ngFor="let fc of weatherData().forecast">
+              <span class="fc-date">{{ fc.date | date:'EEE' }}</span>
+              <div class="fc-condition">
+                <mat-icon class="fc-icon">cloud</mat-icon>
+                <span>{{ fc.condition }}</span>
+              </div>
+              <div class="fc-temps">
+                <span class="fc-max">{{ fc.maxTemp }}°</span>
+                <span class="fc-min">{{ fc.minTemp }}°</span>
+              </div>
+              <span class="fc-rain" *ngIf="fc.rainChance > 0">💧 {{ fc.rainChance }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="loading-screen">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading your crafted travel itinerary...</p>
+  </div>
+</ng-template>

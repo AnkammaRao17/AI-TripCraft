@@ -1,0 +1,213 @@
+<div class="builder-wrapper">
+  <!-- AI Loading Screen Overlay -->
+  <div class="ai-loader-overlay" *ngIf="isLoading()">
+    <div class="glass-card loader-card">
+      <mat-spinner diameter="70" strokeWidth="6"></mat-spinner>
+      <h2 class="loader-title">Crafting Your Itinerary</h2>
+      <p class="loader-subtitle">{{ loadingMessage() }}</p>
+      
+      <div class="skeleton-wave">
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line delay-1"></div>
+        <div class="skeleton-line delay-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Normal Form Mode -->
+  <div *ngIf="!isLoading()">
+    <div class="builder-header">
+      <h1 class="builder-title">AI TripCraft Studio</h1>
+      <p class="builder-subtitle">Supply your preferences and let Google Gemini AI draft a custom hour-by-hour itinerary.</p>
+    </div>
+
+    <mat-stepper linear #stepper class="glass-stepper">
+      <!-- Step 1: Basic Destination Details -->
+      <mat-step [stepControl]="firstFormGroup" errorMessage="Basic info is required">
+        <ng-template matStepLabel>Destination</ng-template>
+        <form [formGroup]="firstFormGroup" class="step-form-content">
+          <h3 class="step-title">Where and when are you traveling?</h3>
+          
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Destination City</mat-label>
+              <input matInput formControlName="destination" placeholder="e.g. Tokyo" />
+              <mat-icon matSuffix>place</mat-icon>
+              <mat-error *ngIf="firstFormGroup.get('destination')?.hasError('required')">Destination is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Country</mat-label>
+              <input matInput formControlName="country" placeholder="e.g. Japan" />
+              <mat-icon matSuffix>public</mat-icon>
+              <mat-error *ngIf="firstFormGroup.get('country')?.hasError('required')">Country is required</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-grid">
+            <div class="date-input-field">
+              <label class="custom-label">Start Date</label>
+              <input type="date" formControlName="startDate" class="html-date-input" />
+              <span class="custom-error" *ngIf="firstFormGroup.get('startDate')?.touched && firstFormGroup.get('startDate')?.invalid">
+                Start date is required (must be today or in the future)
+              </span>
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Trip Duration (Days)</mat-label>
+              <input matInput type="number" formControlName="numberOfDays" min="1" max="30" />
+              <mat-icon matSuffix>schedule</mat-icon>
+              <mat-error *ngIf="firstFormGroup.get('numberOfDays')?.hasError('required')">Duration is required</mat-error>
+              <mat-error *ngIf="firstFormGroup.get('numberOfDays')?.hasError('min')">Must be at least 1 day</mat-error>
+              <mat-error *ngIf="firstFormGroup.get('numberOfDays')?.hasError('max')">Max length is 30 days</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="actions-row">
+            <button mat-raised-button matStepperNext class="btn-primary">Continue</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 2: Party and Budget -->
+      <mat-step [stepControl]="secondFormGroup" errorMessage="Logistics info is required">
+        <ng-template matStepLabel>Party & Budget</ng-template>
+        <form [formGroup]="secondFormGroup" class="step-form-content">
+          <h3 class="step-title">Specify your group size & budget tier</h3>
+
+          <div class="form-grid-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Budget Tier</mat-label>
+              <mat-select formControlName="budget">
+                <mat-option value="Budget">💵 Budget (Backpacker style)</mat-option>
+                <mat-option value="Moderate">💳 Moderate (Comfortable hotel, local eats)</mat-option>
+                <mat-option value="Luxury">💎 Luxury (High-end resorts, fine dining)</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Number of Travelers</mat-label>
+              <input matInput type="number" formControlName="numberOfTravelers" min="1" />
+              <mat-icon matSuffix>groups</mat-icon>
+              <mat-error *ngIf="secondFormGroup.get('numberOfTravelers')?.hasError('required')">Travelers count is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Trip Style / Type</mat-label>
+              <mat-select formControlName="tripType">
+                <mat-option value="Solo">Solo Traveler</mat-option>
+                <mat-option value="Family">Family Trip</mat-option>
+                <mat-option value="Couple">Couple Getaway</mat-option>
+                <mat-option value="Friends">Friends Hangout</mat-option>
+                <mat-option value="Business">Business Trip</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="actions-row">
+            <button mat-button matStepperPrevious class="btn-secondary">Back</button>
+            <button mat-raised-button matStepperNext class="btn-primary">Continue</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 3: Preferences -->
+      <mat-step [stepControl]="thirdFormGroup">
+        <ng-template matStepLabel>Preferences</ng-template>
+        <form [formGroup]="thirdFormGroup" class="step-form-content">
+          <h3 class="step-title">Fine-tune your comfort settings</h3>
+
+          <div class="form-grid-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Preferred Lodging</mat-label>
+              <mat-select formControlName="hotelPreference">
+                <mat-option value="Hotel">Hotel (Standard)</mat-option>
+                <mat-option value="Resort">Resort & Luxury Lodge</mat-option>
+                <mat-option value="Airbnb">Airbnb / Boutique Stay</mat-option>
+                <mat-option value="Hostel">Hostel (Social & Cheap)</mat-option>
+                <mat-option value="None">No Lodging Needed</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Preferred Transport</mat-label>
+              <mat-select formControlName="transportPreference">
+                <mat-option value="Public Transit">🚌 Public Transport</mat-option>
+                <mat-option value="Car Rental">🚗 Car Rental</mat-option>
+                <mat-option value="Walking">🚶 Walking / Biking</mat-option>
+                <mat-option value="Taxi">🚕 Taxis / Rideshare</mat-option>
+                <mat-option value="Flights">✈ Flights (Intercity)</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Dietary Choices</mat-label>
+              <mat-select formControlName="foodPreference">
+                <mat-option value="Any">🍕 Any Food (No restrictions)</mat-option>
+                <mat-option value="Vegetarian">🥗 Vegetarian</mat-option>
+                <mat-option value="Vegan">🌱 Vegan</mat-option>
+                <mat-option value="Halal">🍖 Halal</mat-option>
+                <mat-option value="Kosher">🥘 Kosher</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Interests Selection -->
+          <h4 class="interests-section-title">What are your main travel interests?</h4>
+          <div class="interests-grid">
+            <div class="interest-item" 
+                 *ngFor="let interest of availableInterests; let i = index" 
+                 [class.selected]="interest.selected" 
+                 (click)="toggleInterest(i)">
+              <mat-icon>{{ interest.icon }}</mat-icon>
+              <span>{{ interest.name }}</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button mat-button matStepperPrevious class="btn-secondary">Back</button>
+            <button mat-raised-button matStepperNext class="btn-primary">Review Selections</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 4: Summary Review -->
+      <mat-step>
+        <ng-template matStepLabel>Submit</ng-template>
+        <div class="step-form-content">
+          <h3 class="step-title">Review and Generate</h3>
+          
+          <div class="summary-details glass-card">
+            <div class="summary-row">
+              <span class="summary-label">Target Destination</span>
+              <span class="summary-val">{{ firstFormGroup.get('destination')?.value }}, {{ firstFormGroup.get('country')?.value }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Date & Duration</span>
+              <span class="summary-val">Starting {{ firstFormGroup.get('startDate')?.value | date:'longDate' }} for {{ firstFormGroup.get('numberOfDays')?.value }} Days</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Budget Tier</span>
+              <span class="summary-val">{{ secondFormGroup.get('budget')?.value }}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Logistics</span>
+              <span class="summary-val">{{ secondFormGroup.get('numberOfTravelers')?.value }} Traveler(s) ({{ secondFormGroup.get('tripType')?.value }} style)</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Preferences</span>
+              <span class="summary-val">Hotel: {{ thirdFormGroup.get('hotelPreference')?.value }} | Transport: {{ thirdFormGroup.get('transportPreference')?.value }}</span>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button mat-button matStepperPrevious class="btn-secondary">Back</button>
+            <button mat-raised-button (click)="onSubmit()" class="btn-primary generate-submit-btn">
+              <mat-icon>insights</mat-icon> Generate Travel Itinerary
+            </button>
+          </div>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
+</div>

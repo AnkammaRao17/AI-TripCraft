@@ -1,0 +1,244 @@
+<div class="dashboard-wrapper">
+  <!-- Top Banner & Quick Actions -->
+  <div class="welcome-banner">
+    <div>
+      <h1 class="welcome-title">
+        Adventure awaits, {{ authService.currentUser()?.profile?.firstName || authService.currentUser()?.username }}!
+      </h1>
+      <p class="welcome-subtitle">Plan trips, track budgets, and explore the world with AI-assisted itineraries.</p>
+    </div>
+    <div>
+      <a mat-raised-button routerLink="/trip-builder" class="btn-primary plan-trip-btn">
+        <mat-icon>add</mat-icon> Craft New Itinerary
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI Metrics Grid -->
+  <div class="kpi-grid">
+    <div class="glass-card kpi-card">
+      <div class="kpi-icon-wrapper bg-indigo">
+        <mat-icon>flight_takeoff</mat-icon>
+      </div>
+      <div>
+        <p class="kpi-label">Upcoming Adventures</p>
+        <h3 class="kpi-value">{{ upcomingTripsCount() }}</h3>
+      </div>
+    </div>
+
+    <div class="glass-card kpi-card">
+      <div class="kpi-icon-wrapper bg-purple">
+        <mat-icon>paid</mat-icon>
+      </div>
+      <div>
+        <p class="kpi-label">Total Estimated Budget</p>
+        <h3 class="kpi-value">\${{ totalBudgetSpent() | number }}</h3>
+      </div>
+    </div>
+
+    <div class="glass-card kpi-card">
+      <div class="kpi-icon-wrapper bg-pink">
+        <mat-icon>bookmarks</mat-icon>
+      </div>
+      <div>
+        <p class="kpi-label">Total Planned Trips</p>
+        <h3 class="kpi-value">{{ totalTrips() }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Block -->
+  <div class="charts-container">
+    <div class="glass-card chart-card">
+      <h4 class="chart-title">Travel Frequency Trends</h4>
+      <div class="canvas-wrapper">
+        <canvas #tripsChart></canvas>
+      </div>
+    </div>
+
+    <div class="glass-card chart-card">
+      <h4 class="chart-title">Budget Tier Distribution</h4>
+      <div class="canvas-wrapper">
+        <canvas #budgetChart></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="glass-card filters-card">
+    <h4 class="section-title"><mat-icon>tune</mat-icon> Filter Journeys</h4>
+    <form [formGroup]="filterForm" (ngSubmit)="onSearchFilter()" class="filters-form">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Search City or Country</mat-label>
+        <input matInput formControlName="search" placeholder="e.g. Paris" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Budget Tier</mat-label>
+        <mat-select formControlName="budget">
+          <mat-option value="">All Tiers</mat-option>
+          <mat-option value="Budget">Budget</mat-option>
+          <mat-option value="Moderate">Moderate</mat-option>
+          <mat-option value="Luxury">Luxury</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Duration</mat-label>
+        <mat-select formControlName="duration">
+          <mat-option value="">All Durations</mat-option>
+          <mat-option value="short">Short (1-3 Days)</mat-option>
+          <mat-option value="medium">Medium (4-7 Days)</mat-option>
+          <mat-option value="long">Long (8+ Days)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Travel Category</mat-label>
+        <mat-select formControlName="tripType">
+          <mat-option value="">All Categories</mat-option>
+          <mat-option value="Solo">Solo</mat-option>
+          <mat-option value="Family">Family</mat-option>
+          <mat-option value="Couple">Couple</mat-option>
+          <mat-option value="Friends">Friends</mat-option>
+          <mat-option value="Business">Business</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="filter-buttons">
+        <button mat-raised-button type="submit" class="btn-primary">Apply</button>
+        <button mat-button type="button" (click)="onResetFilters()" class="btn-secondary">Clear</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Trips List Section -->
+  <div class="section-header">
+    <h2 class="section-heading">My Planned Itineraries</h2>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Retrieving your travel itineraries...</p>
+  </div>
+
+  <div *ngIf="!isLoading() && trips().length === 0" class="empty-state glass-card">
+    <mat-icon class="empty-icon">luggage</mat-icon>
+    <h3>No itineraries found</h3>
+    <p>You haven't planned any trips matching these filters yet. Let's create one!</p>
+    <a mat-raised-button routerLink="/trip-builder" class="btn-primary">Plan a Trip</a>
+  </div>
+
+  <div *ngIf="!isLoading() && trips().length > 0">
+    <div class="trips-grid">
+      <div class="glass-card trip-item-card hover-scale" *ngFor="let trip of trips()">
+        <!-- Gradient Header Card -->
+        <div class="trip-banner-gradient" [ngClass]="'banner-' + trip.budget.toLowerCase()">
+          <span class="trip-tag">{{ trip.tripType }}</span>
+          <button mat-icon-button class="fav-btn" (click)="toggleFavorite(trip._id)" [color]="trip.isSaved ? 'warn' : ''">
+            <mat-icon>{{ trip.isSaved ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+        </div>
+
+        <div class="trip-info">
+          <h3 class="trip-destination">{{ trip.destination }}, <span class="country-text">{{ trip.country }}</span></h3>
+          <p class="trip-date"><mat-icon>calendar_today</mat-icon> {{ trip.startDate | date:'mediumDate' }}</p>
+          
+          <div class="trip-meta-row">
+            <span class="meta-item"><mat-icon>wb_sunny</mat-icon> {{ trip.numberOfDays }} Days</span>
+            <span class="meta-item"><mat-icon>groups</mat-icon> {{ trip.numberOfTravelers }} Traveler(s)</span>
+          </div>
+
+          <div class="budget-badge-row">
+            <span class="budget-tier-badge">{{ trip.budget }}</span>
+            <span class="budget-cost">\${{ trip.estimatedBudgetBreakdown.total | number }}</span>
+          </div>
+
+          <div class="card-actions-row">
+            <a mat-flat-button [routerLink]="['/itinerary', trip._id]" class="view-itinerary-btn">
+              <mat-icon>menu_book</mat-icon> View Guide
+            </a>
+            <button mat-icon-button [matMenuTriggerFor]="cardMenu" class="more-actions-btn">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #cardMenu="matMenu" xPosition="before">
+              <button mat-menu-item (click)="duplicateTrip(trip._id)">
+                <mat-icon>content_copy</mat-icon> Duplicate
+              </button>
+              <button mat-menu-item (click)="deleteTrip(trip._id)" class="text-danger">
+                <mat-icon class="text-danger">delete</mat-icon> Delete
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paginator -->
+    <mat-paginator [length]="totalTrips()"
+                   [pageSize]="limit()"
+                   [pageSizeOptions]="[6, 12, 18]"
+                   (page)="onPageChange($event)"
+                   class="glass-paginator">
+    </mat-paginator>
+  </div>
+
+  <!-- Featured Destinations Catalog -->
+  <div class="section-header margin-top-lg">
+    <h2 class="section-heading">Featured Destinations</h2>
+    <p class="section-subheading">See what other travelers love and rate your favorite spots.</p>
+  </div>
+
+  <div *ngIf="isDestLoading()" class="loading-container">
+    <mat-spinner diameter="30"></mat-spinner>
+  </div>
+
+  <div class="destinations-grid" *ngIf="!isDestLoading()">
+    <div class="glass-card dest-card hover-scale" *ngFor="let dest of destinations()">
+      <img [src]="dest.imageUrl" [alt]="dest.name" class="dest-img" />
+      <div class="dest-info">
+        <div class="dest-header">
+          <h3 class="dest-title">{{ dest.name }}</h3>
+          <span class="dest-country">{{ dest.country }}</span>
+        </div>
+        <p class="dest-desc">{{ dest.description }}</p>
+        
+        <div class="dest-reviews-summary">
+          <div class="stars-row">
+            <mat-icon class="star-icon">star</mat-icon>
+            <span class="rating-value">{{ dest.averageRating }}</span>
+            <span class="reviews-count">({{ dest.totalReviews }} reviews)</span>
+          </div>
+          <button mat-button class="review-btn" (click)="openReviewForm(dest)">
+            <mat-icon>rate_review</mat-icon> Rate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ratings Submission overlay/form -->
+  <div class="review-modal-backdrop" *ngIf="selectedDestForReview()">
+    <div class="glass-card review-modal">
+      <h3 class="modal-title">Write a Review for {{ selectedDestForReview()?.name }}</h3>
+      
+      <div class="stars-picker">
+        <label>Rating:</label>
+        <button type="button" mat-icon-button *ngFor="let star of [1,2,3,4,5]" (click)="reviewRating.set(star)">
+          <mat-icon class="picker-star" [ngClass]="{'active': star <= reviewRating()}">star</mat-icon>
+        </button>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Your Comment</mat-label>
+        <textarea matInput rows="3" [(ngModel)]="reviewComment" placeholder="Tell us about your experience..."></textarea>
+      </mat-form-field>
+
+      <div class="modal-buttons">
+        <button mat-button (click)="closeReviewForm()">Cancel</button>
+        <button mat-raised-button class="btn-primary" (click)="submitReview()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

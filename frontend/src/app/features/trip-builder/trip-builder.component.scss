@@ -1,0 +1,271 @@
+.builder-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fade-in 0.4s ease-out;
+}
+
+.builder-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.builder-title {
+  font-size: 32px;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.builder-subtitle {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.glass-stepper {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  padding: 12px;
+}
+
+.step-form-content {
+  padding: 20px 8px;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 8px;
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Date input field customization (replaces MatDatePicker for stability)
+.date-input-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 22px;
+}
+
+.custom-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  margin-left: 4px;
+}
+
+.html-date-input {
+  height: 52px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 0 16px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+  &:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+}
+
+.custom-error {
+  font-size: 11px;
+  color: #ef4444;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+.actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  border-top: 1.5px solid var(--border-color);
+  padding-top: 20px;
+}
+
+// Step 3: Interests Grid
+.interests-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.interests-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.interest-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 8px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  mat-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+    color: var(--text-secondary);
+    transition: transform 0.25s ease;
+  }
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  &:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+    mat-icon {
+      transform: scale(1.1);
+      color: var(--accent-primary);
+    }
+  }
+  &.selected {
+    background: var(--accent-gradient);
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    mat-icon {
+      color: white;
+    }
+    span {
+      color: white;
+    }
+  }
+}
+
+// Step 4: Summary Card
+.summary-details {
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1.5px solid var(--border-color);
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.summary-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.summary-val {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.generate-submit-btn {
+  background: var(--accent-gradient) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  padding: 0 28px !important;
+  height: 48px !important;
+}
+
+// Fullscreen AI Loader Overlay
+.ai-loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(11, 15, 25, 0.7);
+  backdrop-filter: blur(16px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader-card {
+  width: 90%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.loader-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.loader-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  min-height: 40px;
+  margin-bottom: 24px;
+}
+
+.skeleton-wave {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-line {
+  height: 12px;
+  width: 100%;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  opacity: 0.3;
+  animation: pulse-op 1.5s infinite ease-in-out;
+  &.delay-1 { animation-delay: 0.3s; width: 85%; }
+  &.delay-2 { animation-delay: 0.6s; width: 90%; }
+}
+
+@keyframes pulse-op {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.7; }
+}

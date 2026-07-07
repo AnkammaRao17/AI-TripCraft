@@ -1,0 +1,614 @@
+.itinerary-wrapper {
+  animation: fade-in 0.4s ease-out;
+}
+
+// Header
+.itinerary-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+  border-bottom: 1.5px solid var(--border-color);
+  padding-bottom: 20px;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.back-btn {
+  color: var(--text-secondary) !important;
+  margin-left: -8px !important;
+  margin-bottom: 8px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.trip-title {
+  font-size: 28px;
+  font-weight: 800;
+  .country-sub {
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+}
+
+.trip-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    margin-right: 2px;
+  }
+}
+
+.divider-dot {
+  color: var(--text-muted);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fav-icon-btn {
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  &[color="warn"] {
+    color: #f43f5e;
+    background: white !important;
+    border-color: transparent;
+  }
+}
+
+.more-btn {
+  color: var(--text-secondary);
+}
+
+// Columns Layout
+.itinerary-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+  @media (min-width: 1024px) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+// Day Tabs Customizations
+.card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  mat-icon {
+    color: var(--accent-primary);
+  }
+}
+
+.days-tab-group {
+  --mdc-tab-indicator-active-indicator-color: var(--accent-primary);
+  --mat-tab-header-active-label-text-color: var(--accent-primary);
+  --mat-tab-header-active-hover-label-text-color: var(--accent-primary);
+}
+
+.day-plan-content {
+  padding: 24px 8px 12px 8px;
+}
+
+// Day blocks (Morning / Afternoon / Evening)
+.plan-block {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+  margin-bottom: 16px;
+  border-left: 4px solid transparent;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: translateX(4px);
+  }
+  
+  &.morning { border-left-color: #fbbf24; }
+  &.afternoon { border-left-color: #f97316; }
+  &.evening { border-left-color: #6366f1; }
+}
+
+.block-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  flex-shrink: 0;
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.bg-amber { background-color: #fbbf24; }
+.bg-orange { background-color: #f97316; }
+.bg-indigo-dark { background-color: #4f46e5; }
+
+.block-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.block-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.my-md {
+  margin: 20px 0;
+}
+
+.my-sm {
+  margin: 12px 0;
+}
+
+// Food & Attractions
+.features-section {
+  margin-bottom: 20px;
+}
+
+.sub-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.restaurants-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.restaurant-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+  }
+}
+
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.food-chip {
+  background: rgba(168, 85, 247, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  color: var(--accent-secondary);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.attractions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.attraction-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: var(--accent-primary);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.plan-footer-notes {
+  display: flex;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border: 1.5px dashed var(--border-color);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+  mat-icon {
+    color: var(--text-muted);
+  }
+}
+
+.note-label {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.note-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.day-cost-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-tertiary);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 20px;
+  strong {
+    color: var(--accent-primary);
+    font-size: 15px;
+    font-weight: 700;
+  }
+}
+
+// General Travel Tips Card
+.travel-tips-card {
+  margin-top: 24px;
+}
+
+.tips-list {
+  list-style: none;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  mat-icon {
+    color: #10b981; // green
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+}
+
+// Interactive Map Mockup
+.map-card {
+  padding: 20px;
+}
+
+.map-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.toggle-btn {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 0 10px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-secondary) !important;
+  &.active {
+    background: var(--accent-primary) !important;
+    color: white !important;
+    border-color: transparent !important;
+  }
+}
+
+.map-viewport {
+  height: 240px;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.map-grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.15;
+  background-image: 
+    linear-gradient(rgba(99, 102, 241, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.map-location-tag {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  color: white;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+// Marker node styling
+.map-marker-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 10;
+  &:hover {
+    z-index: 20;
+    .marker-pin {
+      transform: scale(1.2);
+    }
+    .marker-popup {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -105%) scale(1);
+    }
+  }
+}
+
+.marker-pin {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  transition: transform 0.2s ease;
+}
+
+.marker-popup {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -95%) scale(0.9);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  padding: 8px 12px;
+  border-radius: 6px;
+  min-width: 160px;
+  max-width: 200px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.popup-name {
+  font-weight: 700;
+  font-size: 11px;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+}
+
+.popup-desc {
+  font-size: 9px;
+  color: var(--text-secondary);
+}
+
+// Budget Card
+.budget-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.budget-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+  }
+}
+
+.item-cost {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.budget-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.total-cost {
+  font-size: 18px;
+  color: var(--accent-primary);
+}
+
+// Weather Forecast Widget
+.weather-loader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.current-weather-box {
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.weather-main-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.weather-big-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.current-temp {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.current-condition {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.weather-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.forecast-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.forecast-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.forecast-day-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.fc-date {
+  font-weight: 600;
+  width: 40px;
+}
+
+.fc-condition {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 110px;
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.fc-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+}
+
+.fc-temps {
+  display: flex;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.fc-max { color: var(--text-primary); }
+.fc-min { color: var(--text-muted); }
+
+.fc-rain {
+  font-size: 10px;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+// Global Loadings screen
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+
+.text-danger {
+  color: #ef4444 !important;
+}
