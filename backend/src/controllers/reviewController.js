@@ -56,8 +56,8 @@ const deleteReview = async (req, res, next) => {
       return ApiResponse.error(res, 'Review not found', 404);
     }
 
-    // Verify ownership or admin role
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    // Verify ownership
+    if (review.user.toString() !== req.user.id) {
       return ApiResponse.error(res, 'Not authorized to delete this review', 403);
     }
 

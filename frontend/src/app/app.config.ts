@@ -1,9 +1,13 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, LOCALE_ID, DEFAULT_CURRENCY_CODE } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { registerLocaleData } from '@angular/common';
+import localeIn from '@angular/common/locales/en-IN';
+
+registerLocaleData(localeIn);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,5 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'en-IN' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'INR' },
   ],
 };

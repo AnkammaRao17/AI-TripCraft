@@ -32,7 +32,7 @@
       </div>
       <div>
         <p class="kpi-label">Total Estimated Budget</p>
-        <h3 class="kpi-value">\${{ totalBudgetSpent() | number }}</h3>
+        <h3 class="kpi-value">₹{{ totalBudgetSpent() | number }}</h3>
       </div>
     </div>
 
@@ -47,8 +47,8 @@
     </div>
   </div>
 
-  <!-- Charts Block -->
-  <div class="charts-container">
+  <!-- Charts Block / No Data State -->
+  <div class="charts-container" *ngIf="totalTrips() > 0">
     <div class="glass-card chart-card">
       <h4 class="chart-title">Travel Frequency Trends</h4>
       <div class="canvas-wrapper">
@@ -64,57 +64,72 @@
     </div>
   </div>
 
-  <!-- Search & Filters -->
-  <div class="glass-card filters-card">
-    <h4 class="section-title"><mat-icon>tune</mat-icon> Filter Journeys</h4>
-    <form [formGroup]="filterForm" (ngSubmit)="onSearchFilter()" class="filters-form">
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Search City or Country</mat-label>
-        <input matInput formControlName="search" placeholder="e.g. Paris" />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+  <div class="glass-card empty-charts-card" *ngIf="totalTrips() === 0">
+    <h4 class="chart-title"><mat-icon>analytics</mat-icon> Travel Statistics Analytics</h4>
+    <div class="empty-charts-content">
+      <mat-icon class="placeholder-chart-icon">bar_chart</mat-icon>
+      <p class="placeholder-chart-text">No trips yet. Create your first trip.</p>
+      <a mat-raised-button routerLink="/trip-builder" class="btn-primary">Build a Trip</a>
+    </div>
+  </div>
 
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Budget Tier</mat-label>
-        <mat-select formControlName="budget">
-          <mat-option value="">All Tiers</mat-option>
-          <mat-option value="Budget">Budget</mat-option>
-          <mat-option value="Moderate">Moderate</mat-option>
-          <mat-option value="Luxury">Luxury</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Duration</mat-label>
-        <mat-select formControlName="duration">
-          <mat-option value="">All Durations</mat-option>
-          <mat-option value="short">Short (1-3 Days)</mat-option>
-          <mat-option value="medium">Medium (4-7 Days)</mat-option>
-          <mat-option value="long">Long (8+ Days)</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Travel Category</mat-label>
-        <mat-select formControlName="tripType">
-          <mat-option value="">All Categories</mat-option>
-          <mat-option value="Solo">Solo</mat-option>
-          <mat-option value="Family">Family</mat-option>
-          <mat-option value="Couple">Couple</mat-option>
-          <mat-option value="Friends">Friends</mat-option>
-          <mat-option value="Business">Business</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div class="filter-buttons">
-        <button mat-raised-button type="submit" class="btn-primary">Apply</button>
-        <button mat-button type="button" (click)="onResetFilters()" class="btn-secondary">Clear</button>
+  <!-- Recently Created & AI Advisor Recommendations Grid -->
+  <div class="dashboard-side-grid" *ngIf="totalTrips() > 0">
+    <!-- Recently Created Trips -->
+    <div class="glass-card side-panel-card">
+      <h3 class="panel-card-title"><mat-icon>history</mat-icon> Recently Created Trips</h3>
+      <div class="recent-trips-list">
+        <div class="recent-trip-item hover-scale pointer" *ngFor="let trip of recentlyCreatedTrips()" [routerLink]="['/itinerary', trip._id]">
+          <div class="recent-trip-info">
+            <span class="recent-dest">{{ trip.destination }}, <span class="recent-country">{{ trip.country }}</span></span>
+            <span class="recent-meta">{{ trip.numberOfDays }} Days • {{ trip.budget }} tier</span>
+          </div>
+          <mat-icon class="arrow-icon">chevron_right</mat-icon>
+        </div>
       </div>
-    </form>
+    </div>
+
+    <!-- AI Recommendations -->
+    <div class="glass-card side-panel-card bg-advisor-gradient">
+      <h3 class="panel-card-title text-white"><mat-icon>auto_awesome</mat-icon> AI Recommendations</h3>
+      <div class="ai-recs-list">
+        <div class="ai-rec-item text-white" *ngFor="let rec of aiRecommendations()">
+          <mat-icon class="bullet-rec-icon">tips_and_updates</mat-icon>
+          <span>{{ rec }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Favorite Destinations Section -->
+  <div class="section-header margin-top-lg" *ngIf="favoriteDestinations().length > 0">
+    <h2 class="section-heading">My Favorite Destinations</h2>
+    <p class="section-subheading">Your bookmarked travel spots.</p>
+  </div>
+  <div class="destinations-grid" *ngIf="favoriteDestinations().length > 0">
+    <div class="glass-card dest-card hover-scale pointer" *ngFor="let fav of favoriteDestinations()" [routerLink]="['/destination', fav.destination?._id]">
+      <div class="dest-img-wrapper" [class.shimmer-loading]="!isImageLoaded(fav.destination?._id)">
+        <img 
+          [src]="fav.destination?.imageUrl" 
+          [alt]="fav.destination?.name" 
+          class="dest-img" 
+          loading="lazy"
+          (load)="setImageLoaded(fav.destination?._id)" 
+          (error)="onImgError($event, fav.destination?.name); setImageLoaded(fav.destination?._id)" 
+        />
+      </div>
+      <div class="dest-info">
+        <div class="dest-header">
+          <h3 class="dest-title">{{ fav.destination?.name }}</h3>
+          <span class="dest-country">{{ fav.destination?.country }}</span>
+        </div>
+        <p class="dest-desc">{{ fav.destination?.description }}</p>
+      </div>
+    </div>
   </div>
 
   <!-- Trips List Section -->
-  <div class="section-header">
+  <div class="section-header margin-top-lg">
     <h2 class="section-heading">My Planned Itineraries</h2>
   </div>
 
@@ -152,7 +167,7 @@
 
           <div class="budget-badge-row">
             <span class="budget-tier-badge">{{ trip.budget }}</span>
-            <span class="budget-cost">\${{ trip.estimatedBudgetBreakdown.total | number }}</span>
+            <span class="budget-cost">₹{{ trip.estimatedBudgetBreakdown.total | number }}</span>
           </div>
 
           <div class="card-actions-row">
@@ -195,8 +210,17 @@
   </div>
 
   <div class="destinations-grid" *ngIf="!isDestLoading()">
-    <div class="glass-card dest-card hover-scale" *ngFor="let dest of destinations()">
-      <img [src]="dest.imageUrl" [alt]="dest.name" class="dest-img" />
+    <div class="glass-card dest-card hover-scale pointer" *ngFor="let dest of destinations()" [routerLink]="['/destination', dest._id]">
+      <div class="dest-img-wrapper" [class.shimmer-loading]="!isImageLoaded(dest._id)">
+        <img 
+          [src]="dest.imageUrl" 
+          [alt]="dest.name" 
+          class="dest-img" 
+          loading="lazy"
+          (load)="setImageLoaded(dest._id)" 
+          (error)="onImgError($event, dest.name); setImageLoaded(dest._id)" 
+        />
+      </div>
       <div class="dest-info">
         <div class="dest-header">
           <h3 class="dest-title">{{ dest.name }}</h3>
@@ -210,34 +234,17 @@
             <span class="rating-value">{{ dest.averageRating }}</span>
             <span class="reviews-count">({{ dest.totalReviews }} reviews)</span>
           </div>
-          <button mat-button class="review-btn" (click)="openReviewForm(dest)">
-            <mat-icon>rate_review</mat-icon> Rate
+          <button mat-icon-button (click)="toggleFavoriteDestination(dest._id, $event)" class="dest-fav-toggle-btn" title="Add to Favorites">
+            <mat-icon [color]="isDestFavorited(dest._id) ? 'warn' : ''">
+              {{ isDestFavorited(dest._id) ? 'favorite' : 'favorite_border' }}
+            </mat-icon>
           </button>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Ratings Submission overlay/form -->
-  <div class="review-modal-backdrop" *ngIf="selectedDestForReview()">
-    <div class="glass-card review-modal">
-      <h3 class="modal-title">Write a Review for {{ selectedDestForReview()?.name }}</h3>
-      
-      <div class="stars-picker">
-        <label>Rating:</label>
-        <button type="button" mat-icon-button *ngFor="let star of [1,2,3,4,5]" (click)="reviewRating.set(star)">
-          <mat-icon class="picker-star" [ngClass]="{'active': star <= reviewRating()}">star</mat-icon>
-        </button>
-      </div>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Your Comment</mat-label>
-        <textarea matInput rows="3" [(ngModel)]="reviewComment" placeholder="Tell us about your experience..."></textarea>
-      </mat-form-field>
-
-      <div class="modal-buttons">
-        <button mat-button (click)="closeReviewForm()">Cancel</button>
-        <button mat-raised-button class="btn-primary" (click)="submitReview()">Submit</button>
+        <div class="dest-actions-row">
+          <a mat-button [routerLink]="['/destination', dest._id]" class="dest-action-btn">Explore</a>
+          <a mat-raised-button [routerLink]="['/trip-builder']" [queryParams]="{ destination: dest.name, country: dest.country }" (click)="$event.stopPropagation()" class="dest-plan-btn btn-primary">Plan Trip</a>
+        </div>
       </div>
     </div>
   </div>

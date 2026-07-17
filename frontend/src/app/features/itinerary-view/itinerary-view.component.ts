@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +9,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
@@ -21,13 +24,16 @@ import { Trip, Itinerary } from '../../models/interfaces';
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './itinerary-view.component.html',
   styleUrls: ['./itinerary-view.component.scss']
@@ -45,6 +51,11 @@ export class ItineraryViewComponent implements OnInit {
   isLoading = signal(true);
   isWeatherLoading = signal(true);
   isFavorited = signal(false);
+
+  // Tabs & Checklist Signals
+  activeTab = signal<'schedule' | 'tips' | 'packing' | 'hotels'>('schedule');
+  packingItems = signal<{ name: string; checked: boolean }[]>([]);
+  customPackingItem = signal<string>('');
 
   // Maps coordinates and active marker category
   activeMapCategory = signal<'attractions' | 'hotels' | 'restaurants' | 'airports'>('attractions');
@@ -92,6 +103,11 @@ export class ItineraryViewComponent implements OnInit {
         this.trip.set(res.data.trip);
         this.itinerary.set(res.data.itinerary);
         this.isFavorited.set(res.data.isFavorited);
+        
+        // Populate packing checklist from itinerary response
+        const list = res.data.itinerary?.packingList || [];
+        this.packingItems.set(list.map((item: string) => ({ name: item, checked: false })));
+
         this.isLoading.set(false);
         
         // Trigger weather load
@@ -209,12 +225,12 @@ export class ItineraryViewComponent implements OnInit {
       doc.text('Estimated Budget Summary', 15, 92);
 
       const budgetData = [
-        ['Category', 'Cost (USD)'],
-        ['Accommodations (Hotel/Resort)', `\$${t.estimatedBudgetBreakdown.hotelCost.toLocaleString()}`],
-        ['Meals & Dining', `\$${t.estimatedBudgetBreakdown.foodCost.toLocaleString()}`],
-        ['Transit & Transportation', `\$${t.estimatedBudgetBreakdown.transportCost.toLocaleString()}`],
-        ['Sightseeing & Attractions', `\$${t.estimatedBudgetBreakdown.attractionsCost.toLocaleString()}`],
-        ['Total Estimated', `\$${t.estimatedBudgetBreakdown.total.toLocaleString()}`]
+        ['Category', 'Cost (INR)'],
+        ['Accommodations (Hotel/Resort)', `₹${t.estimatedBudgetBreakdown.hotelCost.toLocaleString('en-IN')}`],
+        ['Meals & Dining', `₹${t.estimatedBudgetBreakdown.foodCost.toLocaleString('en-IN')}`],
+        ['Transit & Transportation', `₹${t.estimatedBudgetBreakdown.transportCost.toLocaleString('en-IN')}`],
+        ['Sightseeing & Attractions', `₹${t.estimatedBudgetBreakdown.attractionsCost.toLocaleString('en-IN')}`],
+        ['Total Estimated', `₹${t.estimatedBudgetBreakdown.total.toLocaleString('en-IN')}`]
       ];
 
       doc.autoTable({
@@ -288,5 +304,22 @@ export class ItineraryViewComponent implements OnInit {
       console.error(err);
       this.notification.error('Error compiling PDF file.');
     }
+  }
+
+  addPackingItem(): void {
+    const item = this.customPackingItem().trim();
+    if (!item) return;
+    this.packingItems.update(prev => [...prev, { name: item, checked: false }]);
+    this.customPackingItem.set('');
+    this.notification.success('Custom item added to packing list!');
+  }
+
+  removePackingItem(index: number): void {
+    this.packingItems.update(prev => prev.filter((_, i) => i !== index));
+    this.notification.success('Item removed from packing list.');
+  }
+
+  togglePackingItem(index: number): void {
+    this.packingItems.update(prev => prev.map((item, i) => i === index ? { ...item, checked: !item.checked } : item));
   }
 }

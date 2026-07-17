@@ -52,6 +52,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Signals
   trips = signal<Trip[]>([]);
   destinations = signal<Destination[]>([]);
+  favoriteDestinations = signal<any[]>([]);
   isLoading = signal(true);
   isDestLoading = signal(true);
   
@@ -72,6 +73,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     duration: ['']
   });
 
+  // Computed signals for dashboard polish
+  recentlyCreatedTrips = computed(() => this.trips().slice(0, 3));
+  
+  aiRecommendations = computed(() => {
+    const plannedCities = this.trips().map(t => t.destination.toLowerCase());
+    const recs: string[] = [];
+    if (!plannedCities.includes('goa')) {
+      recs.push('🏖️ Goa: A paradise of sun, sand, and seafood. Highly recommended for beaches and water sports.');
+    }
+    if (!plannedCities.includes('manali')) {
+      recs.push('🏔️ Manali, Himachal Pradesh: Surrounded by snow-capped peaks. Perfect for paragliding, skiing, and trekking.');
+    }
+    if (!plannedCities.includes('jaipur')) {
+      recs.push('🏰 Jaipur, Rajasthan: The Pink City. Explore historic palaces, forts, and royal heritage.');
+    }
+    if (recs.length === 0) {
+      recs.push('🌊 Kerala: The Venice of the East. Famous for backwater houseboats and coconut groves.');
+    }
+    return recs;
+  });
+
   // Chart Canvas Elements
   @ViewChild('tripsChart') tripsChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('budgetChart') budgetChartRef!: ElementRef<HTMLCanvasElement>;
@@ -87,6 +109,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadDashboardData();
     this.loadDestinations();
+    this.loadFavoriteDestinations();
   }
 
   ngAfterViewInit(): void {
@@ -146,7 +169,35 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  loadFavoriteDestinations(): void {
+    this.destService.getFavoriteDestinations().subscribe({
+      next: (res) => {
+        this.favoriteDestinations.set(res.data.favorites || []);
+      },
+      error: () => {}
+    });
+  }
+
+  toggleFavoriteDestination(destId: string, event: Event): void {
+    event.stopPropagation();
+    this.destService.toggleFavoriteDestination(destId).subscribe({
+      next: (res) => {
+        this.notification.success(res.message);
+        this.loadFavoriteDestinations();
+      },
+      error: () => this.notification.error('Failed to bookmark destination.')
+    });
+  }
+
+  isDestFavorited(destId: string): boolean {
+    return this.favoriteDestinations().some(f => f.destination?._id === destId);
+  }
+
   loadStatsAndRenderCharts(): void {
+    if (this.totalTrips() === 0) {
+      // Do not query backend stats or render charts if user has no trips
+      return;
+    }
     this.tripService.getStats().subscribe({
       next: (res) => {
         const stats = res.data;
@@ -315,5 +366,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.notification.error(msg);
       }
     });
+  }
+
+  loadedImages = new Map<string, boolean>();
+
+  setImageLoaded(id: string): void {
+    this.loadedImages.set(id, true);
+  }
+
+  isImageLoaded(id: string): boolean {
+    return this.loadedImages.get(id) || false;
+  }
+
+  onImgError(event: any, destName?: string): void {
+    if (destName?.toLowerCase() === 'hyderabad') {
+      event.target.src = 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=800&q=80';
+    } else {
+      event.target.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80';
+    }
   }
 }

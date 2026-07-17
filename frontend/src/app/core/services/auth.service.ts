@@ -15,7 +15,6 @@ export class AuthService {
   
   // Computed values
   isLoggedIn = computed(() => this.currentUser() !== null);
-  isAdmin = computed(() => this.currentUser()?.role === 'admin');
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadUserFromStorage();
@@ -35,11 +34,13 @@ export class AuthService {
     }
   }
 
-  register(userData: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
+  register(userData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, userData).pipe(
       tap((res) => this.handleAuthentication(res.data))
     );
   }
+
+
 
   login(credentials: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
@@ -89,7 +90,8 @@ export class AuthService {
   }
 
   getProfile(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/profile`).pipe(
+    const usersUrl = this.apiUrl.replace('/auth', '/users');
+    return this.http.get<any>(`${usersUrl}/profile`).pipe(
       tap((res) => {
         this.currentUser.set(res.data.user);
         localStorage.setItem('ai-tripcraft-user', JSON.stringify(res.data.user));
@@ -98,7 +100,8 @@ export class AuthService {
   }
 
   updateProfile(profileData: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/profile`, profileData).pipe(
+    const usersUrl = this.apiUrl.replace('/auth', '/users');
+    return this.http.put<any>(`${usersUrl}/profile`, profileData).pipe(
       tap((res) => {
         this.currentUser.set(res.data.user);
         localStorage.setItem('ai-tripcraft-user', JSON.stringify(res.data.user));

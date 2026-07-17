@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
+      enum: ['user'],
       default: 'user',
     },
     refreshTokens: {
@@ -41,11 +41,33 @@ const UserSchema = new mongoose.Schema(
       phone: { type: String, default: '' },
       avatarUrl: { type: String, default: '' },
     },
+    firstName: { type: String, default: '' },
+    lastName: { type: String, default: '' },
+    phone: { type: String, default: '' },
+    avatar: { type: String, default: '' },
+    emailVerified: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   }
 );
+
+// Sync top-level and profile fields
+UserSchema.pre('save', function (next) {
+  if (this.firstName) this.profile.firstName = this.firstName;
+  if (this.profile.firstName) this.firstName = this.profile.firstName;
+  
+  if (this.lastName) this.profile.lastName = this.lastName;
+  if (this.profile.lastName) this.lastName = this.profile.lastName;
+  
+  if (this.phone) this.profile.phone = this.phone;
+  if (this.profile.phone) this.phone = this.profile.phone;
+  
+  if (this.avatar) this.profile.avatarUrl = this.avatar;
+  if (this.profile.avatarUrl) this.avatar = this.profile.avatarUrl;
+  
+  next();
+});
 
 // Encrypt password before saving
 UserSchema.pre('save', async function (next) {

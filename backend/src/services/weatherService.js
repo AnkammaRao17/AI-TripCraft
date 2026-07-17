@@ -49,10 +49,10 @@ const getWeatherByCity = async (city, latitude, longitude) => {
         lat = coords.lat;
         lng = coords.lng;
       } else {
-        // Default to a fallback (e.g., Paris coordinates)
+        // Default to a fallback (e.g., Delhi coordinates)
         logger.warn(`Could not resolve coordinates for ${city}. Falling back to default coordinates.`);
-        lat = 48.8566;
-        lng = 2.3522;
+        lat = 28.6139;
+        lng = 77.2090;
       }
     }
 

@@ -36,9 +36,6 @@ import { ThemeService } from '../../../core/services/theme.service';
           <a routerLink="/trip-builder" routerLinkActive="active-link" class="nav-link">
             <mat-icon>add_circle</mat-icon> Plan Trip
           </a>
-          <a routerLink="/admin" routerLinkActive="active-link" class="nav-link" *ngIf="authService.isAdmin()">
-            <mat-icon>admin_panel_settings</mat-icon> Admin
-          </a>
         </nav>
 
         <span class="spacer"></span>

@@ -9,8 +9,19 @@ import { Destination, Review } from '../../models/interfaces';
 export class DestinationService {
   private destUrl = 'http://localhost:5000/api/destinations';
   private reviewsUrl = 'http://localhost:5000/api/reviews';
+  private favoritesUrl = 'http://localhost:5000/api/favorites';
 
   constructor(private http: HttpClient) {}
+
+  // Toggle favorite on destination
+  toggleFavoriteDestination(destId: string): Observable<any> {
+    return this.http.post<any>(`${this.favoritesUrl}/toggle-destination/${destId}`, {});
+  }
+
+  // Get user favorite destinations
+  getFavoriteDestinations(): Observable<any> {
+    return this.http.get<any>(`${this.favoritesUrl}/destinations`);
+  }
 
   // List all destinations (optional search)
   getDestinations(search?: string): Observable<any> {
@@ -23,20 +34,7 @@ export class DestinationService {
     return this.http.get<any>(`${this.destUrl}/${id}`);
   }
 
-  // Create Destination (Admin only)
-  createDestination(data: any): Observable<any> {
-    return this.http.post<any>(this.destUrl, data);
-  }
 
-  // Update Destination (Admin only)
-  updateDestination(id: string, data: any): Observable<any> {
-    return this.http.put<any>(`${this.destUrl}/${id}`, data);
-  }
-
-  // Delete Destination (Admin only)
-  deleteDestination(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.destUrl}/${id}`);
-  }
 
   // Add review to destination
   addReview(destinationId: string, rating: number, comment: string): Observable<any> {

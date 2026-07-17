@@ -2,6 +2,7 @@ const User = require('../models/User');
 const ApiResponse = require('../utils/apiResponse');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const logger = require('../utils/logger');
 
 // Generate Access Token (JWT)
@@ -38,6 +39,11 @@ const registerUser = async (req, res, next) => {
       username,
       email,
       password,
+      emailVerified: true,
+      firstName: firstName || '',
+      lastName: lastName || '',
+      phone: phone || '',
+      avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(username)}`,
       profile: {
         firstName: firstName || '',
         lastName: lastName || '',
@@ -61,6 +67,7 @@ const registerUser = async (req, res, next) => {
         email: user.email,
         role: user.role,
         profile: user.profile,
+        emailVerified: user.emailVerified,
       },
       accessToken,
       refreshToken,

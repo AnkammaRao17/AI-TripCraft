@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -45,6 +44,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'destination/:id',
+    loadComponent: () =>
+      import('./features/destination-details/destination-details.component').then(
+        (m) => m.DestinationDetailsComponent
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'trip-builder',
     loadComponent: () =>
       import('./features/trip-builder/trip-builder.component').then(
@@ -67,14 +74,6 @@ export const routes: Routes = [
         (m) => m.ProfileComponent
       ),
     canActivate: [authGuard],
-  },
-  {
-    path: 'admin',
-    loadComponent: () =>
-      import('./features/admin/admin.component').then(
-        (m) => m.AdminComponent
-      ),
-    canActivate: [authGuard, adminGuard],
   },
   {
     path: '',

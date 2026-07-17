@@ -3,64 +3,139 @@
 // Google Fonts
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-// Global Theme Variables
+// ============================================================
+// GLOBAL THEME VARIABLES
+// ============================================================
 :root, [data-theme="light"] {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
   --bg-tertiary: #f1f5f9;
-  
+
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  
-  --accent-primary: #6366f1; // Indigo
-  --accent-secondary: #a855f7; // Purple
+
+  --accent-primary: #6366f1;
+  --accent-secondary: #a855f7;
   --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-  
+
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.5);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-  
+
   --border-color: #e2e8f0;
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
 
   --toast-success-bg: #10b981;
   --toast-error-bg: #ef4444;
+
+  // Material MDC variables - LIGHT MODE
+  --mat-form-field-label-text-color: #475569;
+  --mat-form-field-outline-color: #e2e8f0;
+  --mat-form-field-focused-outline-color: #6366f1;
+  --mdc-outlined-text-field-label-text-color: #475569;
+  --mdc-outlined-text-field-input-text-color: #0f172a;
+  --mdc-outlined-text-field-outline-color: #cbd5e1;
+  --mdc-outlined-text-field-hover-outline-color: #6366f1;
+  --mdc-outlined-text-field-focus-outline-color: #6366f1;
+  --mat-select-trigger-text-color: #0f172a;
+  --mat-option-label-text-color: #0f172a;
+  --mat-option-selected-state-label-text-color: #6366f1;
+  --mat-stepper-header-label-text-color: #475569;
+  --mat-stepper-header-selected-state-label-text-color: #6366f1;
+  --mat-stepper-header-edit-state-label-text-color: #6366f1;
+  --mat-stepper-header-done-state-label-text-color: #10b981;
+  --mat-tab-header-label-text-color: #475569;
+  --mat-tab-header-active-label-text-color: #6366f1;
+  --mdc-tab-indicator-active-indicator-color: #6366f1;
+  --mat-menu-item-label-text-color: #0f172a;
+  --mdc-snackbar-container-color: #1e293b;
+  --mdc-snackbar-supporting-text-color: #ffffff;
 }
 
 [data-theme="dark"] {
   --bg-primary: #0b0f19;
   --bg-secondary: #131c2e;
   --bg-tertiary: #1e293b;
-  
+
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
   --text-muted: #64748b;
-  
+
   --accent-primary: #818cf8;
   --accent-secondary: #c084fc;
   --accent-gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
-  
-  --glass-bg: rgba(19, 28, 46, 0.7);
-  --glass-border: rgba(30, 41, 59, 0.5);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  
+
+  --glass-bg: rgba(19, 28, 46, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+
   --border-color: #334155;
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-  --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
 
   --toast-success-bg: #059669;
   --toast-error-bg: #dc2626;
+
+  // Material MDC variables - DARK MODE (critical overrides)
+  --mat-form-field-label-text-color: #94a3b8;
+  --mdc-outlined-text-field-label-text-color: #94a3b8;
+  --mdc-outlined-text-field-input-text-color: #f8fafc;
+  --mdc-outlined-text-field-outline-color: #334155;
+  --mdc-outlined-text-field-hover-outline-color: #818cf8;
+  --mdc-outlined-text-field-focus-outline-color: #818cf8;
+  --mdc-outlined-text-field-focus-label-text-color: #818cf8;
+  --mdc-outlined-text-field-hover-label-text-color: #cbd5e1;
+  --mdc-outlined-text-field-error-label-text-color: #f87171;
+  --mdc-outlined-text-field-error-outline-color: #f87171;
+  --mdc-outlined-text-field-caret-color: #818cf8;
+  --mat-select-trigger-text-color: #f8fafc;
+  --mat-select-placeholder-text-color: #64748b;
+  --mat-option-label-text-color: #f8fafc;
+  --mat-option-selected-state-label-text-color: #818cf8;
+  --mat-option-hover-state-layer-color: rgba(129, 140, 248, 0.1);
+  --mat-stepper-header-label-text-color: #cbd5e1;
+  --mat-stepper-header-selected-state-label-text-color: #818cf8;
+  --mat-stepper-header-edit-state-label-text-color: #818cf8;
+  --mat-stepper-header-done-state-label-text-color: #34d399;
+  --mat-stepper-header-icon-background-color: #334155;
+  --mat-stepper-header-selected-state-icon-background-color: #818cf8;
+  --mat-stepper-header-done-state-icon-background-color: #34d399;
+  --mat-stepper-header-error-state-icon-background-color: #f87171;
+  --mat-stepper-line-color: #334155;
+  --mat-tab-header-label-text-color: #94a3b8;
+  --mat-tab-header-active-label-text-color: #818cf8;
+  --mdc-tab-indicator-active-indicator-color: #818cf8;
+  --mat-tab-header-active-hover-label-text-color: #818cf8;
+  --mat-tab-header-active-focus-label-text-color: #818cf8;
+  --mat-menu-item-label-text-color: #f8fafc;
+  --mat-menu-container-color: #1e293b;
+  --mat-card-title-text-color: #f8fafc;
+  --mat-card-subtitle-text-color: #cbd5e1;
+  --mdc-card-elevated-container-color: #131c2e;
+  --mat-paginator-container-background-color: transparent;
+  --mat-paginator-enabled-icon-color: #94a3b8;
+  --mat-paginator-select-trigger-text-size: 14px;
+  --mat-divider-color: #334155;
+  --mdc-checkbox-selected-icon-color: #818cf8;
+  --mat-checkbox-label-text-color: #f8fafc;
 }
 
-// Reset and Core Styles
-* {
+// ============================================================
+// RESET & CORE
+// ============================================================
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+// Smooth theme transitions only on color/background, NOT on all properties
+// (Avoids jank on hover animations)
+body, .glass-card, mat-card, mat-toolbar {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -68,31 +143,36 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
-// Modern Scrollbars
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+p, span, li, label, td, th {
+  color: inherit;
 }
 
-// Layout Classes
+a {
+  color: var(--accent-primary);
+}
+
+// ============================================================
+// MODERN SCROLLBARS
+// ============================================================
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+// ============================================================
+// LAYOUT
+// ============================================================
 .app-container {
   display: flex;
   flex-direction: column;
@@ -107,7 +187,9 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 auto;
 }
 
-// Dashboard Glass Cards
+// ============================================================
+// GLASS CARD
+// ============================================================
 .glass-card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -117,34 +199,41 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--glass-shadow);
   padding: 24px;
   margin-bottom: 24px;
+  color: var(--text-primary);
 }
 
-// Interactive Hover Effects
+// ============================================================
+// HOVER EFFECT
+// ============================================================
 .hover-scale {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     box-shadow: var(--hover-shadow);
   }
 }
 
-// Linear Button Gradient
+// ============================================================
+// BUTTONS
+// ============================================================
 .btn-primary {
-  background: var(--accent-gradient);
-  color: white !important;
+  background: var(--accent-gradient) !important;
+  color: #ffffff !important;
   font-weight: 600 !important;
   border-radius: 9999px !important;
   padding: 0 24px !important;
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px 0 rgba(99, 102, 241, 0.5);
   }
   &:disabled {
     background: var(--text-muted) !important;
     box-shadow: none !important;
+    opacity: 0.6;
+    color: rgba(255,255,255,0.7) !important;
   }
 }
 
@@ -157,10 +246,13 @@ h1, h2, h3, h4, h5, h6 {
   transition: all 0.2s ease !important;
   &:hover {
     background: var(--bg-tertiary) !important;
+    border-color: var(--accent-primary) !important;
   }
 }
 
-// Skeleton loaders
+// ============================================================
+// SKELETON LOADER
+// ============================================================
 .skeleton-box {
   display: inline-block;
   height: 100%;
@@ -173,7 +265,7 @@ h1, h2, h3, h4, h5, h6 {
   );
   background-size: 400% 100%;
   animation: skeleton-loading 1.4s ease infinite;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 @keyframes skeleton-loading {
@@ -181,55 +273,304 @@ h1, h2, h3, h4, h5, h6 {
   100% { background-position: 0 50%; }
 }
 
-// Toast styling overrides
+// ============================================================
+// TOAST / SNACKBAR OVERRIDES
+// ============================================================
 .cdk-overlay-container {
   z-index: 99999 !important;
 }
 
-.toast-success {
-  --mdc-snackbar-container-color: var(--toast-success-bg);
+.toast-success { --mdc-snackbar-container-color: var(--toast-success-bg); }
+.toast-error   { --mdc-snackbar-container-color: var(--toast-error-bg); }
+.toast-info    { --mdc-snackbar-container-color: var(--accent-primary); }
+.toast-warning { --mdc-snackbar-container-color: #f59e0b; }
+
+.mat-mdc-snack-bar-container {
   --mdc-snackbar-supporting-text-color: #ffffff;
 }
 
-.toast-error {
-  --mdc-snackbar-container-color: var(--toast-error-bg);
-  --mdc-snackbar-supporting-text-color: #ffffff;
-}
+// ============================================================
+// ANGULAR MATERIAL GLOBAL DARK MODE OVERRIDES
+// ============================================================
 
-.toast-info {
-  --mdc-snackbar-container-color: var(--accent-primary);
-  --mdc-snackbar-supporting-text-color: #ffffff;
-}
-
-.toast-warning {
-  --mdc-snackbar-container-color: #f59e0b;
-  --mdc-snackbar-supporting-text-color: #ffffff;
-}
-
-// Angular Material Dark Overrides
-.dark {
-  .mat-mdc-card {
-    background-color: var(--bg-secondary) !important;
-    border: 1px solid var(--border-color);
+// Form fields - fix label, input, placeholder visibility
+.mat-mdc-form-field {
+  .mat-mdc-floating-label {
+    color: var(--mat-form-field-label-text-color, var(--text-secondary)) !important;
   }
-  .mat-mdc-dialog-container {
-    background-color: var(--bg-secondary) !important;
+  .mdc-floating-label {
+    color: var(--mdc-outlined-text-field-label-text-color, var(--text-secondary)) !important;
   }
-  .mat-mdc-select-panel {
-    background-color: var(--bg-secondary) !important;
-  }
-  .mat-mdc-option {
-    color: var(--text-primary) !important;
-    &:hover {
-      background-color: var(--bg-tertiary) !important;
+  .mat-mdc-input-element,
+  .mdc-text-field__input {
+    color: var(--mdc-outlined-text-field-input-text-color, var(--text-primary)) !important;
+    caret-color: var(--accent-primary) !important;
+    &::placeholder {
+      color: var(--text-muted) !important;
+      opacity: 1;
     }
   }
-  .mat-mdc-menu-panel {
-    background-color: var(--bg-secondary) !important;
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--border-color) !important;
+  }
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--accent-primary) !important;
+    }
+    .mdc-floating-label {
+      color: var(--accent-primary) !important;
+    }
+  }
+  .mat-mdc-select-value-text {
+    color: var(--text-primary) !important;
+  }
+  .mat-mdc-select-placeholder {
+    color: var(--text-muted) !important;
+  }
+  .mat-mdc-select-arrow {
+    color: var(--text-secondary) !important;
+  }
+  mat-icon[matPrefix], mat-icon[matSuffix] {
+    color: var(--text-muted) !important;
+  }
+  .mat-mdc-form-field-error {
+    color: #f87171 !important;
   }
 }
 
-// Responsive Form layouts
+// Select dropdown panel
+.mat-mdc-select-panel {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+  border-radius: 12px !important;
+}
+
+.mat-mdc-option {
+  color: var(--text-primary) !important;
+  &.mdc-list-item--selected {
+    color: var(--accent-primary) !important;
+    background-color: rgba(99, 102, 241, 0.08) !important;
+  }
+  &:hover {
+    background-color: var(--bg-tertiary) !important;
+  }
+  .mdc-list-item__primary-text {
+    color: var(--text-primary) !important;
+  }
+}
+
+// Stepper - fix label colors
+.mat-stepper-horizontal, .mat-stepper-vertical {
+  background: transparent !important;
+  .mat-step-header {
+    background: transparent !important;
+    .mat-step-label {
+      color: var(--text-secondary) !important;
+      font-weight: 500;
+      &.mat-step-label-selected {
+        color: var(--accent-primary) !important;
+        font-weight: 700;
+      }
+      &.mat-step-label-active {
+        color: var(--text-primary) !important;
+      }
+    }
+    .mat-step-icon {
+      background-color: var(--border-color) !important;
+      color: var(--text-secondary) !important;
+      &.mat-step-icon-selected {
+        background-color: var(--accent-primary) !important;
+        color: #ffffff !important;
+      }
+      &.mat-step-icon-state-done {
+        background-color: #10b981 !important;
+        color: #ffffff !important;
+      }
+      &.mat-step-icon-state-edit {
+        background-color: var(--accent-primary) !important;
+        color: #ffffff !important;
+      }
+      .mat-step-icon-content {
+        color: inherit !important;
+      }
+    }
+    &:hover {
+      background-color: rgba(99, 102, 241, 0.05) !important;
+    }
+    &[aria-selected="true"] {
+      background-color: rgba(99, 102, 241, 0.08) !important;
+    }
+    // Fix for the ripple area in dark mode
+    .mat-ripple-element {
+      background-color: rgba(99, 102, 241, 0.1) !important;
+    }
+  }
+  .mat-stepper-horizontal-line {
+    border-top-color: var(--border-color) !important;
+  }
+  .mat-stepper-vertical-line::before {
+    border-left-color: var(--border-color) !important;
+  }
+}
+
+// MDC Stepper overrides (Angular 17+)
+.mat-step-header {
+  .mat-step-label,
+  .mdc-list-item__primary-text {
+    color: var(--text-secondary) !important;
+  }
+  .mat-step-label-selected .mat-step-label,
+  &[aria-selected="true"] .mat-step-label {
+    color: var(--accent-primary) !important;
+    font-weight: 700 !important;
+  }
+}
+
+// Tabs
+.mat-mdc-tab {
+  .mdc-tab__text-label {
+    color: var(--text-secondary) !important;
+  }
+  &.mdc-tab--active .mdc-tab__text-label {
+    color: var(--accent-primary) !important;
+    font-weight: 700;
+  }
+  .mdc-tab-indicator__content--underline {
+    border-color: var(--accent-primary) !important;
+  }
+}
+
+.mat-mdc-tab-group {
+  --mdc-tab-indicator-active-indicator-color: var(--accent-primary);
+  --mat-tab-header-active-label-text-color: var(--accent-primary);
+  --mat-tab-header-active-hover-label-text-color: var(--accent-primary);
+  --mat-tab-header-active-focus-label-text-color: var(--accent-primary);
+  --mat-tab-header-inactive-label-text-color: var(--text-secondary);
+}
+
+// Cards
+.mat-mdc-card {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--glass-border) !important;
+  .mat-mdc-card-title {
+    color: var(--text-primary) !important;
+  }
+  .mat-mdc-card-subtitle {
+    color: var(--text-secondary) !important;
+  }
+  .mat-mdc-card-content {
+    color: var(--text-primary) !important;
+  }
+}
+
+// Menu panel
+.mat-mdc-menu-panel {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+  border-radius: 12px !important;
+}
+.mat-mdc-menu-item {
+  color: var(--text-primary) !important;
+  .mat-mdc-menu-item-text { color: var(--text-primary) !important; }
+  mat-icon { color: var(--text-secondary) !important; }
+  &:hover {
+    background-color: var(--bg-tertiary) !important;
+  }
+}
+
+// Dialog
+.mat-mdc-dialog-container {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+// Paginator
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  .mat-mdc-paginator-navigation-first,
+  .mat-mdc-paginator-navigation-previous,
+  .mat-mdc-paginator-navigation-next,
+  .mat-mdc-paginator-navigation-last {
+    color: var(--text-secondary) !important;
+  }
+  .mat-mdc-paginator-range-label {
+    color: var(--text-secondary) !important;
+  }
+  .mat-mdc-select-value {
+    color: var(--text-primary) !important;
+  }
+}
+
+// Divider
+.mat-divider {
+  border-color: var(--border-color) !important;
+}
+
+// Progress spinner
+.mat-mdc-progress-spinner circle {
+  stroke: var(--accent-primary) !important;
+}
+
+// Progress bar
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--accent-primary);
+}
+
+// Toolbar
+.mat-toolbar {
+  background: var(--glass-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+// Icon buttons
+.mat-mdc-icon-button {
+  color: var(--text-secondary) !important;
+  &:hover {
+    background-color: rgba(99, 102, 241, 0.08) !important;
+  }
+}
+
+// Raised buttons (when not using .btn-primary)
+.mat-mdc-raised-button:not(.btn-primary) {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+// Flat buttons
+.mat-mdc-button:not(.btn-primary):not(.btn-secondary) {
+  color: var(--text-primary) !important;
+}
+
+// Chips
+.mat-mdc-chip {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+// Autocomplete panel
+.mat-mdc-autocomplete-panel {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+  .mat-mdc-option {
+    color: var(--text-primary) !important;
+  }
+}
+
+// ============================================================
+// FORM GRID UTILITIES
+// ============================================================
 .form-grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -247,3 +588,31 @@ h1, h2, h3, h4, h5, h6 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+// ============================================================
+// ANIMATION UTILITIES
+// ============================================================
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+// ============================================================
+// TEXT COLOR UTILITIES
+// ============================================================
+.text-primary   { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-muted     { color: var(--text-muted) !important; }
+.text-accent    { color: var(--accent-primary) !important; }
+.text-danger    { color: #ef4444 !important; }
+.text-success   { color: #10b981 !important; }
+.text-white     { color: #ffffff !important; }
+
+// ============================================================
+// POINTER UTILITY
+// ============================================================
+.pointer { cursor: pointer; }

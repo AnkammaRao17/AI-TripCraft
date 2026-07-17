@@ -9,7 +9,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  role: 'user' | 'admin';
+  role: 'user';
   profile: UserProfile;
   createdAt?: string;
   updatedAt?: string;
@@ -62,6 +62,8 @@ export interface Itinerary {
   user: string;
   days: DayPlan[];
   travelTips: string[];
+  packingList?: string[];
+  hotels?: string[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -70,12 +72,54 @@ export interface Destination {
   _id: string;
   name: string;
   country: string;
+  state?: string;
+  city?: string;
+  category?: string;
   description: string;
+  history?: string;
+  culture?: string;
+  language?: string;
+  currency?: string;
   coordinates: {
     lat: number;
     lng: number;
   };
+  latitude: number;
+  longitude: number;
+  gallery: string[];
   imageUrl: string;
+
+  climate?: string;
+  weather: string;
+  avgTemperature?: string;
+  bestTime: string;
+
+  nearbyAirport?: string;
+  metroAvailable?: boolean;
+  publicTransport?: string;
+
+  budget: string;
+  estimatedBudgetMin?: number;
+  estimatedBudgetMax?: number;
+
+  hotels: string[];
+  luxuryHotels?: string[];
+  budgetHotels?: string[];
+
+  restaurants: string[];
+  streetFood?: string[];
+  localFoods: string[];
+  shoppingAreas?: string[];
+  nightlife?: string[];
+
+  attractions: string[];
+  hiddenGems?: string[];
+  adventureActivities?: string[];
+  familyActivities?: string[];
+  coupleActivities?: string[];
+  soloTravelTips?: string;
+
+  safetyScore?: number;
   averageRating: number;
   totalReviews: number;
   createdAt?: string;
@@ -137,8 +181,6 @@ export interface StatsResponse {
   data: {
     summary: {
       totalTrips: number;
-      totalUsers?: number;
-      totalDestinations?: number;
     };
     charts: {
       budgetDistribution: { Budget: number; Moderate: number; Luxury: number };

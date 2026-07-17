@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,9 +10,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { TripService } from '../../core/services/trip.service';
+import { DestinationService } from '../../core/services/destination.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { Destination } from '../../models/interfaces';
+
+export function futureDateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
+    const inputDate = new Date(control.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return inputDate >= today ? null : { pastDate: true };
+  };
+}
 
 @Component({
   selector: 'app-trip-builder',
@@ -29,19 +42,36 @@ import { NotificationService } from '../../core/services/notification.service';
     MatIconModule,
     MatStepperModule,
     MatProgressSpinnerModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './trip-builder.component.html',
   styleUrls: ['./trip-builder.component.scss']
 })
-export class TripBuilderComponent {
+export class TripBuilderComponent implements OnInit {
   private fb = inject(FormBuilder);
   private tripService = inject(TripService);
+  private destService = inject(DestinationService);
   private notification = inject(NotificationService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   // Signals
   isLoading = signal(false);
   loadingMessage = signal('Sending details to Gemini AI...');
+  destinations = signal<Destination[]>([]);
+  sliderValue = signal<number>(2);
+
+  budgetLabel = computed(() => {
+    const labels = ['Budget', 'Moderate', 'Luxury'];
+    return labels[this.sliderValue() - 1];
+  });
+
+  filteredDestinations = computed(() => {
+    const input = this.firstFormGroup.get('destination')?.value || '';
+    return this.destinations().filter((d) =>
+      d.name.toLowerCase().includes(input.toLowerCase())
+    );
+  });
 
   // Interests list
   availableInterests = [
@@ -58,8 +88,8 @@ export class TripBuilderComponent {
   // Steps
   firstFormGroup: FormGroup = this.fb.group({
     destination: ['', Validators.required],
-    country: ['', Validators.required],
-    startDate: ['', Validators.required],
+    country: ['India', Validators.required],
+    startDate: ['', [Validators.required, futureDateValidator()]],
     numberOfDays: [3, [Validators.required, Validators.min(1), Validators.max(30)]],
   });
 
@@ -74,6 +104,42 @@ export class TripBuilderComponent {
     hotelPreference: ['Hotel', Validators.required],
     foodPreference: ['Any', Validators.required],
   });
+
+  ngOnInit(): void {
+    // Fetch destinations list for autocomplete
+    this.destService.getDestinations().subscribe({
+      next: (res) => {
+        this.destinations.set(res.data.destinations || []);
+        
+        // Load query parameters if clicked from catalog
+        const paramDest = this.route.snapshot.queryParams['destination'];
+        const paramCountry = this.route.snapshot.queryParams['country'];
+        if (paramDest) {
+          this.firstFormGroup.patchValue({ destination: paramDest });
+        }
+        if (paramCountry) {
+          this.firstFormGroup.patchValue({ country: paramCountry });
+        }
+      }
+    });
+
+    // Auto-fill country field on destination input match
+    this.firstFormGroup.get('destination')?.valueChanges.subscribe((val) => {
+      const match = this.destinations().find(
+        (d) => d.name.toLowerCase() === val?.trim().toLowerCase()
+      );
+      if (match) {
+        this.firstFormGroup.patchValue({ country: match.country });
+      }
+    });
+  }
+
+  onSliderInput(event: Event): void {
+    const val = parseInt((event.target as HTMLInputElement).value);
+    this.sliderValue.set(val);
+    const budgetMap = ['Budget', 'Moderate', 'Luxury'];
+    this.secondFormGroup.patchValue({ budget: budgetMap[val - 1] });
+  }
 
   toggleInterest(index: number): void {
     this.availableInterests[index].selected = !this.availableInterests[index].selected;

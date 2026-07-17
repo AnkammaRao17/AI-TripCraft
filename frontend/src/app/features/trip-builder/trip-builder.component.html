@@ -31,14 +31,19 @@
           <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>Destination City</mat-label>
-              <input matInput formControlName="destination" placeholder="e.g. Tokyo" />
+              <input matInput formControlName="destination" [matAutocomplete]="auto" placeholder="e.g. Delhi" />
               <mat-icon matSuffix>place</mat-icon>
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let dest of filteredDestinations()" [value]="dest.name">
+                  {{ dest.name }}
+                </mat-option>
+              </mat-autocomplete>
               <mat-error *ngIf="firstFormGroup.get('destination')?.hasError('required')">Destination is required</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <input matInput formControlName="country" placeholder="e.g. Japan" />
+              <input matInput formControlName="country" readonly placeholder="India" />
               <mat-icon matSuffix>public</mat-icon>
               <mat-error *ngIf="firstFormGroup.get('country')?.hasError('required')">Country is required</mat-error>
             </mat-form-field>
@@ -48,8 +53,11 @@
             <div class="date-input-field">
               <label class="custom-label">Start Date</label>
               <input type="date" formControlName="startDate" class="html-date-input" />
-              <span class="custom-error" *ngIf="firstFormGroup.get('startDate')?.touched && firstFormGroup.get('startDate')?.invalid">
-                Start date is required (must be today or in the future)
+              <span class="custom-error" *ngIf="firstFormGroup.get('startDate')?.touched && firstFormGroup.get('startDate')?.hasError('pastDate')">
+                Date cannot be in the past. Please select a valid date starting from today.
+              </span>
+              <span class="custom-error" *ngIf="firstFormGroup.get('startDate')?.touched && firstFormGroup.get('startDate')?.hasError('required')">
+                Start date is required.
               </span>
             </div>
 
@@ -76,14 +84,17 @@
           <h3 class="step-title">Specify your group size & budget tier</h3>
 
           <div class="form-grid-3">
-            <mat-form-field appearance="outline">
-              <mat-label>Budget Tier</mat-label>
-              <mat-select formControlName="budget">
-                <mat-option value="Budget">💵 Budget (Backpacker style)</mat-option>
-                <mat-option value="Moderate">💳 Moderate (Comfortable hotel, local eats)</mat-option>
-                <mat-option value="Luxury">💎 Luxury (High-end resorts, fine dining)</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div class="slider-field">
+              <label class="custom-label">Budget Tier: <span class="budget-highlight">{{ budgetLabel() }}</span></label>
+              <div class="slider-container">
+                <input type="range" min="1" max="3" step="1" [value]="sliderValue()" (input)="onSliderInput($event)" class="premium-range-slider" />
+                <div class="slider-ticks">
+                  <span [class.active]="sliderValue() === 1">Budget</span>
+                  <span [class.active]="sliderValue() === 2">Moderate</span>
+                  <span [class.active]="sliderValue() === 3">Luxury</span>
+                </div>
+              </div>
+            </div>
 
             <mat-form-field appearance="outline">
               <mat-label>Number of Travelers</mat-label>

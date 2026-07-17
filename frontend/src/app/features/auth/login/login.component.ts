@@ -40,7 +40,7 @@ import { NotificationService } from '../../../core/services/notification.service
             <!-- Email -->
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Email Address</mat-label>
-              <input matInput type="email" formControlName="email" placeholder="example@email.com" />
+              <input matInput type="email" formControlName="email" />
               <mat-icon matPrefix>email</mat-icon>
               <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
               <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
@@ -149,6 +149,39 @@ import { NotificationService } from '../../../core/services/notification.service
     }
     .font-semibold {
       font-weight: 600;
+    }
+    ::ng-deep {
+      .mat-mdc-text-field-wrapper {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+      }
+      .mat-mdc-text-field-wrapper:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+        border-color: var(--glass-border) !important;
+        border-width: 1px !important;
+        transition: border-color 0.2s ease;
+      }
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading,
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch,
+      .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+        border-color: var(--accent-primary) !important;
+        border-width: 1.5px !important;
+      }
+      .mat-mdc-form-field-icon-prefix {
+        color: var(--text-secondary) !important;
+        padding-right: 8px !important;
+      }
+      .mat-mdc-form-field-focus-active .mat-mdc-form-field-icon-prefix {
+        color: var(--accent-primary) !important;
+      }
+      .mdc-text-field--outlined .mat-mdc-form-field-infix {
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+      }
     }
   `],
 })

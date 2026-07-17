@@ -48,7 +48,26 @@
   <div class="itinerary-grid">
     <!-- Left Column: Day-by-Day Itinerary Plans -->
     <div class="itinerary-main">
-      <div class="glass-card plans-card">
+      <!-- Navigation Tabs -->
+      <div class="glass-card tabs-card">
+        <div class="tabs-nav">
+          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'schedule'" (click)="activeTab.set('schedule')">
+            <mat-icon>calendar_month</mat-icon> Schedule
+          </button>
+          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'packing'" (click)="activeTab.set('packing')">
+            <mat-icon>backpack</mat-icon> Packing List
+          </button>
+          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'hotels'" (click)="activeTab.set('hotels')">
+            <mat-icon>apartment</mat-icon> Hotels
+          </button>
+          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'tips'" (click)="activeTab.set('tips')">
+            <mat-icon>lightbulb</mat-icon> Tips
+          </button>
+        </div>
+      </div>
+
+      <!-- Schedule Tab -->
+      <div class="glass-card plans-card animate-fade" *ngIf="activeTab() === 'schedule'">
         <h2 class="card-heading"><mat-icon>route</mat-icon> Day-by-Day Schedule</h2>
         
         <mat-tab-group class="days-tab-group" animationDuration="250ms">
@@ -78,8 +97,8 @@
 
               <!-- Evening Plan -->
               <div class="plan-block evening">
-                <div class="block-icon bg-indigo-dark">
-                  <mat-icon>dark_mode</mat-icon>
+                <div class="block-icon bg-indigo">
+                  <mat-icon>bedtime</mat-icon>
                 </div>
                 <div class="block-details">
                   <h4 class="block-title">Evening</h4>
@@ -87,26 +106,18 @@
                 </div>
               </div>
 
-              <mat-divider class="my-md"></mat-divider>
-
-              <!-- Food & Dining -->
-              <div class="features-section">
-                <h4 class="sub-section-title"><mat-icon>restaurant</mat-icon> Dining & Local Delicacies</h4>
-                <div class="restaurants-list">
-                  <div class="restaurant-tag" *ngFor="let rest of day.restaurants">
-                    <mat-icon>storefront</mat-icon> <span>{{ rest }}</span>
+              <!-- Culinary & Sights Row -->
+              <div class="plan-details-grid">
+                <div class="detail-box">
+                  <span class="box-label"><mat-icon>restaurant</mat-icon> Eats & Food</span>
+                  <div class="chips-row">
+                    <span class="food-chip" *ngFor="let f of day.localFood">{{ f }}</span>
                   </div>
                 </div>
-                <div class="chips-row">
-                  <span class="food-chip" *ngFor="let food of day.localFood">💡 Try: {{ food }}</span>
-                </div>
-              </div>
 
-              <!-- Attractions list -->
-              <div class="features-section">
-                <h4 class="sub-section-title"><mat-icon>museum</mat-icon> Recommended Attractions</h4>
-                <div class="attractions-row">
-                  <span class="attraction-badge" *ngFor="let attr of day.recommendedAttractions">
+                <div class="detail-box">
+                  <span class="box-label"><mat-icon>museum</mat-icon> Sights</span>
+                  <span class="attraction-tag" *ngFor="let attr of day.recommendedAttractions">
                     <mat-icon>explore</mat-icon> {{ attr }}
                   </span>
                 </div>
@@ -124,15 +135,75 @@
               <!-- Daily Estimated Budget -->
               <div class="day-cost-badge">
                 <span>Estimated Daily Budget:</span>
-                <strong>\${{ day.estimatedDailyBudget }}</strong>
+                <strong>₹{{ day.estimatedDailyBudget | number }}</strong>
               </div>
             </div>
           </mat-tab>
         </mat-tab-group>
       </div>
 
-      <!-- General AI Travel Tips Card -->
-      <div class="glass-card travel-tips-card" *ngIf="itinerary()?.travelTips?.length">
+      <!-- Packing Checklist Tab -->
+      <div class="glass-card packing-card animate-fade" *ngIf="activeTab() === 'packing'">
+        <h2 class="card-heading"><mat-icon>backpack</mat-icon> Packing List</h2>
+        <p class="panel-subtitle">Personalize and check off items before you depart.</p>
+
+        <!-- Add Custom Packing Item Form -->
+        <form (ngSubmit)="addPackingItem()" class="add-packing-form">
+          <mat-form-field appearance="outline" class="flex-grow">
+            <mat-label>Add Custom Item</mat-label>
+            <input matInput [(ngModel)]="customPackingItem" name="customItem" placeholder="e.g. Adapter, Sunscreen" />
+          </mat-form-field>
+          <button mat-raised-button type="submit" class="btn-primary add-packing-btn" [disabled]="!customPackingItem().trim()">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </form>
+
+        <mat-divider class="my-md"></mat-divider>
+
+        <!-- Interactive Packing Checklist -->
+        <div class="packing-list-grid">
+          <div class="packing-item-row hover-scale" *ngFor="let item of packingItems(); let idx = index" [class.checked]="item.checked">
+            <div class="packing-item-left" (click)="togglePackingItem(idx)">
+              <mat-icon class="checkbox-icon">
+                {{ item.checked ? 'check_box' : 'check_box_outline_blank' }}
+              </mat-icon>
+              <span class="packing-item-name">{{ item.name }}</span>
+            </div>
+            <button mat-icon-button (click)="removePackingItem(idx)" class="remove-packing-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="no-packing-items" *ngIf="packingItems().length === 0">
+          <p>Your packing checklist is empty. Add a custom item above!</p>
+        </div>
+      </div>
+
+      <!-- Lodging Recommendations Tab -->
+      <div class="glass-card hotels-card animate-fade" *ngIf="activeTab() === 'hotels'">
+        <h2 class="card-heading"><mat-icon>apartment</mat-icon> Hotel Suggestions</h2>
+        <p class="panel-subtitle">Tailored hotel suggestions matching your selected budget tier.</p>
+
+        <div class="hotels-list-grid">
+          <div class="hotel-recommendation-card hover-scale" *ngFor="let hotel of itinerary()?.hotels">
+            <div class="hotel-card-icon-wrapper">
+              <mat-icon>hotel</mat-icon>
+            </div>
+            <div class="hotel-card-body">
+              <span class="hotel-name">{{ hotel }}</span>
+              <span class="hotel-desc">Budget-friendly stay matching trip specifications.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="no-hotels-placeholder" *ngIf="!itinerary()?.hotels || itinerary()?.hotels?.length === 0">
+          <p>No lodging suggestions found for this itinerary style.</p>
+        </div>
+      </div>
+
+      <!-- General AI Travel Tips Tab -->
+      <div class="glass-card travel-tips-card animate-fade" *ngIf="activeTab() === 'tips' && itinerary()?.travelTips?.length">
         <h3 class="card-heading"><mat-icon>tips_and_updates</mat-icon> AI Travel Recommendations</h3>
         <ul class="tips-list">
           <li class="tip-item" *ngFor="let tip of itinerary()?.travelTips">
@@ -207,7 +278,7 @@
               <mat-icon>hotel</mat-icon>
               <span>Accommodations</span>
             </div>
-            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.hotelCost | number }}</span>
+            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.hotelCost | number }}</span>
           </div>
 
           <!-- Food -->
@@ -216,7 +287,7 @@
               <mat-icon>restaurant</mat-icon>
               <span>Meals & Dining</span>
             </div>
-            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.foodCost | number }}</span>
+            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.foodCost | number }}</span>
           </div>
 
           <!-- Transport -->
@@ -225,7 +296,7 @@
               <mat-icon>commute</mat-icon>
               <span>Transportation</span>
             </div>
-            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.transportCost | number }}</span>
+            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.transportCost | number }}</span>
           </div>
 
           <!-- Attractions -->
@@ -234,7 +305,7 @@
               <mat-icon>local_activity</mat-icon>
               <span>Attractions & Sights</span>
             </div>
-            <span class="item-cost">\${{ trip()?.estimatedBudgetBreakdown?.attractionsCost | number }}</span>
+            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.attractionsCost | number }}</span>
           </div>
 
           <mat-divider class="my-sm"></mat-divider>
@@ -242,7 +313,7 @@
           <!-- Total -->
           <div class="budget-total-row">
             <span>Total Estimated Budget</span>
-            <span class="total-cost">\${{ trip()?.estimatedBudgetBreakdown?.total | number }}</span>
+            <span class="total-cost">₹{{ trip()?.estimatedBudgetBreakdown?.total | number }}</span>
           </div>
         </div>
       </div>

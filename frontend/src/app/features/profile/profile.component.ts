@@ -324,13 +324,24 @@ export class ProfileComponent implements OnInit {
     const { firstName, lastName, phone, avatarUrl } = this.profileForm.value;
 
     this.authService.updateProfile({ firstName, lastName, phone, avatarUrl }).subscribe({
-      next: () => {
+      next: (res) => {
         this.isSaving.set(false);
         this.notification.success('Profile settings updated successfully!');
+        
+        const updatedUser = this.authService.currentUser();
+        if (updatedUser) {
+          this.profileForm.patchValue({
+            firstName: updatedUser.profile?.firstName || '',
+            lastName: updatedUser.profile?.lastName || '',
+            phone: updatedUser.profile?.phone || '',
+            avatarUrl: updatedUser.profile?.avatarUrl || '',
+          });
+        }
       },
-      error: () => {
+      error: (err) => {
         this.isSaving.set(false);
-        this.notification.error('Failed to update profile settings.');
+        const errMsg = err.error?.message || 'Failed to update profile settings.';
+        this.notification.error(errMsg);
       },
     });
   }

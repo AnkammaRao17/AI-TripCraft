@@ -12,6 +12,8 @@ router.route('/')
   .post(tripValidator, validate, tripController.createTrip)
   .get(tripController.getUserTrips);
 
+router.get('/stats', tripController.getUserStats);
+
 router.route('/:id')
   .get(tripController.getTripById)
   .put(tripController.updateTrip)

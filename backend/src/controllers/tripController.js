@@ -8,11 +8,11 @@ const logger = require('../utils/logger');
 
 // Auto calculate budget based on preferences and budget tier
 const calculateEstimatedBudget = (days, budgetTier, travelers, transportPref, hotelPref) => {
-  // Rates per day per traveler in USD
+  // Rates per day per traveler in INR
   const rates = {
-    Budget: { hotel: 25, food: 15, transport: 10, attractions: 10 },
-    Moderate: { hotel: 85, food: 35, transport: 25, attractions: 25 },
-    Luxury: { hotel: 280, food: 90, transport: 75, attractions: 60 }
+    Budget: { hotel: 1500, food: 600, transport: 400, attractions: 300 },
+    Moderate: { hotel: 4500, food: 1500, transport: 1000, attractions: 800 },
+    Luxury: { hotel: 15000, food: 4500, transport: 3000, attractions: 2000 }
   };
 
   const selectedRate = rates[budgetTier] || rates.Moderate;
@@ -354,6 +354,90 @@ const getTripWeather = async (req, res, next) => {
   }
 };
 
+// @desc    Get user personal statistics
+// @route   GET /api/trips/stats
+// @access  Private
+const getUserStats = async (req, res, next) => {
+  try {
+    const filter = { user: req.user.id };
+
+    // 1. Total counts
+    const totalTrips = await Trip.countDocuments(filter);
+
+    // 2. Budget Distribution
+    const budgetStats = await Trip.aggregate([
+      { $match: filter },
+      { $group: { _id: '$budget', count: { $sum: 1 } } }
+    ]);
+    const budgetDistribution = { Budget: 0, Moderate: 0, Luxury: 0 };
+    budgetStats.forEach((stat) => {
+      if (budgetDistribution[stat._id] !== undefined) {
+        budgetDistribution[stat._id] = stat.count;
+      }
+    });
+
+    // 3. Trips Per Month (last 6 months)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+    sixMonthsAgo.setDate(1); // Start of month
+
+    const monthlyStats = await Trip.aggregate([
+      { 
+        $match: {
+          ...filter,
+          createdAt: { $gte: sixMonthsAgo }
+        } 
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } }
+    ]);
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const tripsPerMonth = [];
+
+    // Initialize last 6 months
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      tripsPerMonth.push({
+        label: `${months[d.getMonth()]} ${d.getFullYear().toString().slice(-2)}`,
+        year: d.getFullYear(),
+        month: d.getMonth() + 1,
+        count: 0
+      });
+    }
+
+    monthlyStats.forEach((stat) => {
+      const target = tripsPerMonth.find(
+        (m) => m.year === stat._id.year && m.month === stat._id.month
+      );
+      if (target) {
+        target.count = stat.count;
+      }
+    });
+
+    return ApiResponse.success(res, 'Statistics retrieved successfully', {
+      summary: {
+        totalTrips
+      },
+      charts: {
+        budgetDistribution,
+        tripsPerMonth: tripsPerMonth.map((m) => ({ label: m.label, count: m.count }))
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createTrip,
   getUserTrips,
@@ -361,5 +445,6 @@ module.exports = {
   updateTrip,
   deleteTrip,
   duplicateTrip,
-  getTripWeather
+  getTripWeather,
+  getUserStats
 };

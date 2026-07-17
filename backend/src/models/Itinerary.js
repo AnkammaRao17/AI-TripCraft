@@ -30,6 +30,14 @@ const ItinerarySchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    packingList: {
+      type: [String],
+      default: [],
+    },
+    hotels: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

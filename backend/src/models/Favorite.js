@@ -10,7 +10,10 @@ const FavoriteSchema = new mongoose.Schema(
     trip: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Trip',
-      required: true,
+    },
+    destination: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Destination',
     },
   },
   {
@@ -18,7 +21,8 @@ const FavoriteSchema = new mongoose.Schema(
   }
 );
 
-// Compound index to ensure uniqueness per user-trip combination
-FavoriteSchema.index({ user: 1, trip: 1 }, { unique: true });
+// Sparse compound indexes to ensure uniqueness per user for both trips and destinations
+FavoriteSchema.index({ user: 1, trip: 1 }, { unique: true, partialFilterExpression: { trip: { $exists: true } } });
+FavoriteSchema.index({ user: 1, destination: 1 }, { unique: true, partialFilterExpression: { destination: { $exists: true } } });
 
 module.exports = mongoose.model('Favorite', FavoriteSchema);

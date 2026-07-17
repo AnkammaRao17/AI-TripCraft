@@ -15,11 +15,11 @@ const swaggerDocument = require('../swagger.json');
 
 // Route files
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
 const tripRoutes = require('./routes/trips');
 const destinationRoutes = require('./routes/destinations');
 const reviewRoutes = require('./routes/reviews');
 const favoriteRoutes = require('./routes/favorites');
-const adminRoutes = require('./routes/admin');
 
 // Connect to MongoDB
 connectDB();
@@ -59,11 +59,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/favorites', favoriteRoutes);
-app.use('/api/admin', adminRoutes);
 
 // Base route response
 app.get('/', (req, res) => {

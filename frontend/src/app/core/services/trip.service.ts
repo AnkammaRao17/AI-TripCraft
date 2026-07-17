@@ -9,7 +9,6 @@ import { Trip, Itinerary, Favorite, TripDetailResponse, StatsResponse } from '..
 export class TripService {
   private tripsUrl = 'http://localhost:5000/api/trips';
   private favoritesUrl = 'http://localhost:5000/api/favorites';
-  private adminUrl = 'http://localhost:5000/api/admin';
 
   constructor(private http: HttpClient) {}
 
@@ -84,8 +83,8 @@ export class TripService {
     return this.http.get<any>(this.favoritesUrl);
   }
 
-  // Retrieve user or global analytics statistics
+  // Retrieve user analytics statistics
   getStats(): Observable<StatsResponse> {
-    return this.http.get<StatsResponse>(`${this.adminUrl}/stats`);
+    return this.http.get<StatsResponse>(`${this.tripsUrl}/stats`);
   }
 }

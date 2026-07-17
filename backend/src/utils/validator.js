@@ -3,8 +3,8 @@ const { body } = require('express-validator');
 const registerValidator = [
   body('username')
     .trim()
-    .isLength({ min: 3 })
-    .withMessage('Username must be at least 3 characters long')
+    .isLength({ min: 4 })
+    .withMessage('Username must be at least 4 characters long')
     .matches(/^[a-zA-Z0-9_]+$/)
     .withMessage('Username can only contain alphanumeric characters and underscores'),
   body('email')
@@ -13,11 +13,19 @@ const registerValidator = [
     .withMessage('Please provide a valid email address')
     .normalizeEmail(),
   body('password')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters long'),
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters long')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
   body('firstName').optional().trim(),
   body('lastName').optional().trim(),
-  body('phone').optional().trim(),
+  body('phone')
+    .optional()
+    .trim()
+    .isLength({ min: 10, max: 10 })
+    .withMessage('Phone number must be exactly 10 digits')
+    .isNumeric()
+    .withMessage('Phone number must contain only digits'),
 ];
 
 const loginValidator = [
@@ -38,8 +46,8 @@ const tripValidator = [
     .withMessage('Destination is required'),
   body('country')
     .trim()
-    .notEmpty()
-    .withMessage('Country is required'),
+    .equals('India')
+    .withMessage('Only travel planning within India is supported'),
   body('startDate')
     .isISO8601()
     .withMessage('Please provide a valid start date (YYYY-MM-DD)')
@@ -96,9 +104,33 @@ const reviewValidator = [
     .withMessage('Comment must be at least 3 characters long'),
 ];
 
+const profileValidator = [
+  body('firstName')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('First name cannot exceed 50 characters'),
+  body('lastName')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Last name cannot exceed 50 characters'),
+  body('phone')
+    .optional()
+    .trim()
+    .matches(/^(\+?[0-9\s-]{7,15})?$/)
+    .withMessage('Please provide a valid phone number'),
+  body('avatarUrl')
+    .optional()
+    .trim()
+    .isURL()
+    .withMessage('Please provide a valid avatar URL'),
+];
+
 module.exports = {
   registerValidator,
   loginValidator,
   tripValidator,
   reviewValidator,
+  profileValidator,
 };

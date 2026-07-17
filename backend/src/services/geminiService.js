@@ -52,6 +52,8 @@ Trip details:
 - Hotel Preference: ${hotelPref}
 - Food Preference: ${foodPref}
 
+All monetary budgets and pricing must be generated strictly in Indian Rupees (INR) represented as numeric values without currency symbols.
+
 Return ONLY a JSON object that adheres strictly to the following schema. Do NOT wrap the JSON in Markdown code fences or formatting.
 Schema:
 {
@@ -65,13 +67,23 @@ Schema:
       "restaurants": ["Restaurant name (Brief note)"],
       "localFood": ["Specific dish/food to try in this city"],
       "transportationTips": "Specific tip on getting around this day",
-      "estimatedDailyBudget": 45 (approx. USD amount, number only)
+      "estimatedDailyBudget": 4500 (approx. INR amount, number only)
     }
   ],
   "travelTips": [
     "Tip 1",
     "Tip 2",
     "Tip 3"
+  ],
+  "packingList": [
+    "Packing item 1",
+    "Packing item 2",
+    "Packing item 3"
+  ],
+  "hotels": [
+    "Hotel option 1 (Brief description)",
+    "Hotel option 2 (Brief description)",
+    "Hotel option 3 (Brief description)"
   ]
 }
 Ensure that all day numbers from 1 to ${daysCount} are included in the 'days' array. The budget should correspond to the ${budgetText} tier. Keep output localized, realistic, and specific to ${destination}.
@@ -108,11 +120,11 @@ const generateMockItinerary = (trip) => {
   const { destination, country, numberOfDays, budget } = trip;
   
   const dailyBudgets = {
-    'Budget': 45,
-    'Moderate': 120,
-    'Luxury': 350,
+    'Budget': 1500,
+    'Moderate': 4000,
+    'Luxury': 12000,
   };
-  const baseBudget = dailyBudgets[budget] || 100;
+  const baseBudget = dailyBudgets[budget] || 3000;
   
   const sampleAttractions = [
     'Historic Old Town & Central Square',
@@ -170,9 +182,29 @@ const generateMockItinerary = (trip) => {
     `Check weather forecasts daily; carry a compact umbrella if there is any chance of rain.`
   ];
 
+  const sampleHotels = {
+    'Budget': [`Backpackers Central Hostel (Social, shared rooms near core transit)`, `Eco City Lodge (Private basic rooms)`, `Youth Travel Stay (Clean budget rooms)`],
+    'Moderate': [`Grand Plaza Hotel (Comfortable suites, central location)`, `Scenic Boutique Inn (Quaint local style)`, `Comfort Suites & Spa (Pool and gym included)`],
+    'Luxury': [`The Ritz Grand Resort (5-star luxury, rooftop pools, premium spa)`, `Luxe Palace & Towers (Historic landmark hotel)`, `Vanderbilt Five-Star Hotel (Private butler service)`]
+  };
+  const hotels = sampleHotels[budget] || sampleHotels.Moderate;
+
+  const samplePacking = {
+    'Solo': ['Light daypack', 'Reusable water bottle', 'Local transit card', 'Comfortable walking sneakers', 'Compact umbrella'],
+    'Family': ['Travel first aid kit', 'Snacks for the road', 'Kid-friendly entertainment/tablet', 'Wet wipes & sanitizers', 'Camera'],
+    'Couple': ['Stylish evening wear', 'Travel-size perfumes', 'Light jacket', 'Sunglasses', 'Shared power bank'],
+    'Friends': ['Multi-port charger', 'Portable Bluetooth speaker', 'Casual activewear', 'Card games', 'Hydroflask'],
+    'Business': ['Laptop & chargers', 'Business casual outfits', 'Notebook & pen', 'Travel steamer', 'Noise-cancelling headphones']
+  };
+  const basePacking = ['Passport & visa', 'Credit cards & cash', 'Mobile phone & charger', 'Toothbrush & toiletries', 'Comfortable walking shoes'];
+  const typePacking = samplePacking[trip.tripType] || samplePacking.Solo;
+  const packingList = [...basePacking, ...typePacking];
+
   return {
     days,
-    travelTips
+    travelTips,
+    packingList,
+    hotels
   };
 };
 
