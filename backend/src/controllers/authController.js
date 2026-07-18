@@ -109,9 +109,14 @@ const registerUser = async (req, res, next) => {
   try {
     const { username, email, password, firstName, lastName, phone } = req.body;
 
-    const userExists = await User.findOne({ $or: [{ email }, { username }] });
-    if (userExists) {
-      return ApiResponse.error(res, 'User with this email or username already exists', 400);
+    const existingEmailUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingEmailUser) {
+      return ApiResponse.error(res, 'Email already registered.', 400);
+    }
+
+    const existingUsernameUser = await User.findOne({ username });
+    if (existingUsernameUser) {
+      return ApiResponse.error(res, 'User with this username already exists', 400);
     }
 
     const user = await User.create({
@@ -183,8 +188,7 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('+hashedPassword');
     if (!user) {
       return ApiResponse.error(res, 'Invalid credentials', 401);
     }

@@ -1,5 +1,43 @@
 .itinerary-wrapper {
   animation: fade-in 0.4s ease-out;
+  color: var(--text-secondary);
+  font-family: 'Outfit', 'Inter', sans-serif;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px;
+
+  h1, h2, h3, h4, h5, h6, .trip-title, .card-heading, .timeline-title, .hotel-name, .rest-name, .attr-name, .price-val, .route-node span, .fc-date, .current-temp, .total-cost, .country-sub, strong {
+    color: var(--text-primary) !important;
+  }
+
+  p, .timeline-desc, .note-desc, .attr-history, .packing-item-name, textarea {
+    color: var(--text-secondary) !important;
+  }
+
+  .trip-meta, .badge, .item-label-group, .fc-condition, .distance, .amenity-chip, .hotel-dist, .segment-text, .weather-meta-row, .forecast-title, .fc-temp, span.badge, .timeline-desc mat-icon {
+    color: var(--text-secondary) !important;
+  }
+
+  .price-label, .box-label, .fc-day, .route-mode-text, .divider-dot {
+    color: var(--text-muted) !important;
+  }
+
+  button:not(.fav-icon-btn), a.mat-button, button.mat-raised-button, button.tab-nav-btn {
+    color: var(--text-primary) !important;
+    mat-icon {
+      color: var(--text-primary) !important;
+    }
+  }
+
+  .glass-card, .plans-card, .tabs-card, .hotel-h-card, .restaurant-card, .attraction-detail-card, .packing-item-row, .budget-planner-card, .weather-card, .sidebar-route-map, .timeline-details, .current-weather-box, .detail-box, .segment-card {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--card-shadow) !important;
+  }
+
+  .plans-card, .budget-planner-card, .weather-card {
+    background: var(--surface-2) !important;
+  }
 }
 
 // Header
@@ -27,8 +65,10 @@
 }
 
 .trip-title {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin: 0;
   .country-sub {
     font-weight: 400;
     color: var(--text-secondary);
@@ -40,15 +80,15 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--text-secondary);
-  margin-top: 6px;
+  margin-top: 8px;
   mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
     vertical-align: middle;
-    margin-right: 2px;
+    margin-right: 4px;
   }
 }
 
@@ -63,7 +103,7 @@
 }
 
 .fav-icon-btn {
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.05);
   &[color="warn"] {
     color: #f43f5e;
@@ -80,10 +120,10 @@
 .itinerary-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 30px;
   align-items: start;
   @media (min-width: 1024px) {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2.2fr 1fr;
   }
 }
 
@@ -92,127 +132,280 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 800;
   margin-bottom: 20px;
+  color: #ffffff;
   mat-icon {
-    color: var(--accent-primary);
+    color: var(--accent-primary, #6366f1);
   }
+}
+
+.tabs-card {
+  background: rgba(30, 41, 59, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 20px;
+  padding: 8px;
+  margin-bottom: 20px;
+}
+
+.tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab-nav-btn {
+  padding: 10px 18px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: #94a3b8 !important;
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+  }
+
+  &.active {
+    background: #6366f1 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+}
+
+.plans-card {
+  background: rgba(30, 41, 59, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 24px;
+  padding: 30px;
 }
 
 .days-tab-group {
-  --mdc-tab-indicator-active-indicator-color: var(--accent-primary);
-  --mat-tab-header-active-label-text-color: var(--accent-primary);
-  --mat-tab-header-active-hover-label-text-color: var(--accent-primary);
+  --mdc-tab-indicator-active-indicator-color: #6366f1;
+  --mat-tab-header-active-label-text-color: #6366f1;
+  --mat-tab-header-active-hover-label-text-color: #818cf8;
 }
 
 .day-plan-content {
-  padding: 24px 8px 12px 8px;
+  padding: 24px 0 12px 0;
 }
 
-// Day blocks (Morning / Afternoon / Evening)
-.plan-block {
-  display: flex;
-  gap: 16px;
+// TIMELINE STYLING (Google Maps style)
+.timeline-v-container {
+  position: relative;
+  padding-left: 36px;
+  margin-top: 10px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 17px;
+    width: 2px;
+    background: linear-gradient(180deg, #6366f1 0%, rgba(99, 102, 241, 0.1) 100%);
+  }
+}
+
+.timeline-v-item {
+  position: relative;
+  margin-bottom: 24px;
+
+  .timeline-marker {
+    position: absolute;
+    left: -36px;
+    top: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &.bg-indigo { background: #6366f1; }
+    &.bg-amber { background: #fbbf24; }
+    &.bg-orange { background: #f97316; }
+    &.bg-purple { background: #c084fc; }
+  }
+
+  .timeline-details {
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 16px 20px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(30, 41, 59, 0.45);
+      border-color: rgba(99, 102, 241, 0.15);
+    }
+  }
+
+  .timeline-time {
+    font-size: 12px;
+    font-weight: 700;
+    color: #818cf8;
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 8px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .timeline-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+  }
+
+  .timeline-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin: 0;
+  }
+
+  .activity-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    .badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+        color: #818cf8;
+      }
+    }
+
+    .btn-text {
+      color: #818cf8 !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      padding: 0 6px !important;
+      
+      &:hover {
+        background: rgba(99, 102, 241, 0.08) !important;
+      }
+    }
+  }
+}
+
+// Route segments look like connection blocks
+.timeline-route-segment {
+  position: relative;
+  margin-bottom: 24px;
+
+  .segment-line {
+    position: absolute;
+    left: -20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    border-left: 2px dashed rgba(99, 102, 241, 0.3);
+  }
+
+  .segment-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: none;
+
+    .segment-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #94a3b8;
+    }
+
+    .segment-text {
+      font-size: 13px;
+      color: #94a3b8;
+      flex-grow: 1;
+    }
+
+    .navigate-btn {
+      border-radius: 8px;
+      font-size: 11px !important;
+      padding: 0 12px !important;
+      height: 32px !important;
+      font-weight: 700 !important;
+      line-height: 32px !important;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+// Day Plan Details
+.plan-details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 20px;
+  @media (min-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.detail-box {
+  background: rgba(30, 41, 59, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   padding: 16px;
-  border-radius: 12px;
-  background: var(--bg-tertiary);
-  margin-bottom: 16px;
-  border-left: 4px solid transparent;
-  transition: transform 0.2s ease;
-  &:hover {
-    transform: translateX(4px);
-  }
-  
-  &.morning { border-left-color: #fbbf24; }
-  &.afternoon { border-left-color: #f97316; }
-  &.evening { border-left-color: #6366f1; }
-}
-
-.block-icon {
+  border-radius: 16px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: white;
-  flex-shrink: 0;
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
-}
+  flex-direction: column;
+  gap: 12px;
 
-.bg-amber { background-color: #fbbf24; }
-.bg-orange { background-color: #f97316; }
-.bg-indigo-dark { background-color: #4f46e5; }
-
-.block-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.block-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.my-md {
-  margin: 20px 0;
-}
-
-.my-sm {
-  margin: 12px 0;
-}
-
-// Food & Attractions
-.features-section {
-  margin-bottom: 20px;
-}
-
-.sub-section-title {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.restaurants-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.restaurant-tag {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: var(--text-muted);
+  .box-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #818cf8;
+    }
   }
 }
 
@@ -223,447 +416,505 @@
 }
 
 .food-chip {
-  background: rgba(168, 85, 247, 0.08);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-  color: var(--accent-secondary);
+  background: rgba(244, 114, 182, 0.1);
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  color: #f472b6;
+  font-size: 12px;
+  font-weight: 600;
   padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.attractions-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.attraction-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(99, 102, 241, 0.08);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  color: var(--accent-primary);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  mat-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
-  }
-}
-
-.plan-footer-notes {
-  display: flex;
-  gap: 10px;
-  background: var(--bg-secondary);
-  border: 1.5px dashed var(--border-color);
-  padding: 12px 16px;
   border-radius: 8px;
-  margin-top: 16px;
-  mat-icon {
-    color: var(--text-muted);
-  }
-}
-
-.note-label {
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
 }
 
 .note-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 2px;
+  font-size: 13.5px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .day-cost-badge {
-  display: inline-flex;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  background: var(--bg-tertiary);
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 12px 20px;
+  border-radius: 12px;
   margin-top: 20px;
+  color: #34d399;
+  font-size: 14px;
+  
   strong {
-    color: var(--accent-primary);
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 17px;
+    font-weight: 800;
   }
 }
 
-// General Travel Tips Card
-.travel-tips-card {
-  margin-top: 24px;
-}
-
-.tips-list {
-  list-style: none;
-}
-
-.tip-item {
+// HOTELS TAB (Horizontal Premium Layout)
+.hotels-cards-container {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 8px 0;
-  font-size: 14px;
-  color: var(--text-secondary);
-  mat-icon {
-    color: #10b981; // green
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    margin-top: 2px;
-    flex-shrink: 0;
-  }
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 10px;
 }
 
-// Interactive Map Mockup
-.map-card {
-  padding: 20px;
-}
-
-.map-toggles {
+.hotel-h-card {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-
-.toggle-btn {
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  padding: 0 10px !important;
-  height: 28px !important;
-  line-height: 28px !important;
-  border-radius: 6px !important;
-  border: 1px solid var(--border-color) !important;
-  color: var(--text-secondary) !important;
-  &.active {
-    background: var(--accent-primary) !important;
-    color: white !important;
-    border-color: transparent !important;
-  }
-}
-
-.map-viewport {
-  height: 240px;
-  background: var(--bg-tertiary);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  position: relative;
+  background: rgba(30, 41, 59, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
-}
+  box-shadow: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-.map-grid-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.15;
-  background-image: 
-    linear-gradient(rgba(99, 102, 241, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.map-location-tag {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  color: white;
-  font-size: 9px;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-// Marker node styling
-.map-marker-node {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  z-index: 10;
-  &:hover {
-    z-index: 20;
-    .marker-pin {
-      transform: scale(1.2);
-    }
-    .marker-popup {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, -105%) scale(1);
-    }
-  }
-}
-
-.marker-pin {
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-  transition: transform 0.2s ease;
-}
-
-.marker-popup {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -95%) scale(0.9);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  padding: 8px 12px;
-  border-radius: 6px;
-  min-width: 160px;
-  max-width: 200px;
-  text-align: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-}
-
-.popup-name {
-  font-weight: 700;
-  font-size: 11px;
-  margin-bottom: 2px;
-  color: var(--text-primary);
-}
-
-.popup-desc {
-  font-size: 9px;
-  color: var(--text-secondary);
-}
-
-// Budget Card
-.budget-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.budget-item-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.item-label-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: var(--text-muted);
-  }
-}
-
-.item-cost {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.budget-total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.total-cost {
-  font-size: 18px;
-  color: var(--accent-primary);
-}
-
-// Weather Forecast Widget
-.weather-loader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-
-.current-weather-box {
-  background: var(--bg-tertiary);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-}
-
-.weather-main-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.weather-big-icon {
-  font-size: 36px;
-  width: 36px;
-  height: 36px;
-}
-
-.current-temp {
-  font-size: 26px;
-  font-weight: 700;
-}
-
-.current-condition {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.weather-meta-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.forecast-title {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-}
-
-.forecast-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.forecast-day-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-}
-
-.fc-date {
-  font-weight: 600;
-  width: 40px;
-}
-
-.fc-condition {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  width: 110px;
-  span {
-    white-space: nowrap;
+  .hotel-img-column {
+    position: relative;
+    width: 220px;
+    min-width: 220px;
     overflow: hidden;
-    text-overflow: ellipsis;
+
+    .hotel-room-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .hotel-rating {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 4px 8px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fbbf24;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
   }
-}
 
-.fc-icon {
-  font-size: 14px;
-  width: 14px;
-  height: 14px;
-  color: var(--text-muted);
-}
+  .hotel-info-column {
+    padding: 24px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-.fc-temps {
-  display: flex;
-  gap: 6px;
-  font-weight: 500;
-}
+  .hotel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
 
-.fc-max { color: var(--text-primary); }
-.fc-min { color: var(--text-muted); }
+    .hotel-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+    }
 
-.fc-rain {
-  font-size: 10px;
-  color: var(--accent-primary);
-  font-weight: 600;
-}
+    .hotel-dist {
+      font-size: 12px;
+      color: #818cf8;
+      background: rgba(99, 102, 241, 0.1);
+      padding: 2px 10px;
+      border-radius: 100px;
+    }
+  }
 
-// Global Loadings screen
-.loading-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 60vh;
-  gap: 16px;
-  color: var(--text-secondary);
-}
+  .hotel-amenities-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
 
-.text-danger {
-  color: #ef4444 !important;
-}
+    .amenity-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 11.5px;
+      color: #cbd5e1;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+  }
 
-// Navigation Tabs
-.tabs-card {
-  margin-bottom: 24px;
-  padding: 8px !important;
-}
+  .hotel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 16px;
 
-.tabs-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+    .hotel-pricing {
+      display: flex;
+      flex-direction: column;
+      
+      .price-label {
+        font-size: 11px;
+        color: #94a3b8;
+      }
+      .price-val {
+        font-size: 20px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+    }
 
-.tab-nav-btn {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  border-radius: 8px !important;
-  padding: 0 16px !important;
-  height: 38px !important;
-  color: var(--text-secondary) !important;
-  transition: all 0.25s ease !important;
+    .hotel-actions {
+      display: flex;
+      gap: 12px;
+
+      button {
+        border-radius: 10px;
+        font-weight: 700;
+      }
+    }
+  }
 
   &:hover {
-    background: rgba(99, 102, 241, 0.08) !important;
-    color: var(--accent-primary) !important;
+    border-color: rgba(99, 102, 241, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.05);
+    
+    .hotel-room-img {
+      transform: scale(1.05);
+    }
   }
 
-  &.active {
-    background: var(--accent-primary) !important;
-    color: white !important;
+  @media (max-width: 600px) {
+    flex-direction: column;
+
+    .hotel-img-column {
+      width: 100%;
+      height: 180px;
+    }
   }
 }
 
-// Tab Animations
-.animate-fade {
-  animation: tab-fade 0.3s ease-out;
+// RESTAURANTS TAB
+.restaurants-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 10px;
+  
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-@keyframes tab-fade {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+.restaurant-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(30, 41, 59, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  height: 100%;
+
+  .rest-img-wrapper {
+    position: relative;
+    padding-bottom: 50%;
+    overflow: hidden;
+
+    .rest-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .rest-rating {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      padding: 4px 8px;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #fbbf24;
+      font-size: 12px;
+      font-weight: 700;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .rest-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+
+    .rest-cuisine {
+      font-size: 11px;
+      font-weight: 700;
+      color: #f472b6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .rest-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 6px 0;
+    }
+
+    .rest-hours {
+      font-size: 12.5px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 16px;
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .rest-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 12px;
+
+    .rest-pricing {
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+      color: #94a3b8;
+      
+      strong {
+        font-size: 14px;
+        color: #ffffff;
+        margin-top: 2px;
+      }
+    }
+
+    .rest-nav-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+    }
+  }
+
+  &:hover {
+    border-color: rgba(99, 102, 241, 0.2) !important;
+    .rest-img {
+      transform: scale(1.06);
+    }
+  }
 }
 
-// Packing Checklist Card
-.packing-card {
-  padding: 24px;
+// ATTRACTIONS TAB
+.attractions-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 10px;
+  
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.panel-subtitle {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
+.attraction-detail-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(30, 41, 59, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  height: 100%;
+
+  .attr-img-wrapper {
+    position: relative;
+    padding-bottom: 50%;
+    overflow: hidden;
+
+    .attr-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .attr-distance {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #818cf8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      
+      mat-icon {
+        font-size: 13px;
+        width: 13px;
+        height: 13px;
+      }
+    }
+  }
+
+  .attr-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+
+    .attr-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .attr-history {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+    }
+  }
+
+  .attr-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+
+    .label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .val {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+  }
+
+  .attr-footer {
+    button {
+      border-radius: 12px;
+      font-weight: 700;
+    }
+  }
+
+  &:hover {
+    border-color: rgba(99, 102, 241, 0.2) !important;
+    .attr-img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Checklist layout
+.packing-list-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  @media (min-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.packing-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(30, 41, 59, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 10px 16px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+
+  .packing-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    flex-grow: 1;
+
+    .checkbox-icon {
+      color: #94a3b8;
+    }
+    
+    .packing-item-name {
+      font-size: 14px;
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+    }
+  }
+
+  &.checked {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.15);
+    
+    .checkbox-icon {
+      color: #10b981;
+    }
+    .packing-item-name {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+  }
+
+  .remove-packing-btn {
+    color: #64748b;
+    &:hover {
+      color: #ef4444;
+    }
+  }
 }
 
 .add-packing-form {
@@ -674,212 +925,250 @@
 
 .add-packing-btn {
   height: 52px !important;
-  font-weight: 600 !important;
-  padding: 0 20px !important;
+  border-radius: 10px !important;
 }
 
-.packing-list-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-top: 16px;
-  @media (min-width: 600px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.packing-item-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  padding: 10px 14px;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-  
-  &.checked {
-    opacity: 0.6;
-    background: var(--bg-secondary);
-    .packing-item-name {
-      text-decoration: line-through;
-      color: var(--text-muted);
-    }
-    .checkbox-icon {
-      color: #10b981;
-    }
-  }
-}
-
-.packing-item-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  flex-grow: 1;
-}
-
-.checkbox-icon {
-  color: var(--text-muted);
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-}
-
-.packing-item-name {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.remove-packing-btn {
-  color: var(--text-muted);
-  &:hover {
-    color: #ef4444;
-  }
-}
-
-.no-packing-items {
-  text-align: center;
-  padding: 24px 0;
-  color: var(--text-secondary);
-  font-size: 13.5px;
-}
-
-// Hotels Recommendations
-.hotels-card {
-  padding: 24px;
-}
-
-.hotels-list-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin-top: 16px;
-  @media (min-width: 600px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.hotel-recommendation-card {
-  display: flex;
-  gap: 14px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  padding: 16px;
-  border-radius: 12px;
-  align-items: center;
-}
-
-.hotel-card-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(99, 102, 241, 0.1);
-  color: var(--accent-primary);
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  flex-shrink: 0;
-  mat-icon {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.hotel-card-body {
+// Side bar items
+.sidebar-route-map {
   display: flex;
   flex-direction: column;
-}
-
-.hotel-name {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.hotel-desc {
-  font-size: 11.5px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-
-.no-hotels-placeholder {
-  text-align: center;
-  padding: 24px 0;
-  color: var(--text-secondary);
-  font-size: 13.5px;
-}
-
-// Schedule details grid row customization
-.plan-details-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin: 16px 0;
-  border-top: 1px solid var(--border-color);
-  padding-top: 16px;
-  @media (min-width: 600px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.detail-box {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.box-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: var(--accent-secondary);
-  }
-}
-
-.attraction-tag {
-  display: inline-flex;
-  align-items: center;
+  background: rgba(30, 41, 59, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 20px;
+  border-radius: 16px;
   gap: 4px;
-  background: rgba(99, 102, 241, 0.08);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  color: var(--accent-primary);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  margin-right: 6px;
-  margin-bottom: 6px;
+}
+
+.route-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
   mat-icon {
+    color: #818cf8;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+  
+  span {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  &.end {
+    mat-icon {
+      color: #f43f5e;
+    }
+  }
+}
+
+.route-arrow-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 8px;
+  margin: 2px 0;
+  border-left: 2px dashed rgba(99, 102, 241, 0.3);
+
+  .route-mode-text {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-left: 14px;
+  }
+
+  .arrow-down {
     font-size: 14px;
     width: 14px;
     height: 14px;
+    color: #6366f1;
+    margin-left: 8px;
+    margin-top: 4px;
   }
 }
 
-// Inline Editing custom classes
+// Budget Cost Planner Side Card
+.budget-planner-card {
+  background: rgba(30, 41, 59, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 20px;
+}
+
+.budget-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.budget-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13.5px;
+
+  .item-label-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #cbd5e1;
+    
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #94a3b8;
+    }
+  }
+
+  .item-cost {
+    font-weight: 700;
+    color: #ffffff;
+  }
+}
+
+.budget-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+
+  .total-cost {
+    font-size: 20px;
+    font-weight: 800;
+    
+    &.text-indigo {
+      color: #818cf8;
+    }
+  }
+}
+
+// Weather widget sidebar
+.weather-card {
+  background: rgba(30, 41, 59, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 20px;
+}
+
+.current-weather-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.weather-main-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+
+  .weather-big-icon {
+    font-size: 38px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .current-temp {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .current-condition {
+    font-size: 13px;
+    color: #cbd5e1;
+    margin: 0;
+  }
+}
+
+.weather-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 8px;
+}
+
+.forecast-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.forecast-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.forecast-day-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .fc-date {
+    font-weight: 700;
+    width: 40px;
+  }
+
+  .fc-condition {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #cbd5e1;
+    
+    .fc-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      color: #94a3b8;
+    }
+  }
+
+  .fc-temps {
+    .fc-max { font-weight: 700; margin-right: 6px; }
+    .fc-min { color: #94a3b8; }
+  }
+
+  .fc-rain {
+    font-size: 11px;
+    color: #60a5fa;
+  }
+}
+
+// Day Plan Editing
 .day-edit-action-row {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px dashed var(--border-color);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
 }
+
 .edit-buttons-group {
   display: flex;
   gap: 8px;
 }
+
 .budget-input {
   max-width: 150px;
   margin-bottom: -1.25em;
@@ -888,7 +1177,45 @@
     font-weight: 700;
   }
 }
-.full-width {
+
+// Spacers and utilities
+.font-sm {
+  font-size: 12.5px !important;
+}
+
+.margin-top-md {
+  margin-top: 20px;
+}
+
+.my-md {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.w-100 {
   width: 100%;
 }
 
+.flex-grow {
+  flex-grow: 1;
+}
+
+// Fade in animations
+.animate-fade {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 20px;
+  color: #94a3b8;
+}

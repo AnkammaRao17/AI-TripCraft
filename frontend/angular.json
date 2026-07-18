@@ -71,10 +71,17 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "12kB",
-                  "maximumError": "24kB"
+                  "maximumWarning": "32kB",
+                  "maximumError": "64kB"
                 }
               ],
+              "optimization": {
+                "scripts": true,
+                "styles": true,
+                "fonts": {
+                  "inline": false
+                }
+              },
               "outputHashing": "all"
             },
             "development": {

@@ -1,0 +1,85 @@
+<div class="ai-assistant-wrapper" [class.panel-open]="isOpen()">
+  <!-- Floating Launcher Button -->
+  <button mat-fab class="assistant-launcher hover-scale" (click)="toggleAssistant()" title="AI Travel Assistant">
+    <mat-icon class="pulse-icon">{{ isOpen() ? 'close' : 'auto_awesome' }}</mat-icon>
+  </button>
+
+  <!-- Expanded Chat Panel -->
+  <div class="assistant-panel glass-card" *ngIf="isOpen()">
+    <!-- Header -->
+    <div class="panel-header">
+      <div class="header-details">
+        <div class="ai-avatar">
+          <mat-icon>auto_awesome</mat-icon>
+        </div>
+        <div>
+          <h4 class="ai-name">AI Travel Craft</h4>
+          <span class="ai-status">online assistant</span>
+        </div>
+      </div>
+      <button mat-icon-button (click)="toggleAssistant()" class="close-panel-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Message Body -->
+    <div class="panel-body" #chatBody>
+      <div class="messages-list">
+        <div class="message-bubble" 
+             *ngFor="let msg of messages()" 
+             [class.user-bubble]="msg.sender === 'user'"
+             [class.ai-bubble]="msg.sender === 'ai'">
+          <div class="bubble-avatar" *ngIf="msg.sender === 'ai'">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+          <div class="bubble-text">
+            <p>{{ msg.text }}</p>
+            <span class="bubble-time">{{ msg.timestamp | date:'shortTime' }}</span>
+          </div>
+        </div>
+
+        <!-- Typing Loading Indicator -->
+        <div class="message-bubble ai-bubble typing-indicator-bubble" *ngIf="isLoading()">
+          <div class="bubble-avatar">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+          <div class="bubble-text typing-loader">
+            <div class="dot"></div>
+            <div class="dot delay-1"></div>
+            <div class="dot delay-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suggestion Chips -->
+    <div class="panel-suggestions" *ngIf="suggestions().length > 0 && !isLoading()">
+      <div class="suggestions-scroll">
+        <button 
+          *ngFor="let chip of suggestions()" 
+          class="suggestion-chip" 
+          (click)="clickSuggestion(chip)">
+          {{ chip }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer Input Bar -->
+    <div class="panel-footer">
+      <form (ngSubmit)="sendMessage()" class="footer-form">
+        <input 
+          type="text" 
+          [(ngModel)]="inputText" 
+          name="chatMsg"
+          placeholder="Ask AI Assistant..." 
+          class="chat-input"
+          autocomplete="off"
+          [disabled]="isLoading()"
+        />
+        <button mat-icon-button type="submit" [disabled]="!inputText().trim() || isLoading()" class="send-btn">
+          <mat-icon>send</mat-icon>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

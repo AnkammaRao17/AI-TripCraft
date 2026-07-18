@@ -22,11 +22,11 @@
     </div>
 
     <mat-stepper linear #stepper class="glass-stepper">
-      <!-- Step 1: Basic Destination Details -->
-      <mat-step [stepControl]="firstFormGroup" errorMessage="Basic info is required">
+      <!-- Step 1: Destination -->
+      <mat-step [stepControl]="step1FormGroup" errorMessage="Destination is required">
         <ng-template matStepLabel>Destination</ng-template>
-        <form [formGroup]="firstFormGroup" class="step-form-content">
-          <h3 class="step-title">Where and when are you traveling?</h3>
+        <form [formGroup]="step1FormGroup" class="step-form-content">
+          <h3 class="step-title">Where are you traveling to?</h3>
           
           <div class="form-grid">
             <mat-form-field appearance="outline">
@@ -38,36 +38,13 @@
                   {{ dest.name }}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="firstFormGroup.get('destination')?.hasError('required')">Destination is required</mat-error>
+              <mat-error *ngIf="step1FormGroup.get('destination')?.hasError('required')">Destination is required</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <input matInput formControlName="country" readonly placeholder="India" />
+              <input matInput formControlName="country" readonly />
               <mat-icon matSuffix>public</mat-icon>
-              <mat-error *ngIf="firstFormGroup.get('country')?.hasError('required')">Country is required</mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="form-grid">
-            <div class="date-input-field">
-              <label class="custom-label">Start Date</label>
-              <input type="date" formControlName="startDate" class="html-date-input" />
-              <span class="custom-error" *ngIf="firstFormGroup.get('startDate')?.touched && firstFormGroup.get('startDate')?.hasError('pastDate')">
-                Date cannot be in the past. Please select a valid date starting from today.
-              </span>
-              <span class="custom-error" *ngIf="firstFormGroup.get('startDate')?.touched && firstFormGroup.get('startDate')?.hasError('required')">
-                Start date is required.
-              </span>
-            </div>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Trip Duration (Days)</mat-label>
-              <input matInput type="number" formControlName="numberOfDays" min="1" max="30" />
-              <mat-icon matSuffix>schedule</mat-icon>
-              <mat-error *ngIf="firstFormGroup.get('numberOfDays')?.hasError('required')">Duration is required</mat-error>
-              <mat-error *ngIf="firstFormGroup.get('numberOfDays')?.hasError('min')">Must be at least 1 day</mat-error>
-              <mat-error *ngIf="firstFormGroup.get('numberOfDays')?.hasError('max')">Max length is 30 days</mat-error>
             </mat-form-field>
           </div>
 
@@ -77,30 +54,53 @@
         </form>
       </mat-step>
 
-      <!-- Step 2: Party and Budget -->
-      <mat-step [stepControl]="secondFormGroup" errorMessage="Logistics info is required">
-        <ng-template matStepLabel>Party & Budget</ng-template>
-        <form [formGroup]="secondFormGroup" class="step-form-content">
-          <h3 class="step-title">Specify your group size & budget tier</h3>
+      <!-- Step 2: Travel Dates -->
+      <mat-step [stepControl]="step2FormGroup" errorMessage="Dates are required">
+        <ng-template matStepLabel>Dates & Duration</ng-template>
+        <form [formGroup]="step2FormGroup" class="step-form-content">
+          <h3 class="step-title">When is your journey starting?</h3>
 
-          <div class="form-grid-3">
-            <div class="slider-field">
-              <label class="custom-label">Budget Tier: <span class="budget-highlight">{{ budgetLabel() }}</span></label>
-              <div class="slider-container">
-                <input type="range" min="1" max="3" step="1" [value]="sliderValue()" (input)="onSliderInput($event)" class="premium-range-slider" />
-                <div class="slider-ticks">
-                  <span [class.active]="sliderValue() === 1">Budget</span>
-                  <span [class.active]="sliderValue() === 2">Moderate</span>
-                  <span [class.active]="sliderValue() === 3">Luxury</span>
-                </div>
-              </div>
+          <div class="form-grid">
+            <div class="date-input-field">
+              <label class="custom-label">Start Date</label>
+              <input type="date" formControlName="startDate" class="html-date-input" />
+              <span class="custom-error" *ngIf="step2FormGroup.get('startDate')?.touched && step2FormGroup.get('startDate')?.hasError('pastDate')">
+                Date cannot be in the past.
+              </span>
+              <span class="custom-error" *ngIf="step2FormGroup.get('startDate')?.touched && step2FormGroup.get('startDate')?.hasError('required')">
+                Start date is required.
+              </span>
             </div>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Duration (Days)</mat-label>
+              <input matInput type="number" formControlName="numberOfDays" min="1" max="30" />
+              <mat-icon matSuffix>schedule</mat-icon>
+              <mat-error *ngIf="step2FormGroup.get('numberOfDays')?.hasError('required')">Duration is required</mat-error>
+              <mat-error *ngIf="step2FormGroup.get('numberOfDays')?.hasError('min')">Must be at least 1 day</mat-error>
+              <mat-error *ngIf="step2FormGroup.get('numberOfDays')?.hasError('max')">Max length is 30 days</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="actions-row">
+            <button mat-button matStepperPrevious class="btn-secondary">Back</button>
+            <button mat-raised-button matStepperNext class="btn-primary">Continue</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 3: Travelers -->
+      <mat-step [stepControl]="step3FormGroup" errorMessage="Traveler details are required">
+        <ng-template matStepLabel>Travelers</ng-template>
+        <form [formGroup]="step3FormGroup" class="step-form-content">
+          <h3 class="step-title">Who is joining you on this trip?</h3>
+
+          <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>Number of Travelers</mat-label>
               <input matInput type="number" formControlName="numberOfTravelers" min="1" />
               <mat-icon matSuffix>groups</mat-icon>
-              <mat-error *ngIf="secondFormGroup.get('numberOfTravelers')?.hasError('required')">Travelers count is required</mat-error>
+              <mat-error *ngIf="step3FormGroup.get('numberOfTravelers')?.hasError('required')">Travelers count is required</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -122,19 +122,31 @@
         </form>
       </mat-step>
 
-      <!-- Step 3: Preferences -->
-      <mat-step [stepControl]="thirdFormGroup">
-        <ng-template matStepLabel>Preferences</ng-template>
-        <form [formGroup]="thirdFormGroup" class="step-form-content">
-          <h3 class="step-title">Fine-tune your comfort settings</h3>
+      <!-- Step 4: Budget & Preferences -->
+      <mat-step [stepControl]="step4FormGroup">
+        <ng-template matStepLabel>Budget & Lodging</ng-template>
+        <form [formGroup]="step4FormGroup" class="step-form-content">
+          <h3 class="step-title">Specify budget and lodging settings</h3>
 
-          <div class="form-grid-3">
+          <div class="slider-field margin-bottom-md">
+            <label class="custom-label">Budget Tier: <span class="budget-highlight">{{ budgetLabel() }}</span></label>
+            <div class="slider-container">
+              <input type="range" min="1" max="3" step="1" [value]="sliderValue()" (input)="onSliderInput($event)" class="premium-range-slider" />
+              <div class="slider-ticks">
+                <span [class.active]="sliderValue() === 1">Budget</span>
+                <span [class.active]="sliderValue() === 2">Moderate</span>
+                <span [class.active]="sliderValue() === 3">Luxury</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid">
             <mat-form-field appearance="outline">
-              <mat-label>Preferred Lodging</mat-label>
+              <mat-label>Lodging Style</mat-label>
               <mat-select formControlName="hotelPreference">
                 <mat-option value="Hotel">Hotel (Standard)</mat-option>
-                <mat-option value="Resort">Resort & Luxury Lodge</mat-option>
-                <mat-option value="Airbnb">Airbnb / Boutique Stay</mat-option>
+                <mat-option value="Resort">Resort & Luxury</mat-option>
+                <mat-option value="Airbnb">Airbnb Stay</mat-option>
                 <mat-option value="Hostel">Hostel (Social & Cheap)</mat-option>
                 <mat-option value="None">No Lodging Needed</mat-option>
               </mat-select>
@@ -150,20 +162,32 @@
                 <mat-option value="Flights">✈ Flights (Intercity)</mat-option>
               </mat-select>
             </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Dietary Choices</mat-label>
-              <mat-select formControlName="foodPreference">
-                <mat-option value="Any">🍕 Any Food (No restrictions)</mat-option>
-                <mat-option value="Vegetarian">🥗 Vegetarian</mat-option>
-                <mat-option value="Vegan">🌱 Vegan</mat-option>
-                <mat-option value="Halal">🍖 Halal</mat-option>
-                <mat-option value="Kosher">🥘 Kosher</mat-option>
-              </mat-select>
-            </mat-form-field>
           </div>
 
-          <!-- Interests Selection -->
+          <div class="actions-row">
+            <button mat-button matStepperPrevious class="btn-secondary">Back</button>
+            <button mat-raised-button matStepperNext class="btn-primary">Continue</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 5: Interests & Diet -->
+      <mat-step [stepControl]="step5FormGroup">
+        <ng-template matStepLabel>Interests</ng-template>
+        <form [formGroup]="step5FormGroup" class="step-form-content">
+          <h3 class="step-title">Specify custom interests & food choices</h3>
+
+          <mat-form-field appearance="outline" class="full-width margin-bottom-md">
+            <mat-label>Dietary Choice</mat-label>
+            <mat-select formControlName="foodPreference">
+              <mat-option value="Any">🍕 Any Food (No restrictions)</mat-option>
+              <mat-option value="Vegetarian">🥗 Vegetarian</mat-option>
+              <mat-option value="Vegan">🌱 Vegan</mat-option>
+              <mat-option value="Halal">🍖 Halal</mat-option>
+              <mat-option value="Kosher">🥘 Kosher</mat-option>
+            </mat-select>
+          </mat-form-field>
+
           <h4 class="interests-section-title">What are your main travel interests?</h4>
           <div class="interests-grid">
             <div class="interest-item" 
@@ -182,32 +206,32 @@
         </form>
       </mat-step>
 
-      <!-- Step 4: Summary Review -->
+      <!-- Step 6: Generate -->
       <mat-step>
-        <ng-template matStepLabel>Submit</ng-template>
+        <ng-template matStepLabel>Generate</ng-template>
         <div class="step-form-content">
           <h3 class="step-title">Review and Generate</h3>
           
           <div class="summary-details glass-card">
             <div class="summary-row">
               <span class="summary-label">Target Destination</span>
-              <span class="summary-val">{{ firstFormGroup.get('destination')?.value }}, {{ firstFormGroup.get('country')?.value }}</span>
+              <span class="summary-val">{{ step1FormGroup.get('destination')?.value }}, {{ step1FormGroup.get('country')?.value }}</span>
             </div>
             <div class="summary-row">
-              <span class="summary-label">Date & Duration</span>
-              <span class="summary-val">Starting {{ firstFormGroup.get('startDate')?.value | date:'longDate' }} for {{ firstFormGroup.get('numberOfDays')?.value }} Days</span>
+              <span class="summary-label">Dates & Duration</span>
+              <span class="summary-val">Starting {{ step2FormGroup.get('startDate')?.value | date:'longDate' }} for {{ step2FormGroup.get('numberOfDays')?.value }} Days</span>
             </div>
             <div class="summary-row">
-              <span class="summary-label">Budget Tier</span>
-              <span class="summary-val">{{ secondFormGroup.get('budget')?.value }}</span>
+              <span class="summary-label">Budget & Lodging</span>
+              <span class="summary-val">{{ step4FormGroup.get('budget')?.value }} tier ({{ step4FormGroup.get('hotelPreference')?.value }})</span>
             </div>
             <div class="summary-row">
               <span class="summary-label">Logistics</span>
-              <span class="summary-val">{{ secondFormGroup.get('numberOfTravelers')?.value }} Traveler(s) ({{ secondFormGroup.get('tripType')?.value }} style)</span>
+              <span class="summary-val">{{ step3FormGroup.get('numberOfTravelers')?.value }} Traveler(s) ({{ step3FormGroup.get('tripType')?.value }})</span>
             </div>
             <div class="summary-row">
-              <span class="summary-label">Preferences</span>
-              <span class="summary-val">Hotel: {{ thirdFormGroup.get('hotelPreference')?.value }} | Transport: {{ thirdFormGroup.get('transportPreference')?.value }}</span>
+              <span class="summary-label">Transport & Diet</span>
+              <span class="summary-val">{{ step4FormGroup.get('transportPreference')?.value }} | {{ step5FormGroup.get('foodPreference')?.value }}</span>
             </div>
           </div>
 

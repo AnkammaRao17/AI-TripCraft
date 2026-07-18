@@ -986,9 +986,9 @@ const destinations = [
     "weather": "Pleasant 15–25°C, very heavy monsoon (Jun–Sep), cool winters",
     "avgTemperature": "20°C average",
     "bestTime": "October to March",
-    "nearbyAirport": "Mangalore Airport (IXE) — 130 km; Mysore (MyQ private) — 120 km; Bengaluru (BLR) — 250 km",
+    "nearbyAirport": "Mangalore Airport (IXE) — 130 km; Bengaluru (BLR) — 250 km",
     "metroAvailable": false,
-    "publicTransport": "KSRTC buses from Bengaluru and Mysore, private taxis",
+    "publicTransport": "KSRTC buses from Bengaluru, private taxis",
     "budget": "Moderate",
     "estimatedBudgetMin": 3000,
     "estimatedBudgetMax": 10000,
@@ -1648,120 +1648,6 @@ const destinations = [
     "totalReviews": 18
   },
   {
-    "name": "Andaman Islands",
-    "country": "India",
-    "state": "Andaman and Nicobar Islands",
-    "city": "Port Blair",
-    "category": "Beach",
-    "description": "India's tropical island paradise — crystal-clear turquoise lagoons, white sand beaches, bioluminescent plankton, and world-class scuba diving. One of Asia's best kept secrets.",
-    "history": "The Andamans served as a British penal colony for freedom fighters, most famously at Cellular Jail (Kala Pani). The Jarawa and Sentinelese tribes are among the world's last uncontacted peoples — legally protected from outside contact.",
-    "culture": "A mosaic of mainland Indian settlers, Bengali refugees, and indigenous Andamanese tribes. The Nicobari and Onge tribes have unique cultures. The local cuisine blends South Indian and Bengali with abundant fresh seafood.",
-    "language": "Hindi, Bengali, Tamil, Telugu, Nicobari (indigenous)",
-    "currency": "Indian Rupee (INR)",
-    "coordinates": {
-      "lat": 11.7401,
-      "lng": 92.6586
-    },
-    "latitude": 11.7401,
-    "longitude": 92.6586,
-    "imageUrl": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80",
-    "gallery": [
-      "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=600&q=80"
-    ],
-    "climate": "Tropical rainforest",
-    "weather": "Warm year-round (23–33°C), monsoon May–October, best Nov–April",
-    "avgTemperature": "28°C constant",
-    "bestTime": "November to April",
-    "nearbyAirport": "Veer Savarkar International Airport (IXZ) — 2 km from Port Blair",
-    "metroAvailable": false,
-    "publicTransport": "Government ferries between islands (book advance), private speedboats, autos in Port Blair",
-    "budget": "Moderate",
-    "estimatedBudgetMin": 4000,
-    "estimatedBudgetMax": 15000,
-    "attractions": [
-      "Radhanagar Beach (Havelock — Asia's best)",
-      "Cellular Jail & Light and Sound Show",
-      "Neil Island (Bharatpur Beach)",
-      "Baratang Island (limestone caves)",
-      "Ross Island (British ruins)",
-      "North Bay Island (snorkeling)"
-    ],
-    "hiddenGems": [
-      "Elephant Beach (Havelock — bioluminescence at night)",
-      "Lalaji Bay Beach (Long Island, no crowds)",
-      "Cinque Island (restricted, remote)",
-      "Jolly Buoy Island (best coral reefs)"
-    ],
-    "luxuryHotels": [
-      "Taj Exotica Andaman",
-      "Barefoot at Havelock",
-      "Munjoh Ocean Resort (Neil Island)"
-    ],
-    "budgetHotels": [
-      "Symphony Palms (Havelock)",
-      "Zostel Andaman",
-      "TSG Blue Resort (Neil)"
-    ],
-    "hotels": [
-      "Taj Exotica Andaman (Luxury)",
-      "Barefoot at Havelock (Moderate)",
-      "Zostel Havelock (Budget)"
-    ],
-    "restaurants": [
-      "Full Moon Café (Havelock)",
-      "Veg Worldff (Neil Island)",
-      "Amaya Restaurant (Taj)",
-      "Annapurna Café (Port Blair)"
-    ],
-    "streetFood": [
-      "Grilled seafood at Aberdeen Bazaar",
-      "Fish curry rice at local dhabas",
-      "Fresh coconut water everywhere"
-    ],
-    "localFoods": [
-      "Andaman Lobster",
-      "Fish Tikka",
-      "Prawn Biryani",
-      "Coconut crab (seasonal)",
-      "Fresh barracuda",
-      "Coconut-based curries"
-    ],
-    "shoppingAreas": [
-      "Aberdeen Bazaar (Port Blair)",
-      "Sagarika Handicrafts",
-      "Shell & coral jewelry shops (non-protected species only)"
-    ],
-    "nightlife": [
-      "Beach bonfires on Havelock",
-      "Bar at Barefoot Resort",
-      "Bioluminescent swim at Elephant Beach after dark (guided tours)"
-    ],
-    "adventureActivities": [
-      "Scuba diving at Barracuda City (Havelock)",
-      "Snorkeling at Elephant Beach",
-      "Sea walk at North Bay",
-      "Kayaking in mangroves",
-      "Glass-bottom boat rides"
-    ],
-    "familyActivities": [
-      "Cellular Jail (history lesson)",
-      "Samudrika Naval Marine Museum",
-      "Turtle nesting beach visits (seasonal)",
-      "Glass-bottom boats for kids"
-    ],
-    "coupleActivities": [
-      "Sunset at Radhanagar Beach",
-      "Private honeymoon water villas",
-      "Night swimming with bioluminescence",
-      "Couples scuba certification"
-    ],
-    "soloTravelTips": "Book inter-island ferries well in advance (government ferries sell out). Havelock (Swaraj Dweep) and Neil (Shaheed Dweep) are the most popular islands. Carry cash — digital payments are limited. Register your itinerary at Port Blair on arrival.",
-    "safetyScore": 9,
-    "averageRating": 4.9,
-    "totalReviews": 16
-  },
-  {
     "name": "Bengaluru",
     "country": "India",
     "state": "Karnataka",
@@ -1833,16 +1719,16 @@ const destinations = [
     "streetFood": [
       "Masala Dosa at MTR",
       "Obbattu (sweet flatbread)",
-      "Mysore Pak at Anand Sweets",
+      "Ghee Roast Dosa at Anand Sweets",
       "Darshinis (quick South Indian meals)"
     ],
     "localFoods": [
       "Ragi Mudde (local grain balls)",
       "Bisi Bele Bath",
-      "Mysore Masala Dosa",
+      "Masala Dosa",
       "Filter Coffee",
       "Avalakki (poha variant)",
-      "Mysore Pak"
+      "Dharwad Pedha"
     ],
     "shoppingAreas": [
       "Commercial Street",
@@ -1997,107 +1883,6 @@ const destinations = [
     "safetyScore": 7,
     "averageRating": 4.4,
     "totalReviews": 9
-  },
-  {
-    "name": "Mysore",
-    "country": "India",
-    "state": "Karnataka",
-    "city": "Mysore",
-    "category": "Heritage",
-    "description": "The cultural capital of Karnataka, famous for the majestic Mysore Palace, rich heritage, and vibrant Dasara festival.",
-    "history": "Formerly the capital of the Kingdom of Mysore ruled by the Wodeyar dynasty. A city of royal palaces, sandalwood, and silk.",
-    "culture": "Known for classical Carnatic music, Mysore style painting, and the historic Dasara procession.",
-    "language": "Kannada, English, Hindi",
-    "currency": "Indian Rupee (INR)",
-    "coordinates": {
-      "lat": 12.2958,
-      "lng": 76.6394
-    },
-    "latitude": 12.2958,
-    "longitude": 76.6394,
-    "imageUrl": "https://images.unsplash.com/photo-1590496793907-4c740b2f0a50?auto=format&fit=crop&w=800&q=80",
-    "gallery": [
-      "https://images.unsplash.com/photo-1600100397608-f010e42ec9a5?auto=format&fit=crop&w=600&q=80"
-    ],
-    "climate": "Tropical wet and dry",
-    "weather": "Warm summers (34°C), moderate monsoons, cool pleasant winters (15-28°C)",
-    "avgTemperature": "24°C average",
-    "bestTime": "October to March",
-    "nearbyAirport": "Mysore Airport (MYQ) or Bengaluru (BLR) — 170 km",
-    "metroAvailable": false,
-    "publicTransport": "KSRTC local buses, auto-rickshaws, Ola/Uber",
-    "budget": "Moderate",
-    "estimatedBudgetMin": 1500,
-    "estimatedBudgetMax": 5000,
-    "attractions": [
-      "Mysore Palace",
-      "Chamundi Hill",
-      "Brindavan Gardens",
-      "Mysore Zoo",
-      "St. Philomena's Church",
-      "Jaganmohan Palace"
-    ],
-    "hiddenGems": [
-      "Karanji Lake",
-      "Melukote heritage town (day trip)",
-      "Somanathapura Chennakesava Temple"
-    ],
-    "luxuryHotels": [
-      "Grand Mercure Mysore",
-      "Radisson Blu Plaza Mysore",
-      "Royal Orchid Metropole"
-    ],
-    "budgetHotels": [
-      "Zostel Mysore",
-      "Roamer's Sand Hostel",
-      "Hotel Roopa"
-    ],
-    "hotels": [
-      "Grand Mercure Mysore (Luxury)",
-      "Southern Star Mysore (Moderate)",
-      "Zostel Mysore (Budget)"
-    ],
-    "restaurants": [
-      "Mylari (famous for Masala Dosa)",
-      "Gufha Restaurant",
-      "Tiger Trail"
-    ],
-    "streetFood": [
-      "Mysore Pak (sweet)",
-      "Mysore Masala Dosa",
-      "Churumuri (spicy puffed rice)"
-    ],
-    "localFoods": [
-      "Mysore Masala Dosa",
-      "Mysore Pak",
-      "Bisi Bele Bath",
-      "Mysore Bonda"
-    ],
-    "shoppingAreas": [
-      "Devaraja Market",
-      "Sayyaji Rao Road (silk & sandalwood)"
-    ],
-    "nightlife": [
-      "Palace illumination (Sundays)",
-      "Pubs in Gokulam and Devaraj Urs road"
-    ],
-    "adventureActivities": [
-      "Skydiving at Mysore airport (seasonal)",
-      "Trekking up Chamundi steps"
-    ],
-    "familyActivities": [
-      "Mysore Zoo visit",
-      "Brindavan Gardens light show",
-      "Mysore Palace museum tour"
-    ],
-    "coupleActivities": [
-      "Sunset at Chamundi Hill",
-      "Walk around Karanji Lake"
-    ],
-    "soloTravelTips": "Mysore is extremely peaceful and safe. Renting a bicycle is a great way to explore the wide streets of Gokulam.",
-    "safetyScore": 9,
-    "averageRating": 4.5,
-    "totalReviews": 8
   },
   {
     "name": "Rishikesh",
@@ -2299,109 +2084,6 @@ const destinations = [
     "safetyScore": 9,
     "averageRating": 4.8,
     "totalReviews": 15
-  },
-  {
-    "name": "Darjeeling",
-    "country": "India",
-    "state": "West Bengal",
-    "city": "Darjeeling",
-    "category": "Hill Station",
-    "description": "Nestled in the lesser Himalayas, renowned for its black tea industry, spectacular views of Kanchenjunga, and the historic toy train.",
-    "history": "Developed as a health resort (sanatorium) by the British East India Company in the 1840s. Famous for high-quality Darjeeling tea plantations.",
-    "culture": "Rich cultural blend of Nepali, Tibetan, and Bengali traditions. Famous for tea-drinking etiquette, Tibetan monasteries, and mountaineering culture.",
-    "language": "Nepali, Bengali, Tibetan, English, Hindi",
-    "currency": "Indian Rupee (INR)",
-    "coordinates": {
-      "lat": 27.041,
-      "lng": 88.2627
-    },
-    "latitude": 27.041,
-    "longitude": 88.2627,
-    "imageUrl": "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80",
-    "gallery": [
-      "https://images.unsplash.com/photo-1626082895617-2c6de3476af7?auto=format&fit=crop&w=600&q=80"
-    ],
-    "climate": "Subtropical highland",
-    "weather": "Cool summers (15-25°C), heavy monsoons and fog, cold winters (2-10°C)",
-    "avgTemperature": "15°C average",
-    "bestTime": "October to December, March to May",
-    "nearbyAirport": "Bagdogra Airport (IXB) — 70 km; NJP Railway Station — 75 km",
-    "metroAvailable": false,
-    "publicTransport": "Shared jeeps (main transit between hill towns), private taxis, Toy Train",
-    "budget": "Moderate",
-    "estimatedBudgetMin": 2000,
-    "estimatedBudgetMax": 6000,
-    "attractions": [
-      "Tiger Hill (Kanchenjunga sunrise)",
-      "Darjeeling Himalayan Railway (UNESCO Toy Train)",
-      "Batasia Loop",
-      "Ghoom Monastery",
-      "Padmaja Naidu Himalayan Zoological Park",
-      "Himalayan Mountaineering Institute"
-    ],
-    "hiddenGems": [
-      "Rock Garden",
-      "Senchal Lake",
-      "Lepchajagat quiet pine forest village"
-    ],
-    "luxuryHotels": [
-      "Windamere Hotel (Historic heritage hotel)",
-      "Mayfair Darjeeling",
-      "Elgin Darjeeling"
-    ],
-    "budgetHotels": [
-      "Hideout Travel Home",
-      "Backpacker's Hostel Darjeeling",
-      "Hotel Dekeling"
-    ],
-    "hotels": [
-      "Mayfair Darjeeling (Luxury)",
-      "Elgin Darjeeling (Moderate)",
-      "Hideout Hostel (Budget)"
-    ],
-    "restaurants": [
-      "Glenary's Bakery & Restaurant",
-      "Keventers (breakfast with Kanchenjunga view)",
-      "Sonam's Kitchen"
-    ],
-    "streetFood": [
-      "Momos with spicy tomato chutney",
-      "Thukpa noodle soup",
-      "Chhurpi (local cheese)",
-      "Darjeeling Tea"
-    ],
-    "localFoods": [
-      "Momos",
-      "Thukpa",
-      "Nepali Thali (Gundruk, Bhat)",
-      "Traditional brewed tea"
-    ],
-    "shoppingAreas": [
-      "Mall Road (Chowrasta)",
-      "Tibetan Refugee Self Help Center (handicrafts)",
-      "Bhutanese Market"
-    ],
-    "nightlife": [
-      "Glenary's Pub",
-      "Joey's Pub (historic British-style tavern)"
-    ],
-    "adventureActivities": [
-      "Singalila Ridge trek to Sandakphu (highest peak in West Bengal)",
-      "Rock climbing at Tenzing Rock"
-    ],
-    "familyActivities": [
-      "Toy Train ride",
-      "Himalayan Zoo to see Red Pandas and Snow Leopards",
-      "Telescope view of Kanchenjunga"
-    ],
-    "coupleActivities": [
-      "Stroll in the tea gardens",
-      "Sunrise watch at Tiger Hill"
-    ],
-    "soloTravelTips": "Shared jeeps are cheap and connect all major places. Keep an umbrella handy as weather changes quickly.",
-    "safetyScore": 9,
-    "averageRating": 4.5,
-    "totalReviews": 7
   },
   {
     "name": "Srinagar",
@@ -2928,12 +2610,13 @@ const seedDatabaseInline = async (shouldExit = false) => {
       console.log('👤 Seeding Users...');
       for (const u of users) {
         // Enforce hashed passwords during registration/seeding for production readiness
+        const { password, ...userData } = u;
         const bcrypt = require('bcryptjs');
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(u.password, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
         await User.create({
-          ...u,
-          password: hashedPassword,
+          ...userData,
+          hashedPassword: hashedPassword,
           otpVerified: true,
           emailVerified: true
         });
@@ -2944,27 +2627,41 @@ const seedDatabaseInline = async (shouldExit = false) => {
 
     const allDestinations = [...destinations, ...supplementaryDestinations];
     const destCount = await Destination.countDocuments({});
+    const { getDestinationImageUrl } = require('./destinationImages');
+    
     if (destCount === 0) {
       console.log(`🌍 Seeding ${allDestinations.length} Destinations...`);
       for (const d of allDestinations) {
-        await Destination.create(d);
+        const correctImg = getDestinationImageUrl(d.name);
+        await Destination.create({
+          ...d,
+          imageUrl: correctImg,
+          gallery: [correctImg]
+        });
       }
       console.log(`✅ Database seeded successfully with ${allDestinations.length} destinations!`);
     } else {
-      console.log('🌍 Destinations are already seeded. Checking for missing destinations...');
+      console.log('🌍 Destinations are already seeded. Checking and updating image URLs...');
       let added = 0;
+      let updated = 0;
       for (const d of allDestinations) {
         const exists = await Destination.findOne({ name: d.name });
+        const correctImg = getDestinationImageUrl(d.name);
         if (!exists) {
-          await Destination.create(d);
+          await Destination.create({
+            ...d,
+            imageUrl: correctImg,
+            gallery: [correctImg]
+          });
           added++;
+        } else {
+          exists.imageUrl = correctImg;
+          exists.gallery = [correctImg];
+          await exists.save();
+          updated++;
         }
       }
-      if (added > 0) {
-        console.log(`✅ Seeded ${added} missing destinations.`);
-      } else {
-        console.log('🌍 All seeded destinations are already present.');
-      }
+      console.log(`✅ Seeded ${added} missing destinations and updated ${updated} existing destinations with correct unique images.`);
     }
 
     if (shouldExit) process.exit(0);

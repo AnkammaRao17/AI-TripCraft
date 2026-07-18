@@ -52,13 +52,19 @@
       <div class="glass-card tabs-card">
         <div class="tabs-nav">
           <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'schedule'" (click)="activeTab.set('schedule')">
-            <mat-icon>calendar_month</mat-icon> Schedule
-          </button>
-          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'packing'" (click)="activeTab.set('packing')">
-            <mat-icon>backpack</mat-icon> Packing List
+            <mat-icon>calendar_month</mat-icon> Timeline
           </button>
           <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'hotels'" (click)="activeTab.set('hotels')">
             <mat-icon>apartment</mat-icon> Hotels
+          </button>
+          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'restaurants'" (click)="activeTab.set('restaurants')">
+            <mat-icon>restaurant</mat-icon> Restaurants
+          </button>
+          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'attractions'" (click)="activeTab.set('attractions')">
+            <mat-icon>explore</mat-icon> Attractions
+          </button>
+          <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'packing'" (click)="activeTab.set('packing')">
+            <mat-icon>backpack</mat-icon> Packing List
           </button>
           <button mat-button class="tab-nav-btn" [class.active]="activeTab() === 'tips'" (click)="activeTab.set('tips')">
             <mat-icon>lightbulb</mat-icon> Tips
@@ -66,12 +72,12 @@
         </div>
       </div>
 
-      <!-- Schedule Tab -->
+      <!-- Schedule Tab (Google Maps Timeline Style) -->
       <div class="glass-card plans-card animate-fade" *ngIf="activeTab() === 'schedule'">
-        <h2 class="card-heading"><mat-icon>route</mat-icon> Day-by-Day Schedule</h2>
+        <h2 class="card-heading"><mat-icon>route</mat-icon> Hourly Google Maps Timeline</h2>
         
         <mat-tab-group class="days-tab-group" animationDuration="250ms">
-          <mat-tab *ngFor="let day of itinerary()?.days" [label]="'Day ' + day.dayNumber">
+          <mat-tab *ngFor="let day of itinerary()?.days; let dayIdx = index" [label]="'Day ' + day.dayNumber">
             <div class="day-plan-content">
               <!-- Day Editing Actions -->
               <div class="day-edit-action-row">
@@ -88,71 +94,136 @@
                 </div>
               </div>
 
-              <!-- Morning Plan -->
-              <div class="plan-block morning">
-                <div class="block-icon bg-amber">
-                  <mat-icon>light_mode</mat-icon>
+              <!-- Sleek Timeline Connector Component -->
+              <div class="timeline-v-container">
+                
+                <!-- START NODE: Hotel -->
+                <div class="timeline-v-item hotel-start">
+                  <div class="timeline-marker bg-indigo">
+                    <mat-icon>hotel</mat-icon>
+                  </div>
+                  <div class="timeline-details">
+                    <span class="timeline-time">08:00 AM</span>
+                    <h4 class="timeline-title">Breakfast at Stay</h4>
+                    <p class="timeline-desc">Prepare for the day. Head out after breakfast.</p>
+                  </div>
                 </div>
-                <div class="block-details">
-                  <h4 class="block-title">Morning</h4>
-                  <p class="block-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.morningPlan }}</p>
-                  <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
-                    <textarea matInput rows="3" [(ngModel)]="editMorningPlan" name="editMorning"></textarea>
-                  </mat-form-field>
+
+                <!-- ROUTE SEGMENT 1 -->
+                <div class="timeline-route-segment" *ngIf="routeSegments()[dayIdx]?.[0] as seg">
+                  <div class="segment-line"></div>
+                  <div class="segment-card glass-card">
+                    <mat-icon class="segment-icon">directions_car</mat-icon>
+                    <span class="segment-text">Take a {{ seg.mode }} to {{ seg.to }} ({{ seg.distance }}, {{ seg.duration }})</span>
+                    <button mat-button class="navigate-btn btn-primary" (click)="openNavigation(seg.from, seg.to)">
+                      <mat-icon>navigation</mat-icon> Navigate
+                    </button>
+                  </div>
+                </div>
+
+                <!-- MORNING PLAN -->
+                <div class="timeline-v-item morning-plan">
+                  <div class="timeline-marker bg-amber">
+                    <mat-icon>light_mode</mat-icon>
+                  </div>
+                  <div class="timeline-details">
+                    <span class="timeline-time">09:30 AM</span>
+                    <h4 class="timeline-title">Morning Tour Stop</h4>
+                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.morningPlan }}</p>
+                    <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
+                      <textarea matInput rows="3" [(ngModel)]="editMorningPlan" name="editMorning"></textarea>
+                    </mat-form-field>
+                    
+                    <div class="activity-meta" *ngIf="day.recommendedAttractions[0] as firstAttr">
+                      <span class="badge"><mat-icon>explore</mat-icon> Visit: {{ firstAttr }}</span>
+                      <button mat-button class="btn-text" (click)="openNavigation(trip()?.destination || '', firstAttr)">
+                        Open Maps
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROUTE SEGMENT 2 -->
+                <div class="timeline-route-segment" *ngIf="routeSegments()[dayIdx]?.[1] as seg">
+                  <div class="segment-line"></div>
+                  <div class="segment-card glass-card">
+                    <mat-icon class="segment-icon">directions_walk</mat-icon>
+                    <span class="segment-text">Walk to Lunch at {{ seg.to }} ({{ seg.distance }}, {{ seg.duration }})</span>
+                    <button mat-button class="navigate-btn btn-primary" (click)="openNavigation(seg.from, seg.to)">
+                      <mat-icon>navigation</mat-icon> Navigate
+                    </button>
+                  </div>
+                </div>
+
+                <!-- AFTERNOON PLAN -->
+                <div class="timeline-v-item afternoon-plan">
+                  <div class="timeline-marker bg-orange">
+                    <mat-icon>wb_twilight</mat-icon>
+                  </div>
+                  <div class="timeline-details">
+                    <span class="timeline-time">01:30 PM</span>
+                    <h4 class="timeline-title">Lunch & Afternoon Sights</h4>
+                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.afternoonPlan }}</p>
+                    <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
+                      <textarea matInput rows="3" [(ngModel)]="editAfternoonPlan" name="editAfternoon"></textarea>
+                    </mat-form-field>
+
+                    <div class="activity-meta" *ngIf="day.restaurants[0] as firstRest">
+                      <span class="badge"><mat-icon>restaurant</mat-icon> Dine: {{ firstRest }}</span>
+                      <button mat-button class="btn-text" (click)="openNavigation(day.recommendedAttractions[0] || '', firstRest)">
+                        Open Maps
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROUTE SEGMENT 3 -->
+                <div class="timeline-route-segment" *ngIf="routeSegments()[dayIdx]?.[2] as seg">
+                  <div class="segment-line"></div>
+                  <div class="segment-card glass-card">
+                    <mat-icon class="segment-icon">directions_car</mat-icon>
+                    <span class="segment-text">Drive to Evening Attraction ({{ seg.distance }}, {{ seg.duration }})</span>
+                    <button mat-button class="navigate-btn btn-primary" (click)="openNavigation(seg.from, seg.to)">
+                      <mat-icon>navigation</mat-icon> Navigate
+                    </button>
+                  </div>
+                </div>
+
+                <!-- EVENING PLAN -->
+                <div class="timeline-v-item evening-plan">
+                  <div class="timeline-marker bg-purple">
+                    <mat-icon>bedtime</mat-icon>
+                  </div>
+                  <div class="timeline-details">
+                    <span class="timeline-time">06:00 PM</span>
+                    <h4 class="timeline-title">Evening Entertainment</h4>
+                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.eveningPlan }}</p>
+                    <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
+                      <textarea matInput rows="3" [(ngModel)]="editEveningPlan" name="editEvening"></textarea>
+                    </mat-form-field>
+
+                    <div class="activity-meta" *ngIf="day.recommendedAttractions[1] as secondAttr">
+                      <span class="badge"><mat-icon>local_activity</mat-icon> Spot: {{ secondAttr }}</span>
+                      <button mat-button class="btn-text" (click)="openNavigation(day.restaurants[0] || '', secondAttr)">
+                        Open Maps
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Afternoon Plan -->
-              <div class="plan-block afternoon">
-                <div class="block-icon bg-orange">
-                  <mat-icon>wb_twilight</mat-icon>
-                </div>
-                <div class="block-details">
-                  <h4 class="block-title">Afternoon</h4>
-                  <p class="block-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.afternoonPlan }}</p>
-                  <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
-                    <textarea matInput rows="3" [(ngModel)]="editAfternoonPlan" name="editAfternoon"></textarea>
-                  </mat-form-field>
-                </div>
-              </div>
-
-              <!-- Evening Plan -->
-              <div class="plan-block evening">
-                <div class="block-icon bg-indigo">
-                  <mat-icon>bedtime</mat-icon>
-                </div>
-                <div class="block-details">
-                  <h4 class="block-title">Evening</h4>
-                  <p class="block-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.eveningPlan }}</p>
-                  <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
-                    <textarea matInput rows="3" [(ngModel)]="editEveningPlan" name="editEvening"></textarea>
-                  </mat-form-field>
-                </div>
-              </div>
-
-              <!-- Culinary & Sights Row -->
-              <div class="plan-details-grid">
+              <!-- Culinary & Sights Summary Row -->
+              <div class="plan-details-grid margin-top-md">
                 <div class="detail-box">
-                  <span class="box-label"><mat-icon>restaurant</mat-icon> Eats & Food</span>
+                  <span class="box-label"><mat-icon>local_dining</mat-icon> Local Foods to Try</span>
                   <div class="chips-row">
                     <span class="food-chip" *ngFor="let f of day.localFood">{{ f }}</span>
                   </div>
                 </div>
 
                 <div class="detail-box">
-                  <span class="box-label"><mat-icon>museum</mat-icon> Sights</span>
-                  <span class="attraction-tag" *ngFor="let attr of day.recommendedAttractions">
-                    <mat-icon>explore</mat-icon> {{ attr }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Daily Transportation Tips -->
-              <div class="plan-footer-notes" *ngIf="day.transportationTips || editingDay() === day.dayNumber">
-                <mat-icon>commute</mat-icon>
-                <div class="full-width">
-                  <span class="note-label">Transit Note:</span>
-                  <p class="note-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.transportationTips }}</p>
+                  <span class="box-label"><mat-icon>commute</mat-icon> Transit Notes</span>
+                  <p class="note-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.transportationTips || 'Walk and auto rickshaws are best.' }}</p>
                   <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
                     <input matInput [(ngModel)]="editTransitTips" name="editTransit" />
                   </mat-form-field>
@@ -161,7 +232,7 @@
 
               <!-- Daily Estimated Budget -->
               <div class="day-cost-badge">
-                <span>Estimated Daily Budget:</span>
+                <span>Estimated Day Cost:</span>
                 <strong *ngIf="editingDay() !== day.dayNumber">₹{{ day.estimatedDailyBudget | number }}</strong>
                 <mat-form-field appearance="outline" *ngIf="editingDay() === day.dayNumber" class="budget-input">
                   <input matInput type="number" [(ngModel)]="editDailyBudget" name="editBudget" />
@@ -171,6 +242,154 @@
             </div>
           </mat-tab>
         </mat-tab-group>
+      </div>
+
+      <!-- Hotels Tab (Premium Lodging Cards) -->
+      <div class="glass-card plans-card animate-fade" *ngIf="activeTab() === 'hotels'">
+        <h2 class="card-heading"><mat-icon>apartment</mat-icon> Recommended Accommodations</h2>
+        <p class="panel-subtitle">Sleek, highly-rated stays in {{ trip()?.destination }} matched to your budget preferences.</p>
+
+        <div class="hotels-cards-container">
+          <div class="glass-card hotel-h-card hover-lift" *ngFor="let hotel of enrichedHotels()">
+            <div class="hotel-img-column">
+              <img [src]="hotel.imageUrl" [alt]="hotel.name" class="hotel-room-img" />
+              <span class="hotel-rating">
+                <mat-icon>star</mat-icon> {{ hotel.rating }}
+              </span>
+            </div>
+            
+            <div class="hotel-info-column">
+              <div class="hotel-header">
+                <h3 class="hotel-name">{{ hotel.name }}</h3>
+                <span class="hotel-dist">{{ hotel.distance }}</span>
+              </div>
+              
+              <div class="hotel-amenities-row">
+                <span class="amenity-chip" *ngFor="let am of hotel.amenities">{{ am }}</span>
+              </div>
+
+              <div class="hotel-footer">
+                <div class="hotel-pricing">
+                  <span class="price-label">Price per night</span>
+                  <span class="price-val">₹{{ hotel.price | number }}</span>
+                </div>
+                <div class="hotel-actions">
+                  <button mat-button class="btn-secondary" (click)="openNavigation(trip()?.destination || '', hotel.name)">
+                    <mat-icon>map</mat-icon> View Map
+                  </button>
+                  <button mat-raised-button class="btn-primary font-sm" (click)="openNavigation(hotel.name, 'Tourist places')">
+                    Book Stay
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Restaurants Tab (Sleek Food Cards) -->
+      <div class="glass-card plans-card animate-fade" *ngIf="activeTab() === 'restaurants'">
+        <h2 class="card-heading"><mat-icon>local_dining</mat-icon> Recommended Dining & Eats</h2>
+        <p class="panel-subtitle">Exquisite culinary spots and restaurants handpicked for you.</p>
+
+        <div class="restaurants-cards-grid">
+          <div class="glass-card restaurant-card hover-scale" *ngFor="let rest of enrichedRestaurants()">
+            <div class="rest-img-wrapper">
+              <img [src]="rest.imageUrl" [alt]="rest.name" class="rest-img" />
+              <span class="rest-rating">
+                <mat-icon>star</mat-icon> {{ rest.rating }}
+              </span>
+            </div>
+            
+            <div class="rest-content">
+              <span class="rest-cuisine">{{ rest.cuisine }}</span>
+              <h3 class="rest-name">{{ rest.name }}</h3>
+              <p class="rest-hours"><mat-icon>schedule</mat-icon> {{ rest.hours }}</p>
+              
+              <div class="rest-footer">
+                <div class="rest-pricing">
+                  <span>Avg Cost:</span>
+                  <strong>₹{{ rest.price }} for two</strong>
+                </div>
+                <button mat-icon-button class="rest-nav-btn btn-primary" (click)="openNavigation(trip()?.destination || '', rest.name)" title="Navigate">
+                  <mat-icon>navigation</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attractions Tab (Rich Sightseeing Cards) -->
+      <div class="glass-card plans-card animate-fade" *ngIf="activeTab() === 'attractions'">
+        <h2 class="card-heading"><mat-icon>explore</mat-icon> Sightseeing & Attractions</h2>
+        <p class="panel-subtitle">Must-visit historical sites, natural wonders, and local points of interest.</p>
+
+        <div class="attractions-cards-grid">
+          <div class="glass-card attraction-detail-card hover-lift" *ngFor="let attr of enrichedAttractions()">
+            <div class="attr-img-wrapper">
+              <img [src]="attr.imageUrl" [alt]="attr.name" class="attr-img" />
+              <span class="attr-distance"><mat-icon>location_on</mat-icon> {{ attr.distance }}</span>
+            </div>
+
+            <div class="attr-content">
+              <h3 class="attr-name">{{ attr.name }}</h3>
+              <p class="attr-history">{{ attr.history }}</p>
+              
+              <div class="attr-meta-grid">
+                <div>
+                  <span class="label">Hours</span>
+                  <span class="val">{{ attr.hours }}</span>
+                </div>
+                <div>
+                  <span class="label">Entry Fee</span>
+                  <span class="val">{{ attr.fee }}</span>
+                </div>
+                <div>
+                  <span class="label">Time Required</span>
+                  <span class="val">{{ attr.timeRequired }}</span>
+                </div>
+                <div>
+                  <span class="label">Best Time</span>
+                  <span class="val">{{ attr.bestTime }}</span>
+                </div>
+              </div>
+
+              <div class="attr-footer">
+                <button mat-raised-button class="btn-primary w-100" (click)="openNavigation(trip()?.destination || '', attr.name)">
+                  <mat-icon>navigation</mat-icon> Navigate & Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Hidden Gems Section -->
+        <div class="hidden-gems-section" *ngIf="itinerary()?.hiddenGems && itinerary()?.hiddenGems!.length > 0" style="margin-top: 30px;">
+          <h3 class="card-heading" style="color: var(--primary); display: flex; align-items: center; gap: 8px;"><mat-icon>auto_awesome</mat-icon> AI Recommended Hidden Gems</h3>
+          <p class="panel-subtitle">Off-the-beaten-path locations recommended by local travel experts.</p>
+          <div class="tips-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+            <div *ngFor="let gem of itinerary()?.hiddenGems" style="background: var(--surface-2); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); display: flex; gap: 12px;">
+              <mat-icon style="color: var(--primary); flex-shrink: 0; font-size: 20px; width: 20px; height: 20px;">park</mat-icon>
+              <div>
+                <h4 style="margin: 0 0 4px 0; font-weight: 700; font-size: 14.5px; color: var(--text-primary);">{{ gem }}</h4>
+                <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.45;">An exclusive, peaceful spot highly valued by local residents for scenic sightseeing away from standard tourist crowds.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best Photography Spots Section -->
+        <div class="photography-spots-section" *ngIf="itinerary()?.photographySpots && itinerary()?.photographySpots!.length > 0" style="margin-top: 30px;">
+          <h3 class="card-heading" style="color: #ec4899; display: flex; align-items: center; gap: 8px;"><mat-icon>photo_camera</mat-icon> Best Photography Locations</h3>
+          <p class="panel-subtitle">Top Instagram-worthy backgrounds in this region.</p>
+          <div class="photography-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div *ngFor="let photo of itinerary()?.photographySpots" style="background: var(--surface-2); border: 1px solid var(--border); padding: 12px 16px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 10px;">
+              <mat-icon style="color: #ec4899; flex-shrink: 0;">camera_alt</mat-icon>
+              <span style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">{{ photo }}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Packing Checklist Tab -->
@@ -211,28 +430,6 @@
         </div>
       </div>
 
-      <!-- Lodging Recommendations Tab -->
-      <div class="glass-card hotels-card animate-fade" *ngIf="activeTab() === 'hotels'">
-        <h2 class="card-heading"><mat-icon>apartment</mat-icon> Hotel Suggestions</h2>
-        <p class="panel-subtitle">Tailored hotel suggestions matching your selected budget tier.</p>
-
-        <div class="hotels-list-grid">
-          <div class="hotel-recommendation-card hover-scale" *ngFor="let hotel of itinerary()?.hotels">
-            <div class="hotel-card-icon-wrapper">
-              <mat-icon>hotel</mat-icon>
-            </div>
-            <div class="hotel-card-body">
-              <span class="hotel-name">{{ hotel }}</span>
-              <span class="hotel-desc">Budget-friendly stay matching trip specifications.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="no-hotels-placeholder" *ngIf="!itinerary()?.hotels || itinerary()?.hotels?.length === 0">
-          <p>No lodging suggestions found for this itinerary style.</p>
-        </div>
-      </div>
-
       <!-- General AI Travel Tips Tab -->
       <div class="glass-card travel-tips-card animate-fade" *ngIf="activeTab() === 'tips'">
         <h3 class="card-heading"><mat-icon>tips_and_updates</mat-icon> Travel Recommendations</h3>
@@ -265,64 +462,57 @@
         <div class="no-tips-placeholder" *ngIf="!itinerary()?.travelTips || itinerary()?.travelTips?.length === 0" style="text-align: center; color: var(--text-secondary); padding: 24px 0;">
           <p>No travel recommendations yet. Type a tip above and click Add!</p>
         </div>
+
+        <!-- Local Safety Guidelines -->
+        <div class="safety-tips-section" *ngIf="itinerary()?.safetyTips && itinerary()?.safetyTips!.length > 0" style="margin-top: 24px; padding-top: 20px; border-top: 1px dashed var(--border);">
+          <h4 style="font-weight: 700; margin-bottom: 12px; color: var(--danger); display: flex; align-items: center; gap: 8px;">
+            <mat-icon>security</mat-icon> Local Safety Guidelines
+          </h4>
+          <ul class="tips-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+            <li *ngFor="let safety of itinerary()?.safetyTips" style="display: flex; align-items: center; gap: 8px; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.12); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13.5px; color: var(--text-secondary);">
+              <mat-icon style="color: var(--danger); flex-shrink: 0; font-size: 18px; width: 18px; height: 18px;">info</mat-icon>
+              <span>{{ safety }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <!-- Right Column: Map, Budget Breakdown, Weather Forecast -->
+    <!-- Right Column: Route Roadmaps, Budget Breakdown, Weather Forecast -->
     <div class="itinerary-sidebar">
       
-      <!-- Interactive Maps Mockup -->
+      <!-- Route Cards Timeline map substitute -->
       <div class="glass-card map-card">
-        <h3 class="card-heading"><mat-icon>map</mat-icon> Live Interactive Map</h3>
-        
-        <!-- Category Toggles -->
-        <div class="map-toggles">
-          <button mat-button class="toggle-btn" 
-                  [class.active]="activeMapCategory() === 'attractions'" 
-                  (click)="activeMapCategory.set('attractions')">
-            Attractions
-          </button>
-          <button mat-button class="toggle-btn" 
-                  [class.active]="activeMapCategory() === 'hotels'" 
-                  (click)="activeMapCategory.set('hotels')">
-            Hotels
-          </button>
-          <button mat-button class="toggle-btn" 
-                  [class.active]="activeMapCategory() === 'restaurants'" 
-                  (click)="activeMapCategory.set('restaurants')">
-            Eats
-          </button>
-          <button mat-button class="toggle-btn" 
-                  [class.active]="activeMapCategory() === 'airports'" 
-                  (click)="activeMapCategory.set('airports')">
-            Airports
-          </button>
-        </div>
+        <h3 class="card-heading"><mat-icon>alt_route</mat-icon> Route Connections</h3>
+        <p class="panel-subtitle">Day roadmap between key tour stops.</p>
 
-        <!-- High Fidelity Map Grid mockup -->
-        <div class="map-viewport">
-          <div class="map-grid-lines"></div>
-          
-          <!-- Mock Markers Render -->
-          <div class="map-marker-node" 
-               *ngFor="let marker of mapMarkers(); let idx = index"
-               [ngStyle]="{'top': (30 + (idx * 20)) + '%', 'left': (25 + (idx * 30)) + '%'}"
-               [title]="marker.name">
-            <mat-icon class="marker-pin" [color]="activeMapCategory() === 'hotels' ? 'primary' : 'warn'">
-              {{ activeMapCategory() === 'hotels' ? 'hotel' : activeMapCategory() === 'restaurants' ? 'restaurant' : activeMapCategory() === 'airports' ? 'flight_land' : 'location_on' }}
-            </mat-icon>
-            <div class="marker-popup">
-              <p class="popup-name">{{ marker.name }}</p>
-              <p class="popup-desc">{{ marker.details }}</p>
+        <!-- Dynamic Day Route Roadmaps -->
+        <div class="sidebar-route-map">
+          <div class="route-map-segment" *ngFor="let seg of routeSegments()[0]; let last = last">
+            <div class="route-node">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ seg.from }}</span>
+            </div>
+            
+            <div class="route-arrow-line">
+              <span class="route-mode-text">{{ seg.mode }} ({{ seg.distance }})</span>
+              <mat-icon class="arrow-down">arrow_downward</mat-icon>
+            </div>
+
+            <div class="route-node end" *ngIf="last">
+              <mat-icon>place</mat-icon>
+              <span>{{ seg.to }}</span>
             </div>
           </div>
-
-          <span class="map-location-tag">Map centered on {{ trip()?.destination }}</span>
         </div>
+
+        <button mat-raised-button class="btn-primary w-100 margin-top-md" (click)="openNavigation(trip()?.destination || '', 'Hotels & Attractions')">
+          <mat-icon>map</mat-icon> Open Google Maps
+        </button>
       </div>
 
       <!-- Estimated Cost Budget Planner Card -->
-      <div class="glass-card budget-planner-card" *ngIf="trip()?.estimatedBudgetBreakdown">
+      <div class="glass-card budget-planner-card" *ngIf="detailedBudget() as budget">
         <h3 class="card-heading"><mat-icon>calculate</mat-icon> Budget Cost Calculator</h3>
         
         <div class="budget-items-list">
@@ -330,45 +520,82 @@
           <div class="budget-item-row">
             <div class="item-label-group">
               <mat-icon>hotel</mat-icon>
-              <span>Accommodations</span>
+              <span>Accommodation Stays</span>
             </div>
-            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.hotelCost | number }}</span>
+            <span class="item-cost">₹{{ budget.hotel | number }}</span>
           </div>
 
           <!-- Food -->
           <div class="budget-item-row">
             <div class="item-label-group">
               <mat-icon>restaurant</mat-icon>
-              <span>Meals & Dining</span>
+              <span>Meals & Food Guide</span>
             </div>
-            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.foodCost | number }}</span>
+            <span class="item-cost">₹{{ budget.food | number }}</span>
           </div>
 
           <!-- Transport -->
           <div class="budget-item-row">
             <div class="item-label-group">
               <mat-icon>commute</mat-icon>
-              <span>Transportation</span>
+              <span>Transportation & Fuel</span>
             </div>
-            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.transportCost | number }}</span>
+            <span class="item-cost">₹{{ budget.transport | number }}</span>
           </div>
 
           <!-- Attractions -->
           <div class="budget-item-row">
             <div class="item-label-group">
               <mat-icon>local_activity</mat-icon>
-              <span>Attractions & Sights</span>
+              <span>Sightseeing Tickets</span>
             </div>
-            <span class="item-cost">₹{{ trip()?.estimatedBudgetBreakdown?.attractionsCost | number }}</span>
+            <span class="item-cost">₹{{ budget.tickets | number }}</span>
+          </div>
+
+          <!-- Shopping -->
+          <div class="budget-item-row">
+            <div class="item-label-group">
+              <mat-icon>shopping_bag</mat-icon>
+              <span>Shopping & Souvenirs</span>
+            </div>
+            <span class="item-cost">₹{{ budget.shopping | number }}</span>
+          </div>
+
+          <!-- Emergency -->
+          <div class="budget-item-row">
+            <div class="item-label-group">
+              <mat-icon>health_and_safety</mat-icon>
+              <span>Emergency Buffer</span>
+            </div>
+            <span class="item-cost">₹{{ budget.emergency | number }}</span>
+          </div>
+
+          <!-- Taxes -->
+          <div class="budget-item-row">
+            <div class="item-label-group">
+              <mat-icon>receipt</mat-icon>
+              <span>GST & Services (5%)</span>
+            </div>
+            <span class="item-cost">₹{{ budget.taxes | number }}</span>
           </div>
 
           <mat-divider class="my-sm"></mat-divider>
 
           <!-- Total -->
           <div class="budget-total-row">
-            <span>Total Estimated Budget</span>
-            <span class="total-cost">₹{{ trip()?.estimatedBudgetBreakdown?.total | number }}</span>
+            <span>Grand Total Budget</span>
+            <span class="total-cost text-indigo">₹{{ budget.grandTotal | number }}</span>
           </div>
+        </div>
+
+        <!-- AI Budget Optimization text -->
+        <div class="ai-budget-opt-box" *ngIf="itinerary()?.budgetOptimization" style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.12); border-radius: var(--radius-sm); padding: 14px; margin-top: 16px;">
+          <p style="margin: 0; font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--primary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">auto_awesome</mat-icon> AI Budget Optimizer Advice
+          </p>
+          <p style="margin: 6px 0 0 0; font-size: 12.5px; line-height: 1.45; color: var(--text-secondary);">
+            {{ itinerary()?.budgetOptimization }}
+          </p>
         </div>
       </div>
 
@@ -415,6 +642,14 @@
                 <span class="fc-min">{{ fc.minTemp }}°</span>
               </div>
               <span class="fc-rain" *ngIf="fc.rainChance > 0">💧 {{ fc.rainChance }}%</span>
+            </div>
+          </div>
+          <!-- Best Visiting Time warning/advice -->
+          <div class="best-time-box" *ngIf="itinerary()?.bestVisitingTime" style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-start;">
+            <mat-icon style="color: var(--primary); font-size: 18px; width: 18px; height: 18px; margin-top: 2px;">info</mat-icon>
+            <div>
+              <span style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted); display: block;">Best Time to Visit</span>
+              <p style="margin: 2px 0 0 0; font-size: 12.5px; line-height: 1.45; color: var(--text-secondary);">{{ itinerary()?.bestVisitingTime }}</p>
             </div>
           </div>
         </div>

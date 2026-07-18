@@ -11,7 +11,7 @@ export class ThemeService {
     // Load initial theme on service initialization
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem(this.THEME_KEY);
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const prefersDark = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
       this.isDarkMode.set(savedTheme === 'dark' || (!savedTheme && prefersDark));
     }
 

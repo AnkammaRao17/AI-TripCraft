@@ -64,6 +64,11 @@ export interface Itinerary {
   travelTips: string[];
   packingList?: string[];
   hotels?: string[];
+  hiddenGems?: string[];
+  safetyTips?: string[];
+  photographySpots?: string[];
+  bestVisitingTime?: string;
+  budgetOptimization?: string;
   createdAt?: string;
   updatedAt?: string;
 }

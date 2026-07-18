@@ -1,82 +1,137 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 // Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
 // ============================================================
 // GLOBAL THEME VARIABLES
 // ============================================================
 :root, [data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f1f5f9;
+  --background: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-2: #F1F5F9;
 
-  --text-primary: #0f172a;
+  --text-primary: #111827;
   --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text-muted: #94A3B8;
 
-  --accent-primary: #6366f1;
-  --accent-secondary: #a855f7;
-  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  --primary: #6D5DF6;
+  --primary-hover: #5A4AF4;
+  --secondary: #8B5CF6;
+  --accent: #14B8A6;
+  
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
 
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+  --title: #111827;
+  --subtitle: #475569;
+  --body: #64748B;
+  --muted: #94A3B8;
 
-  --border-color: #e2e8f0;
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+  --border: #E5E7EB;
+  --card: #FFFFFF;
+  --primary-gradient: linear-gradient(135deg, #6D5DF6 0%, #8B5CF6 100%);
 
-  --toast-success-bg: #10b981;
-  --toast-error-bg: #ef4444;
+  // Backward compatibility mappings
+  --bg-primary: var(--background);
+  --bg-secondary: var(--surface);
+  --bg-tertiary: var(--surface-2);
+  --text-muted: var(--text-muted);
+  --accent-primary: var(--primary);
+  --accent-secondary: var(--secondary);
+  --accent-gradient: var(--primary-gradient);
+  --border-color: var(--border);
+  --toast-success-bg: var(--success);
+  --toast-error-bg: var(--danger);
+
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(17, 24, 39, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(17, 24, 39, 0.04);
+
+  --card-shadow: 0 4px 6px -1px rgba(17, 24, 39, 0.05), 0 2px 4px -2px rgba(17, 24, 39, 0.05);
+  --hover-shadow: 0 10px 15px -3px rgba(17, 24, 39, 0.08), 0 4px 6px -4px rgba(17, 24, 39, 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  --anim-speed: 0.3s;
 
   // Material MDC variables - LIGHT MODE
-  --mat-form-field-label-text-color: #475569;
-  --mat-form-field-outline-color: #e2e8f0;
-  --mat-form-field-focused-outline-color: #6366f1;
-  --mdc-outlined-text-field-label-text-color: #475569;
-  --mdc-outlined-text-field-input-text-color: #0f172a;
+  --mat-form-field-label-text-color: var(--text-secondary);
+  --mat-form-field-outline-color: var(--border);
+  --mat-form-field-focused-outline-color: var(--primary);
+  --mdc-outlined-text-field-label-text-color: var(--text-secondary);
+  --mdc-outlined-text-field-input-text-color: var(--text-primary);
   --mdc-outlined-text-field-outline-color: #cbd5e1;
-  --mdc-outlined-text-field-hover-outline-color: #6366f1;
-  --mdc-outlined-text-field-focus-outline-color: #6366f1;
-  --mat-select-trigger-text-color: #0f172a;
-  --mat-option-label-text-color: #0f172a;
-  --mat-option-selected-state-label-text-color: #6366f1;
-  --mat-stepper-header-label-text-color: #475569;
-  --mat-stepper-header-selected-state-label-text-color: #6366f1;
-  --mat-stepper-header-edit-state-label-text-color: #6366f1;
-  --mat-stepper-header-done-state-label-text-color: #10b981;
-  --mat-tab-header-label-text-color: #475569;
-  --mat-tab-header-active-label-text-color: #6366f1;
-  --mdc-tab-indicator-active-indicator-color: #6366f1;
-  --mat-menu-item-label-text-color: #0f172a;
+  --mdc-outlined-text-field-hover-outline-color: var(--primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--primary);
+  --mat-select-trigger-text-color: var(--text-primary);
+  --mat-option-label-text-color: var(--text-primary);
+  --mat-option-selected-state-label-text-color: var(--primary);
+  --mat-stepper-header-label-text-color: var(--text-secondary);
+  --mat-stepper-header-selected-state-label-text-color: var(--primary);
+  --mat-stepper-header-edit-state-label-text-color: var(--primary);
+  --mat-stepper-header-done-state-label-text-color: var(--success);
+  --mat-tab-header-label-text-color: var(--text-secondary);
+  --mat-tab-header-active-label-text-color: var(--primary);
+  --mdc-tab-indicator-active-indicator-color: var(--primary);
+  --mat-menu-item-label-text-color: var(--text-primary);
   --mdc-snackbar-container-color: #1e293b;
   --mdc-snackbar-supporting-text-color: #ffffff;
 }
 
 [data-theme="dark"] {
-  --bg-primary: #0b0f19;
-  --bg-secondary: #131c2e;
-  --bg-tertiary: #1e293b;
+  --background: #0B1220;
+  --surface: #111827;
+  --surface-2: #1E293B;
 
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E2E8F0;
+  --text-muted: #94A3B8;
 
-  --accent-primary: #818cf8;
-  --accent-secondary: #c084fc;
-  --accent-gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+  --title: #FFFFFF;
+  --subtitle: #E2E8F0;
+  --body: #CBD5E1;
+  --muted: #94A3B8;
+
+  --primary: #7C5CFF;
+  --secondary: #8B5CF6;
+  --accent: #14B8A6;
+  --primary-gradient: linear-gradient(135deg, #7C5CFF 0%, #8B5CF6 100%);
+
+  --border: rgba(255, 255, 255, 0.08);
+  --card: #111827;
+
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+
+  // Backward compatibility mappings
+  --bg-primary: var(--background);
+  --bg-secondary: var(--surface);
+  --bg-tertiary: var(--surface-2);
+  --accent-primary: var(--primary);
+  --accent-secondary: var(--secondary);
+  --accent-gradient: var(--primary-gradient);
+  --border-color: var(--border);
+  --toast-success-bg: var(--success);
+  --toast-error-bg: var(--danger);
 
   --glass-bg: rgba(19, 28, 46, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 
-  --border-color: #334155;
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-
-  --toast-success-bg: #059669;
-  --toast-error-bg: #dc2626;
 
   // Material MDC variables - DARK MODE (critical overrides)
   --mat-form-field-label-text-color: #94a3b8;
@@ -129,7 +184,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
 // Smooth theme transitions only on color/background, NOT on all properties
@@ -148,9 +203,10 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 600;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  line-height: 1.3;
   color: var(--text-primary);
 }
 
@@ -616,3 +672,101 @@ a {
 // POINTER UTILITY
 // ============================================================
 .pointer { cursor: pointer; }
+
+// ============================================================
+// MATERIAL & THEMING OVERRIDES
+// ============================================================
+.mat-mdc-card, mat-card, .glass-card {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.mat-mdc-toolbar, mat-toolbar {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-menu-panel, .mat-menu-panel, .profile-dropdown-panel {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.mat-mdc-menu-item, .mat-menu-item {
+  color: var(--text-primary) !important;
+  &:hover {
+    background-color: var(--surface-2) !important;
+  }
+}
+
+.mat-mdc-option {
+  color: var(--text-primary) !important;
+  background-color: var(--surface) !important;
+  &:hover:not(.mdc-list-item--disabled) {
+    background-color: var(--surface-2) !important;
+  }
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background-color: rgba(99, 102, 241, 0.08) !important;
+    .mdc-list-item__primary-text {
+      color: var(--primary) !important;
+    }
+  }
+}
+
+.mat-mdc-select-panel {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.mat-mdc-dialog-container {
+  background-color: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+.mat-mdc-tab-header, .mat-tab-header {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.mat-mdc-tab-body-wrapper {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-input-element, input, select, textarea {
+  color: var(--text-primary) !important;
+  &::placeholder {
+    color: var(--text-muted) !important;
+  }
+}
+
+.mat-mdc-form-field {
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--border) !important;
+  }
+  
+  &:hover .mdc-notched-outline__leading,
+  &:hover .mdc-notched-outline__notch,
+  &:hover .mdc-notched-outline__trailing {
+    border-color: var(--primary) !important;
+  }
+  
+  &.mat-focused .mdc-notched-outline__leading,
+  &.mat-focused .mdc-notched-outline__notch,
+  &.mat-focused .mdc-notched-outline__trailing {
+    border-color: var(--primary) !important;
+    border-width: 2px !important;
+  }
+
+  .mat-mdc-form-field-label {
+    color: var(--text-secondary) !important;
+  }
+  &.mat-focused .mat-mdc-form-field-label {
+    color: var(--primary) !important;
+  }
+}
+

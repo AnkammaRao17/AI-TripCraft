@@ -84,7 +84,21 @@ Schema:
     "Hotel option 1 (Brief description)",
     "Hotel option 2 (Brief description)",
     "Hotel option 3 (Brief description)"
-  ]
+  ],
+  "hiddenGems": [
+    "Hidden local attraction 1",
+    "Hidden local attraction 2"
+  ],
+  "safetyTips": [
+    "Safety recommendation 1",
+    "Safety recommendation 2"
+  ],
+  "photographySpots": [
+    "Scenic photo spot 1",
+    "Scenic photo spot 2"
+  ],
+  "bestVisitingTime": "Best season, months, or morning hours to explore this region",
+  "budgetOptimization": "Specific recommendations on transit passes, budget homestays, and street food to save money"
 }
 Ensure that all day numbers from 1 to ${daysCount} are included in the 'days' array. The budget should correspond to the ${budgetText} tier. Keep output localized, realistic, and specific to ${destination}.
 `;
@@ -126,32 +140,76 @@ const generateMockItinerary = (trip) => {
   };
   const baseBudget = dailyBudgets[budget] || 3000;
   
-  const sampleAttractions = [
-    'Historic Old Town & Central Square',
-    'Main Museum of Fine Arts',
-    'Panoramic City Hill Lookout',
-    'Botanical Gardens & Riverside Walk',
-    'Local Cathedral & Landmark Bridge',
-    'Artisanal Street Market',
-    'Cultural Arts Theater & Opera House'
-  ];
-  
-  const sampleRestaurants = [
-    'La Petit Bistro (French fusion)',
-    'The Green Garden Cafe (Organic salads)',
-    'Traditional Tavern (Local recipes)',
-    'The View Rooftop (Cocktails and skewers)',
-    'Street Food Stalls (Quick snacks)',
-    'Mama\'s Kitchen (Homemade traditional food)'
-  ];
+  const destLower = destination.toLowerCase();
 
-  const sampleFoods = [
-    'Traditional baked pastries',
-    'Slow-cooked local stew',
-    'Savory street dumplings',
-    'Freshly ground local roast coffee',
-    'Artisanal honey and cheeses'
-  ];
+  let sampleAttractions = [];
+  let sampleRestaurants = [];
+  let sampleFoods = [];
+  let hotels = [];
+  let hiddenGems = [];
+  let safetyTips = [];
+  let photographySpots = [];
+  let bestVisitingTime = '';
+  let budgetOptimization = '';
+
+  if (destLower.includes('goa')) {
+    sampleAttractions = ['Calangute Beach coastline', 'Basilica of Bom Jesus', 'Fort Aguada lighthouse', 'Dudhsagar Waterfalls', 'Anjuna Flea Market', 'Baga Beach shacks', 'Mangueshi Temple'];
+    sampleRestaurants = ['Britto\'s Beach Shack', 'Curlies Vagator', 'Gunpowder Restaurant', 'Thalassa Greek Tavern', 'Fisherman\'s Wharf'];
+    sampleFoods = ['Goan fish curry rice', 'Pork vindaloo stew', 'Bebinca multi-layered cake', 'Chicken cafreal grill', 'Feni heritage cocktail'];
+
+    hotels = budget === 'Budget' ? ['Zostel Goa, Vagator (Social hostel)', 'Roadhouse Backpackers Stay'] :
+             budget === 'Luxury' ? ['Taj Exotica Resort Benaulim (Luxury royal style)', 'W Goa, Vagator'] :
+             ['Cidade de Goa Heritage Resort', 'Goan Heritage Resort Calangute'];
+
+    hiddenGems = ['Cola Beach freshwater lagoon', 'Chorao Island mangrove bird sanctuary', 'Netravali Bubble Lake'];
+    safetyTips = ['Avoid swimming in beaches during high tide flags.', 'Rent two-wheelers only from licensed black-yellow plate vendors.', 'Respect local silence rules in churches and heritage spots.'];
+    photographySpots = ['Fort Aguada panoramic sea viewpoint', 'Fontainhas Latin Quarter colorful Portuguese corridors', 'Dudhsagar waterfall bridge crossings'];
+    bestVisitingTime = 'November to February is the finest time, featuring cool breezes, vibrant night markets, and beach parties.';
+    budgetOptimization = 'Rent a local scooter (₹400/day) instead of booking private cabs. Dine at local beach shacks to save up to ₹1,500 daily.';
+  } else if (destLower.includes('jaipur')) {
+    sampleAttractions = ['Amber Palace & Fortress', 'Hawa Mahal Palace of Winds', 'City Palace museum', 'Jantar Mantar Observatory', 'Nahargarh Fort ramparts', 'Birla Mandir Temple'];
+    sampleRestaurants = ['Laxmi Mishthan Bhandar (LMB)', 'Rawat Sweets & Restaurant', 'Peacock Rooftop Resto', 'Spice Court Jaipur', 'Suvarna Mahal Palace Dining'];
+    sampleFoods = ['Dal Baati Churma royal platter', 'Pyaaz Kachori pastries', 'Gatte ki Sabzi curry', 'Lal Maas spiced lamb', 'Mawa Kachori dessert'];
+
+    hotels = budget === 'Budget' ? ['Zostel Jaipur, Old City (Vibrant hostel)', 'Pearl Palace Backpacker Lodge'] :
+             budget === 'Luxury' ? ['Rambagh Palace (5-star heritage royalty)', 'ITC Rajputana Jaipur'] :
+             ['Umaid Bhawan Boutique Hotel', 'Pearl Palace Heritage Stay'];
+
+    hiddenGems = ['Panna Meena ka Kund ancient stepwell', 'Galta Ji natural water monkey temple', 'Amer Fort backwall sunrise trail'];
+    safetyTips = ['Negotiate prices with local auto rickshaw drivers beforehand.', 'Buy the composite monuments ticket to save entry fees.', 'Beware of pushy jewelry and gemstone vendors.'];
+    photographySpots = ['Hawa Mahal street face facade', 'Patrika Gate pink heritage columns', 'Sunset panoramas from Nahargarh Fort heights'];
+    bestVisitingTime = 'October to March offers cool desert climate, perfect for exploring fort ramparts and palaces.';
+    budgetOptimization = 'Buy a composite entry ticket (covers Amber, Hawa Mahal, Albert Hall) for major savings. Eat delicious Pyaaz Kachoris at Rawat for under ₹100.';
+  } else if (destLower.includes('manali')) {
+    sampleAttractions = ['Solang Valley adventure point', 'Hadimba Devi pine temple', 'Jogini Waterfalls trail', 'Rohtang Pass snow lookout', 'Old Manali Cafe Street', 'Vashisht Hot Water Springs'];
+    sampleRestaurants = ['The Johnson\'s Cafe & Lodge', 'Cafe 1947 (Old Manali)', 'Lazy Dog Riverside Cafe', 'Il Forno Italian Woodfire', 'Chopsticks Tibetan Diner'];
+    sampleFoods = ['Steamed Siddu with ghee', 'Fresh pan-fried trout fish', 'Kadhi Chawal comfort bowl', 'Hot Tibetan thukpa noodles', 'Apple honey brew'];
+
+    hotels = budget === 'Budget' ? ['Zostel Manali, Old Town (Social hostel)', 'Alt Life Backpacker Hub'] :
+             budget === 'Luxury' ? ['Span Resort & Spa (Luxury riverside villas)', 'The Solang Valley Resort'] :
+             ['Manu Allaya Resort & Spa', 'The Johnson Lodge Boutique Stay'];
+
+    hiddenGems = ['Sajla waterfall secret pool', 'Hampta Pass glacier base camp', 'Soyal village heritage wooden houses'];
+    safetyTips = ['Check Rohtang Pass permit rules online in advance.', 'Avoid driving in snow or heavy rainfall landslide weather.', 'Keep warm jackets ready even in summers.'];
+    photographySpots = ['Rohtang snow line range panorama', 'Hadimba pine forest paths', 'Jogini waterfall mist bridge'];
+    bestVisitingTime = 'October to June is recommended. Go in winter for snow sports, or summer to escape plains heat.';
+    budgetOptimization = 'Use shared local shuttle buses instead of private SUVs to commute to Solang. Old Manali offers budget stays starting at ₹600/night.';
+  } else {
+    // Default generic but REAL Indian travel options
+    sampleAttractions = ['Central Historic Palace Museum', 'Vibrant Local Artisans Bazaar', 'Scenic Sunset Hill Vista', 'Eco Botanical Gardens', 'Local Heritage Cathedral'];
+    sampleRestaurants = ['The Saffron Kitchen', 'Traditional Spice Court', 'Lakeside Rooftop Cafe', 'Grand Raj Family Diner', 'Royal Heritage Kitchen'];
+    sampleFoods = ['Regional Special Spiced Thali', 'Street Chat & Sweet Pastries', 'Fragrant Filter Coffee', 'Slow-cooked Stew & Rice', 'Tandoori Platters'];
+
+    hotels = budget === 'Budget' ? ['Local Backpacker Zostel (Social shared rooms)', 'Clean City Transit Lodge'] :
+             budget === 'Luxury' ? ['Grand Palace Heritage Hotel (5-star luxury)', 'The Royal Resort & Spa'] :
+             ['Comfort Inn & Suites', 'Scenic Boutique Heritage Stay'];
+
+    hiddenGems = ['Ancient stepwell ruins', 'Scenic hilltop sunset clearing', 'Quiet local lake reserve'];
+    safetyTips = ['Carry a reusable water bottle; consume filtered water only.', 'Keep offline navigation coordinates downloaded on mobile.', 'Always seek permission before photographing people or temple interiors.'];
+    photographySpots = ['Heritage entrance arches', 'Vibrant marketplace spices', 'Panoramic hilltop vantage views'];
+    bestVisitingTime = 'October to March is generally the finest sightseeing weather across most Indian destinations.';
+    budgetOptimization = 'Opt for shared auto-rickshaws or local buses. Enjoy meals at popular local diners which cost less than ₹200.';
+  }
 
   const days = [];
   for (let i = 1; i <= numberOfDays; i++) {
@@ -164,9 +222,9 @@ const generateMockItinerary = (trip) => {
 
     days.push({
       dayNumber: i,
-      morningPlan: `Start your morning by visiting the famous ${attraction1}. Stroll around and admire the architectural details while capturing photos in the soft morning light.`,
+      morningPlan: `Start your morning by visiting the famous ${attraction1}. Stroll around and admire the details while capturing photos in the soft morning light.`,
       afternoonPlan: `Head to ${rest1} for a delicious lunch. Spend your afternoon exploring the ${attraction2}, diving deep into the local history and exhibits.`,
-      eveningPlan: `Enjoy an elegant dinner at ${rest2}. Conclude your evening with a pleasant stroll along the active district and soak in the vibrant atmosphere.`,
+      eveningPlan: `Enjoy an elegant dinner at ${rest2}. Conclude your evening with a pleasant stroll and soak in the vibrant atmosphere.`,
       recommendedAttractions: [attraction1, attraction2],
       restaurants: [rest1, rest2],
       localFood: [food1, food2],
@@ -181,13 +239,6 @@ const generateMockItinerary = (trip) => {
     `Try starting your days early (before 9:00 AM) to beat the main crowd at the core attractions.`,
     `Check weather forecasts daily; carry a compact umbrella if there is any chance of rain.`
   ];
-
-  const sampleHotels = {
-    'Budget': [`Backpackers Central Hostel (Social, shared rooms near core transit)`, `Eco City Lodge (Private basic rooms)`, `Youth Travel Stay (Clean budget rooms)`],
-    'Moderate': [`Grand Plaza Hotel (Comfortable suites, central location)`, `Scenic Boutique Inn (Quaint local style)`, `Comfort Suites & Spa (Pool and gym included)`],
-    'Luxury': [`The Ritz Grand Resort (5-star luxury, rooftop pools, premium spa)`, `Luxe Palace & Towers (Historic landmark hotel)`, `Vanderbilt Five-Star Hotel (Private butler service)`]
-  };
-  const hotels = sampleHotels[budget] || sampleHotels.Moderate;
 
   const samplePacking = {
     'Solo': ['Light daypack', 'Reusable water bottle', 'Local transit card', 'Comfortable walking sneakers', 'Compact umbrella'],
@@ -204,7 +255,12 @@ const generateMockItinerary = (trip) => {
     days,
     travelTips,
     packingList,
-    hotels
+    hotels,
+    hiddenGems,
+    safetyTips,
+    photographySpots,
+    bestVisitingTime,
+    budgetOptimization
   };
 };
 

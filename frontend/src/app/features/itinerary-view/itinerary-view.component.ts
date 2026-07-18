@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +16,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
 import { TripService } from '../../core/services/trip.service';
+import { AiService } from '../../core/services/ai.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Trip, Itinerary } from '../../models/interfaces';
 
@@ -41,8 +43,10 @@ import { Trip, Itinerary } from '../../models/interfaces';
 export class ItineraryViewComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private tripService = inject(TripService);
+  private aiService = inject(AiService);
   private notification = inject(NotificationService);
   private router = inject(Router);
+  private http = inject(HttpClient);
 
   // Signals
   trip = signal<Trip | null>(null);
@@ -53,7 +57,7 @@ export class ItineraryViewComponent implements OnInit {
   isFavorited = signal(false);
 
   // Tabs & Checklist Signals
-  activeTab = signal<'schedule' | 'tips' | 'packing' | 'hotels'>('schedule');
+  activeTab = signal<'schedule' | 'packing' | 'hotels' | 'restaurants' | 'attractions' | 'tips'>('schedule');
   packingItems = signal<{ name: string; checked: boolean }[]>([]);
   customPackingItem = signal<string>('');
 
@@ -68,35 +72,170 @@ export class ItineraryViewComponent implements OnInit {
   // Tips Signal
   newTravelTip = signal<string>('');
 
-  // Maps coordinates and active marker category
-  activeMapCategory = signal<'attractions' | 'hotels' | 'restaurants' | 'airports'>('attractions');
-  mapMarkers = computed(() => {
+  // Spacing and layout helpers
+  detailedBudget = computed(() => {
     const t = this.trip();
-    if (!t) return [];
+    if (!t) return null;
     
-    // Generate dynamic mock geolocations based on destination name for map mockup
-    const lat = this.weatherData()?.coordinates?.lat || 48.8566;
-    const lng = this.weatherData()?.coordinates?.lng || 2.3522;
-
-    const items = {
-      attractions: [
-        { name: `${t.destination} Main Landmark`, lat: lat + 0.005, lng: lng - 0.003, details: 'Famous historical viewpoint' },
-        { name: 'City Center Art Museum', lat: lat - 0.004, lng: lng + 0.006, details: 'Classic and modern exhibitions' }
-      ],
-      hotels: [
-        { name: `${t.destination} Grand Plaza Hotel`, lat: lat - 0.002, lng: lng - 0.002, details: 'Highly rated comfort stay' },
-        { name: 'Rooftop Boutique Airbnb', lat: lat + 0.006, lng: lng + 0.003, details: 'Scenic skyline stays' }
-      ],
-      restaurants: [
-        { name: 'La Custom Kitchen', lat: lat + 0.003, lng: lng + 0.002, details: 'Traditional local cuisine' },
-        { name: 'Corner Bistro & Coffee', lat: lat - 0.005, lng: lng - 0.004, details: 'Great morning roast and brunch' }
-      ],
-      airports: [
-        { name: `${t.destination} International Airport (Terminal 1)`, lat: lat + 0.085, lng: lng - 0.065, details: 'Main entry hub' }
-      ]
+    const hotel = t.estimatedBudgetBreakdown?.hotelCost || 0;
+    const food = t.estimatedBudgetBreakdown?.foodCost || 0;
+    const transport = t.estimatedBudgetBreakdown?.transportCost || 0;
+    const tickets = t.estimatedBudgetBreakdown?.attractionsCost || 0;
+    
+    const shopping = Math.round(t.estimatedBudgetBreakdown?.total * 0.15);
+    const emergency = Math.round(t.estimatedBudgetBreakdown?.total * 0.10);
+    const taxes = Math.round((hotel + food) * 0.05);
+    const grandTotal = hotel + food + transport + tickets + shopping + emergency + taxes;
+    
+    return {
+      hotel,
+      food,
+      transport,
+      tickets,
+      shopping,
+      emergency,
+      taxes,
+      grandTotal
     };
-    return items[this.activeMapCategory()];
   });
+
+  enrichedHotels = computed(() => {
+    const list = this.itinerary()?.hotels || [];
+    const destination = this.trip()?.destination || 'Destination';
+    
+    const hotelImages = [
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=600&q=80'
+    ];
+    
+    const fallbackNames = [
+      `Grand Hyatt Luxury Suites`,
+      `Taj Heritage Palace & Spa`,
+      `Boutique Garden Resorts`
+    ];
+
+    const namesToUse = list.length > 0 ? list : fallbackNames;
+
+    return namesToUse.map((name, idx) => {
+      const rating = (4.5 + (idx * 0.15) % 0.5).toFixed(1);
+      const tier = this.trip()?.budget || 'Moderate';
+      let price = 4500;
+      if (tier === 'Budget') price = 1500 + (idx * 500);
+      else if (tier === 'Luxury') price = 12000 + (idx * 3000);
+      else price = 4500 + (idx * 1500);
+
+      const amenities = idx % 2 === 0 
+        ? ['Free Wi-Fi', 'Outdoor Pool', 'Spa', 'Restaurant', 'AC']
+        : ['Free Breakfast', 'Gym', 'Bar', 'Room Service', 'AC'];
+
+      return {
+        name,
+        imageUrl: hotelImages[idx % hotelImages.length],
+        rating,
+        price,
+        amenities,
+        distance: `${(1.2 + idx * 0.8).toFixed(1)} km from tourist hub`
+      };
+    });
+  });
+
+  enrichedRestaurants = computed(() => {
+    const itin = this.itinerary();
+    if (!itin) return [];
+
+    const foodImages = [
+      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'
+    ];
+
+    const allNames: string[] = [];
+    itin.days.forEach(day => {
+      day.restaurants.forEach(r => {
+        if (!allNames.includes(r)) allNames.push(r);
+      });
+    });
+
+    if (allNames.length === 0) {
+      allNames.push('Punjabi Kadhai', 'Saffron Fine Dine', 'Local Street Treat Spot');
+    }
+
+    const cuisines = ['North Indian Special, Tandoori', 'South Indian Deluxe, Vegetarian', 'Continental & Indian Fusion'];
+
+    return allNames.map((name, idx) => {
+      const rating = (4.3 + (idx * 0.12) % 0.6).toFixed(1);
+      const hours = '11:00 AM - 11:30 PM';
+      const price = 350 + (idx * 150);
+      return {
+        name,
+        imageUrl: foodImages[idx % foodImages.length],
+        cuisine: cuisines[idx % cuisines.length],
+        rating,
+        hours,
+        price,
+        distance: `${(0.8 + idx * 0.5).toFixed(1)} km`
+      };
+    });
+  });
+
+  enrichedAttractions = computed(() => {
+    const itin = this.itinerary();
+    if (!itin) return [];
+
+    const attrImages = [
+      'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?auto=format&fit=crop&w=600&q=80'
+    ];
+
+    const allNames: string[] = [];
+    itin.days.forEach(day => {
+      day.recommendedAttractions.forEach(attr => {
+        if (!allNames.includes(attr)) allNames.push(attr);
+      });
+    });
+
+    if (allNames.length === 0) {
+      allNames.push('Heritage Fort Landmark', 'Craft & Bazaar Market', 'Golden Scenic Viewpoint');
+    }
+
+    return allNames.map((name, idx) => {
+      return {
+        name,
+        imageUrl: attrImages[idx % attrImages.length],
+        history: 'A classic heritage landmark representing the deep roots, culture and ancient architecture of the region.',
+        hours: '09:00 AM - 06:00 PM',
+        fee: idx % 2 === 0 ? '₹150 per person' : 'Free entry for all',
+        timeRequired: '2 - 3 Hours',
+        bestTime: 'Morning or late afternoon',
+        distance: `${(1.5 + idx * 1.1).toFixed(1)} km`
+      };
+    });
+  });
+
+  routeSegments = computed(() => {
+    const itin = this.itinerary();
+    if (!itin) return [];
+
+    return itin.days.map((day) => {
+      const hotel = 'Hotel Stay';
+      const attraction1 = day.recommendedAttractions[0] || 'Local Landmark';
+      const lunch = day.restaurants[0] || 'Spice Villa Bistro';
+      const attraction2 = day.recommendedAttractions[1] || 'Sunset Garden';
+      
+      return [
+        { from: hotel, to: attraction1, distance: '2.4 km', duration: '8 mins', mode: 'Auto Rickshaw' },
+        { from: attraction1, to: lunch, distance: '1.1 km', duration: '5 mins', mode: 'Walk' },
+        { from: lunch, to: attraction2, distance: '3.8 km', duration: '12 mins', mode: 'Cab Ride' }
+      ];
+    });
+  });
+
+  openNavigation(from: string, to: string): void {
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(from)}&destination=${encodeURIComponent(to)}&travelmode=driving`;
+    window.open(url, '_blank');
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
@@ -105,6 +244,13 @@ export class ItineraryViewComponent implements OnInit {
     } else {
       this.router.navigate(['/dashboard']);
     }
+
+    this.aiService.itineraryModified$.subscribe(() => {
+      const activeId = this.route.snapshot.params['id'];
+      if (activeId) {
+        this.loadTripDetails(activeId);
+      }
+    });
   }
 
   loadTripDetails(id: string): void {
@@ -123,6 +269,13 @@ export class ItineraryViewComponent implements OnInit {
         
         // Trigger weather load
         this.loadWeather(id);
+
+        // Celebrating successful generation with confetti
+        const createdTime = res.data?.trip?.createdAt ? new Date(res.data.trip.createdAt).getTime() : 0;
+        const diff = Date.now() - createdTime;
+        if (createdTime > 0 && diff < 20000) {
+          this.triggerConfetti();
+        }
       },
       error: () => {
         this.isLoading.set(false);
@@ -187,134 +340,32 @@ export class ItineraryViewComponent implements OnInit {
 
   downloadPDF(): void {
     const t = this.trip();
-    const itin = this.itinerary();
-    if (!t || !itin) {
+    if (!t) {
       this.notification.warning('Itinerary data not fully loaded.');
       return;
     }
 
-    try {
-      const doc = new jsPDF() as any;
-      const primaryColor = [99, 102, 241]; // Indigo
-      
-      // Header Section
-      doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.rect(0, 0, 210, 40, 'F');
+    this.notification.info('Compiling your premium PDF brochure on backend...');
 
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(22);
-      doc.text('AI TRIPCRAPT - ITINERARY', 15, 25);
-
-      doc.setFontSize(12);
-      doc.setFont('Helvetica', 'normal');
-      doc.text(`Generated for: ${t.destination}, ${t.country}`, 15, 33);
-
-      // Trip Specifications
-      doc.setTextColor(50, 50, 50);
-      doc.setFontSize(14);
-      doc.setFont('Helvetica', 'bold');
-      doc.text('Trip Details', 15, 52);
-
-      const detailsData = [
-        ['Start Date', new Date(t.startDate).toDateString(), 'Duration', `${t.numberOfDays} Days`],
-        ['Budget Level', t.budget, 'Travelers', `${t.numberOfTravelers} Person(s)`],
-        ['Trip Type', t.tripType, 'Preferences', `Hotel: ${t.hotelPreference} | Transport: ${t.transportPreference}`]
-      ];
-
-      doc.autoTable({
-        startY: 56,
-        body: detailsData,
-        theme: 'plain',
-        styles: { fontSize: 10, cellPadding: 2 },
-        columnStyles: { 0: { fontStyle: 'bold', width: 35 }, 2: { fontStyle: 'bold', width: 35 } }
-      });
-
-      // Budget Breakdown Table
-      doc.setFontSize(14);
-      doc.setFont('Helvetica', 'bold');
-      doc.text('Estimated Budget Summary', 15, 92);
-
-      const budgetData = [
-        ['Category', 'Cost (INR)'],
-        ['Accommodations (Hotel/Resort)', `₹${t.estimatedBudgetBreakdown.hotelCost.toLocaleString('en-IN')}`],
-        ['Meals & Dining', `₹${t.estimatedBudgetBreakdown.foodCost.toLocaleString('en-IN')}`],
-        ['Transit & Transportation', `₹${t.estimatedBudgetBreakdown.transportCost.toLocaleString('en-IN')}`],
-        ['Sightseeing & Attractions', `₹${t.estimatedBudgetBreakdown.attractionsCost.toLocaleString('en-IN')}`],
-        ['Total Estimated', `₹${t.estimatedBudgetBreakdown.total.toLocaleString('en-IN')}`]
-      ];
-
-      doc.autoTable({
-        startY: 96,
-        head: [budgetData[0]],
-        body: budgetData.slice(1),
-        theme: 'striped',
-        headStyles: { fillColor: primaryColor, textColor: [255, 255, 255], fontStyle: 'bold' },
-        styles: { fontSize: 9 }
-      });
-
-      // Day-by-Day schedule
-      let currentY = doc.previousAutoTable.finalY + 15;
-      doc.setFontSize(14);
-      doc.setFont('Helvetica', 'bold');
-      doc.text('Day-by-Day Travel Plans', 15, currentY);
-      currentY += 6;
-
-      itin.days.forEach((day) => {
-        // Page break if near bottom
-        if (currentY > 260) {
-          doc.addPage();
-          currentY = 20;
-        }
-
-        doc.setFontSize(11);
-        doc.setFont('Helvetica', 'bold');
-        doc.setFillColor(240, 240, 240);
-        doc.rect(15, currentY - 4, 180, 7, 'F');
-        doc.text(`DAY ${day.dayNumber} - SCHEDULE`, 18, currentY + 1);
-        currentY += 10;
-
-        doc.setFontSize(9);
-        doc.setFont('Helvetica', 'normal');
+    this.http.get(`http://localhost:5000/api/trips/${t._id}/pdf`, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const cleanDest = t.destination.replace(/[^a-zA-Z0-9]/g, '_');
+        const filename = `AITripCraft_${cleanDest}.pdf`;
         
-        doc.setFont('Helvetica', 'bold');
-        doc.text('Morning:', 18, currentY);
-        doc.setFont('Helvetica', 'normal');
-        doc.text(doc.splitTextToSize(day.morningPlan, 150), 38, currentY);
-        currentY += Math.max(doc.splitTextToSize(day.morningPlan, 150).length * 4.5, 6);
-
-        doc.setFont('Helvetica', 'bold');
-        doc.text('Afternoon:', 18, currentY);
-        doc.setFont('Helvetica', 'normal');
-        doc.text(doc.splitTextToSize(day.afternoonPlan, 150), 38, currentY);
-        currentY += Math.max(doc.splitTextToSize(day.afternoonPlan, 150).length * 4.5, 6);
-
-        doc.setFont('Helvetica', 'bold');
-        doc.text('Evening:', 18, currentY);
-        doc.setFont('Helvetica', 'normal');
-        doc.text(doc.splitTextToSize(day.eveningPlan, 150), 38, currentY);
-        currentY += Math.max(doc.splitTextToSize(day.eveningPlan, 150).length * 4.5, 8);
-
-        doc.setFont('Helvetica', 'bold');
-        doc.text('Attractions:', 18, currentY);
-        doc.setFont('Helvetica', 'normal');
-        doc.text(day.recommendedAttractions.join(', '), 38, currentY);
-        currentY += 5;
-
-        doc.setFont('Helvetica', 'bold');
-        doc.text('Restaurants:', 18, currentY);
-        doc.setFont('Helvetica', 'normal');
-        doc.text(day.restaurants.join(', '), 38, currentY);
-        currentY += 8;
-      });
-
-      // Save PDF
-      doc.save(`Itinerary_${t.destination}_${t.numberOfDays}Days.pdf`);
-      this.notification.success('Itinerary PDF downloaded successfully!');
-    } catch (err) {
-      console.error(err);
-      this.notification.error('Error compiling PDF file.');
-    }
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        
+        this.notification.success('PDF downloaded successfully!');
+      },
+      error: (err) => {
+        console.error(err);
+        this.notification.error('Failed to download PDF. Please try again.');
+      }
+    });
   }
 
   addPackingItem(): void {
@@ -398,5 +449,71 @@ export class ItineraryViewComponent implements OnInit {
       },
       error: () => this.notification.error('Failed to remove travel tip.')
     });
+  }
+
+  triggerConfetti(): void {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '99999';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#6366f1', '#a855f7', '#ec4899', '#10b981', '#f59e0b'];
+    const particles: any[] = [];
+
+    for (let i = 0; i < 150; i++) {
+      particles.push({
+        x: canvas.width / 2,
+        y: canvas.height * 0.4,
+        angle: Math.random() * Math.PI * 2,
+        speed: 5 + Math.random() * 15,
+        radius: 3 + Math.random() * 5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        opacity: 1,
+        decay: 0.015 + Math.random() * 0.02,
+        gravity: 0.4
+      });
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = false;
+
+      particles.forEach(p => {
+        if (p.opacity > 0) {
+          p.x += Math.cos(p.angle) * p.speed;
+          p.y += Math.sin(p.angle) * p.speed + p.gravity;
+          p.opacity -= p.decay;
+          
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.opacity;
+          ctx.fill();
+          
+          alive = true;
+        }
+      });
+
+      if (alive) {
+        requestAnimationFrame(animate);
+      } else {
+        if (document.body.contains(canvas)) {
+          document.body.removeChild(canvas);
+        }
+      }
+    };
+
+    animate();
   }
 }

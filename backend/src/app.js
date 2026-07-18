@@ -27,6 +27,7 @@ const tripRoutes = require('./routes/trips');
 const destinationRoutes = require('./routes/destinations');
 const reviewRoutes = require('./routes/reviews');
 const favoriteRoutes = require('./routes/favorites');
+const aiRoutes = require('./routes/ai');
 
 // Connect to MongoDB
 connectDB();
@@ -64,6 +65,60 @@ app.use(morgan('combined', { stream: { write: (message) => logger.http(message.t
 // Serve API Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Debug Routes
+app.get('/debug/users', async (req, res, next) => {
+  try {
+    const User = require('./models/User');
+    const users = await User.find({});
+    res.json(users);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/debug/db', async (req, res, next) => {
+  try {
+    const mongoose = require('mongoose');
+    const User = require('./models/User');
+    const conn = mongoose.connection;
+
+    const dbName = conn.db ? conn.db.databaseName : 'N/A';
+    let collectionCount = 0;
+    if (conn.db) {
+      const collections = await conn.db.listCollections().toArray();
+      collectionCount = collections.length;
+    }
+
+    const userCount = await User.countDocuments({});
+
+    const states = {
+      0: 'disconnected',
+      1: 'connected',
+      2: 'connecting',
+      3: 'disconnecting'
+    };
+    const connectionState = states[conn.readyState] || 'unknown';
+
+    const connString = process.env.MONGO_URI || '';
+    let databaseType = 'Local MongoDB';
+    if (connString.includes('.mongodb.net')) {
+      databaseType = 'MongoDB Atlas';
+    } else if (connString.includes('mongo:') || connString.includes('aitripcraft-db')) {
+      databaseType = 'Docker MongoDB';
+    }
+
+    res.json({
+      databaseName: dbName,
+      collectionCount,
+      userCount,
+      mongoConnectionState: connectionState,
+      databaseType
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -71,6 +126,7 @@ app.use('/api/trips', tripRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Base route response
 app.get('/', (req, res) => {

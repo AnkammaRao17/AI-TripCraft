@@ -9,34 +9,39 @@ const cleanAdminUsers = async () => {
 
 const connectDB = async () => {
   try {
-    let connString = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/aitripcraft';
+    const connString = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/aitripcraft';
     logger.info(`Checking MongoDB connection at: ${connString.replace(/:([^@]+)@/, ':****@')}`);
     
-    try {
-      await mongoose.connect(connString, {
-        autoIndex: true,
-        serverSelectionTimeoutMS: 2000 // Fast fail in 2 seconds
-      });
-      logger.info('✓ MongoDB Connected');
-    } catch (localError) {
-      logger.warn(`Could not connect to MongoDB at ${connString}: ${localError.message}`);
-      logger.info('Starting In-Memory MongoDB Server for demonstration...');
-      
-      const { MongoMemoryServer } = require('mongodb-memory-server');
-      const mongoServer = await MongoMemoryServer.create();
-      connString = mongoServer.getUri();
-      
-      logger.info(`In-Memory MongoDB Server running at: ${connString}`);
-      await mongoose.connect(connString, {
-        autoIndex: true
-      });
-      logger.info('✓ MongoDB Connected (In-Memory)');
+    await mongoose.connect(connString, {
+      autoIndex: true,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      family: 4
+    });
+    logger.info('✓ Connected to MongoDB');
 
-      // Seed data inline immediately in-process
-      const { seedDatabaseInline } = require('./seed');
-      await seedDatabaseInline(false);
-      logger.info('Database seeded inline successfully.');
+    let dbName = 'Unknown';
+    let version = 'Unknown';
+    let collectionCount = 0;
+    let userCount = 0;
+
+    try {
+      const conn = mongoose.connection;
+      dbName = conn.db.databaseName;
+      const admin = conn.db.admin();
+      const buildInfo = await admin.buildInfo();
+      version = buildInfo.version;
+      const collections = await conn.db.listCollections().toArray();
+      collectionCount = collections.length;
+      userCount = await User.countDocuments({});
+    } catch (statsError) {
+      logger.warn(`Failed to gather MongoDB stats: ${statsError.message}`);
     }
+
+    logger.info(`Database Name: ${dbName}`);
+    logger.info(`MongoDB Version: ${version}`);
+    logger.info(`Collection Count: ${collectionCount}`);
+    logger.info(`User Count: ${userCount}`);
   } catch (error) {
     logger.error(`MongoDB connection error: ${error.message}`);
     process.exit(1);

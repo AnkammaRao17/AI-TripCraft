@@ -1,0 +1,168 @@
+<div class="destinations-wrapper">
+  <!-- Destinations Header Section -->
+  <div class="destinations-header">
+    <h1 class="page-title">Explore Curated Destinations</h1>
+    <p class="page-subtitle">Search, filter, and plan your next journey through India's most exquisite travel spots.</p>
+  </div>
+
+  <!-- Search & Sorting Toolbar -->
+  <div class="toolbar-section glass-card">
+    <form [formGroup]="searchForm" class="search-form">
+      <div class="custom-search-container">
+        <div class="custom-search-input-wrapper">
+          <mat-icon class="search-start-icon">search</mat-icon>
+          <input 
+            type="text" 
+            placeholder="Where are you planning to go? (e.g. Munnar, Jaipur, Goa)" 
+            formControlName="search"
+            class="custom-search-input"
+            (focus)="isSearchFocused.set(true)"
+            (blur)="onSearchBlur()"
+          />
+          <button 
+            type="button"
+            mat-icon-button 
+            *ngIf="searchForm.get('search')?.value"
+            (click)="clearSearch()" 
+            class="search-clear-btn"
+            title="Clear search"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <!-- Autocomplete Suggestions Panel -->
+        <div class="search-autocomplete-panel glass-card animate-fade-in" *ngIf="isSearchFocused() && autocompleteSuggestions().length > 0">
+          <div 
+            class="autocomplete-item" 
+            *ngFor="let sug of autocompleteSuggestions()"
+            (mousedown)="selectSuggestion(sug)"
+          >
+            <mat-icon class="sug-icon">location_on</mat-icon>
+            <div class="sug-details">
+              <span class="sug-name">{{ sug.name }}</span>
+              <span class="sug-state">{{ sug.state }}, {{ sug.country }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="sort-select-wrapper">
+      <mat-form-field appearance="outline" class="sort-field">
+        <mat-label>Sort By</mat-label>
+        <mat-select [value]="sortBy()" (selectionChange)="sortBy.set($event.value)">
+          <mat-option value="name">Alphabetical (A-Z)</mat-option>
+          <mat-option value="rating">Highest Rated</mat-option>
+          <mat-option value="popularity">Most Popular (Reviews)</mat-option>
+        </mat-select>
+        <mat-icon matSuffix>sort</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Popular Searches Chips -->
+  <div class="popular-searches-chips">
+    <span class="popular-label">Popular:</span>
+    <div class="pop-chips-row">
+      <button 
+        type="button" 
+        *ngFor="let pop of popularSearches" 
+        class="pop-chip-btn" 
+        (click)="setSearchQuery(pop)"
+      >
+        #{{ pop }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Category filter chips -->
+  <div class="category-filters-container">
+    <div class="category-chips-scroll">
+      <button 
+        *ngFor="let cat of categories" 
+        class="category-filter-btn"
+        [class.active]="selectedCategory() === cat"
+        (click)="selectCategory(cat)">
+        {{ categoryDisplayMap[cat] || cat }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading curated Indian travel destinations...</p>
+  </div>
+
+  <!-- Empty Results State -->
+  <div *ngIf="!isLoading() && filteredDestinations().length === 0" class="empty-state glass-card">
+    <mat-icon class="empty-icon">search_off</mat-icon>
+    <h3>No destinations found.</h3>
+    <p>Try modifying your search text or select a different category filter.</p>
+    <button mat-raised-button color="primary" class="clear-search-btn btn-primary" style="margin-top: 16px; min-height: 38px;" (click)="clearSearch()">
+      Clear Search
+    </button>
+  </div>
+
+  <!-- Grid of Destinations (Airbnb styled cards) -->
+  <div class="destinations-grid" *ngIf="!isLoading() && filteredDestinations().length > 0">
+    <div class="airbnb-dest-card hover-scale pointer" *ngFor="let dest of filteredDestinations()" [routerLink]="['/destination', dest._id]">
+      <div class="airbnb-img-wrapper">
+        <img 
+          [src]="dest.imageUrl" 
+          [alt]="dest.name" 
+          class="airbnb-img" 
+          loading="lazy"
+          (error)="onImgError($event, dest.name)" 
+        />
+        <div class="airbnb-image-overlay"></div>
+        
+        <!-- Rating badge -->
+        <span class="airbnb-rating-badge">
+          <mat-icon>star</mat-icon> {{ dest.averageRating }}
+        </span>
+
+        <!-- Best Season badge -->
+        <span class="airbnb-ai-badge">
+          <mat-icon>wb_sunny</mat-icon> {{ dest.bestTime || 'Oct - Mar' }}
+        </span>
+
+        <!-- Bookmark icon -->
+        <button mat-icon-button (click)="toggleFavorite(dest._id, $event)" class="airbnb-fav-btn" title="Save Destination">
+          <mat-icon [color]="isFavorited(dest._id) ? 'warn' : ''">
+            {{ isFavorited(dest._id) ? 'favorite' : 'favorite_border' }}
+          </mat-icon>
+        </button>
+      </div>
+
+      <div class="airbnb-info-content">
+        <div class="airbnb-meta-row">
+          <h3 class="airbnb-title">{{ dest.name }}</h3>
+          <span class="airbnb-category-tag">{{ categoryDisplayMap[dest.category || ''] || dest.category }}</span>
+        </div>
+        <span class="airbnb-location">{{ dest.state || dest.country }}</span>
+        <p class="airbnb-desc-snippet">{{ dest.description }}</p>
+        
+        <div class="airbnb-price-season-row">
+          <span class="airbnb-price">
+            <span class="price-label">Est:</span> ₹{{ dest.estimatedBudgetMin || 2000 | number }}/day
+          </span>
+          <span class="airbnb-safety" *ngIf="dest.safetyScore">
+            <mat-icon>shield</mat-icon> Safety {{ dest.safetyScore }}/10
+          </span>
+        </div>
+
+        <!-- Quick Highlights -->
+        <div class="airbnb-highlights-row" *ngIf="dest.attractions?.length">
+          <span class="highlight-chip" *ngFor="let attr of dest.attractions?.slice(0, 2)">{{ attr }}</span>
+        </div>
+
+        <div class="airbnb-actions">
+          <a mat-button [routerLink]="['/destination', dest._id]" class="airbnb-details-btn">View Details</a>
+          <a mat-raised-button [routerLink]="['/trip-builder']" [queryParams]="{ destination: dest.name, country: dest.country }" (click)="$event.stopPropagation()" class="airbnb-plan-btn btn-primary">Plan Trip</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

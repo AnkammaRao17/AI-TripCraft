@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 const connectDB = require('../config/db');
 const User = require('../models/User');
 const OTP = require('../models/OTP');
@@ -22,7 +23,7 @@ const makeMockRes = () => {
 const runTests = async () => {
   console.log('🧪 Starting Authentication Integration Test Suite...');
   
-  // 1. Connect to DB using the app's db.js logic (handles MongoMemoryServer fallback)
+  // 1. Connect to DB using the app's db.js logic (connects directly to persistent database)
   await connectDB();
   console.log('✅ Connected to MongoDB.');
 

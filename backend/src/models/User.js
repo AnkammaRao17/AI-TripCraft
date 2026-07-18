@@ -18,10 +18,8 @@ const UserSchema = new mongoose.Schema(
       lowercase: true,
       match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
     },
-    password: {
+    hashedPassword: {
       type: String,
-      required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
       select: false, // hide password by default in queries
     },
     role: {
@@ -76,14 +74,34 @@ UserSchema.pre('save', function (next) {
   next();
 });
 
+// Virtual field for password
+UserSchema.virtual('password')
+  .set(function (password) {
+    this._password = password;
+  })
+  .get(function () {
+    return this._password;
+  });
+
+// Validate virtual password or existing hashedPassword
+UserSchema.pre('validate', function (next) {
+  if (this.isNew && !this._password && !this.hashedPassword) {
+    this.invalidate('password', 'Password is required');
+  }
+  if (this._password && this._password.length < 6) {
+    this.invalidate('password', 'Password must be at least 6 characters');
+  }
+  next();
+});
+
 // Encrypt password before saving
 UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+  if (!this._password) {
     return next();
   }
   try {
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    this.hashedPassword = await bcrypt.hash(this._password, salt);
     next();
   } catch (error) {
     next(error);
@@ -92,7 +110,7 @@ UserSchema.pre('save', async function (next) {
 
 // Compare input password with database hashed password
 UserSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(enteredPassword, this.hashedPassword);
 };
 
 module.exports = mongoose.model('User', UserSchema);

@@ -14,6 +14,7 @@ import { TripService } from '../../core/services/trip.service';
 import { DestinationService } from '../../core/services/destination.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Trip } from '../../models/interfaces';
+import { getDestinationImageUrl, getNextDestinationImageUrl } from '../../shared/constants/destination-images';
 
 @Component({
   selector: 'app-profile',
@@ -392,7 +393,13 @@ export class ProfileComponent implements OnInit {
   loadFavorites(): void {
     this.destService.getFavoriteDestinations().subscribe({
       next: (res) => {
-        this.favoritePlaces.set(res.data.favorites || []);
+        const mapped = (res.data.favorites || []).map((f: any) => {
+          if (f.destination) {
+            f.destination.imageUrl = getDestinationImageUrl(f.destination.name);
+          }
+          return f;
+        });
+        this.favoritePlaces.set(mapped);
       },
       error: () => {}
     });
@@ -405,7 +412,12 @@ export class ProfileComponent implements OnInit {
   }
 
   onImgError(event: any, destName?: string): void {
-    event.target.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80';
+    const currentUrl = event.target.src;
+    const name = destName || 'Destination';
+    const nextUrl = getNextDestinationImageUrl(currentUrl, name);
+    if (event.target.src !== nextUrl) {
+      event.target.src = nextUrl;
+    }
   }
 
   onSubmit(): void {

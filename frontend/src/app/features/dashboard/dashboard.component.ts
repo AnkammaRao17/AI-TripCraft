@@ -15,9 +15,11 @@ import { Chart } from 'chart.js/auto';
 
 import { TripService } from '../../core/services/trip.service';
 import { DestinationService } from '../../core/services/destination.service';
+import { AiService } from '../../core/services/ai.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Trip, Destination } from '../../models/interfaces';
+import { getDestinationImageUrl, getNextDestinationImageUrl } from '../../shared/constants/destination-images';
 
 @Component({
   selector: 'app-dashboard',
@@ -44,6 +46,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // Services
   tripService = inject(TripService);
   destService = inject(DestinationService);
+  aiService = inject(AiService);
   notification = inject(NotificationService);
   authService = inject(AuthService);
   fb = inject(FormBuilder);
@@ -53,6 +56,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   trips = signal<Trip[]>([]);
   destinations = signal<Destination[]>([]);
   favoriteDestinations = signal<any[]>([]);
+  aiInsights = signal<any[]>([]);
+  aiDestRecs = signal<any[]>([]);
+  isAiLoading = signal<boolean>(false);
   isLoading = signal(true);
   isDestLoading = signal(true);
   
@@ -110,6 +116,31 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.loadDashboardData();
     this.loadDestinations();
     this.loadFavoriteDestinations();
+    this.loadAiDashboardData();
+  }
+
+  loadAiDashboardData(): void {
+    this.isAiLoading.set(true);
+    this.aiService.getInsights().subscribe({
+      next: (res) => {
+        this.aiInsights.set(res.data || []);
+      },
+      error: () => {}
+    });
+
+    this.aiService.getRecommendations('July', 'Moderate', 'Family').subscribe({
+      next: (res) => {
+        const mapped = (res.data || []).map((r: any) => ({
+          ...r,
+          imageUrl: getDestinationImageUrl(r.name)
+        }));
+        this.aiDestRecs.set(mapped);
+        this.isAiLoading.set(false);
+      },
+      error: () => {
+        this.isAiLoading.set(false);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -160,7 +191,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.isDestLoading.set(true);
     this.destService.getDestinations().subscribe({
       next: (res) => {
-        this.destinations.set(res.data.destinations);
+        const sliced = (res.data.destinations || []).slice(0, 6).map((d: any) => ({
+          ...d,
+          imageUrl: getDestinationImageUrl(d.name)
+        }));
+        this.destinations.set(sliced);
         this.isDestLoading.set(false);
       },
       error: () => {
@@ -172,7 +207,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loadFavoriteDestinations(): void {
     this.destService.getFavoriteDestinations().subscribe({
       next: (res) => {
-        this.favoriteDestinations.set(res.data.favorites || []);
+        const mapped = (res.data.favorites || []).map((f: any) => {
+          if (f.destination) {
+            f.destination.imageUrl = getDestinationImageUrl(f.destination.name);
+          }
+          return f;
+        });
+        this.favoriteDestinations.set(mapped);
       },
       error: () => {}
     });
@@ -379,10 +420,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   onImgError(event: any, destName?: string): void {
-    if (destName?.toLowerCase() === 'hyderabad') {
-      event.target.src = 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=800&q=80';
-    } else {
-      event.target.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80';
+    const currentUrl = event.target.src;
+    const name = destName || 'Destination';
+    const nextUrl = getNextDestinationImageUrl(currentUrl, name);
+    if (event.target.src !== nextUrl) {
+      event.target.src = nextUrl;
     }
   }
 }

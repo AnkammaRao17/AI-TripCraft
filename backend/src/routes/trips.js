@@ -21,6 +21,7 @@ router.route('/:id')
 
 router.post('/:id/duplicate', tripController.duplicateTrip);
 router.get('/:id/weather', tripController.getTripWeather);
+router.get('/:id/pdf', tripController.generateTripPDF);
 
 // Itinerary customization sub-routes
 router.put('/:id/itinerary/days/:dayNum', itineraryController.updateItineraryDay);

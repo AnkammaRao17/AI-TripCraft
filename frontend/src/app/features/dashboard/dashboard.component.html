@@ -45,6 +45,7 @@
         <h3 class="kpi-value">{{ totalTrips() }}</h3>
       </div>
     </div>
+
   </div>
 
   <!-- Charts Block / No Data State -->
@@ -89,15 +90,98 @@
       </div>
     </div>
 
-    <!-- AI Recommendations -->
+    <!-- AI Personal Travel Insights -->
     <div class="glass-card side-panel-card bg-advisor-gradient">
-      <h3 class="panel-card-title text-white"><mat-icon>auto_awesome</mat-icon> AI Recommendations</h3>
+      <h3 class="panel-card-title text-white"><mat-icon>auto_awesome</mat-icon> AI Travel Insights</h3>
       <div class="ai-recs-list">
-        <div class="ai-rec-item text-white" *ngFor="let rec of aiRecommendations()">
+        <div class="ai-rec-item text-white" *ngFor="let insight of aiInsights()">
+          <mat-icon class="bullet-rec-icon">
+            {{ insight.type === 'warning' ? 'warning' : insight.type === 'saving' ? 'paid' : 'tips_and_updates' }}
+          </mat-icon>
+          <span>{{ insight.text }}</span>
+        </div>
+        <div class="ai-rec-item text-white" *ngIf="aiInsights().length === 0">
           <mat-icon class="bullet-rec-icon">tips_and_updates</mat-icon>
-          <span>{{ rec }}</span>
+          <span>AI is analyzing your travel patterns to compile custom insights...</span>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- AI Travel Trends & Flight Insights -->
+  <div class="ai-insights-widget-grid" *ngIf="totalTrips() > 0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 24px; margin-bottom: 24px;">
+    <!-- Flight & Transit Trends -->
+    <div class="glass-card flex-col-widget" style="display: flex; flex-direction: column;">
+      <h4 class="widget-card-title" style="margin: 0 0 6px 0; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><mat-icon style="color: var(--primary);">local_airport</mat-icon> Transit & Flight Cost Trends</h4>
+      <p class="widget-subtitle" style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-muted);">Real-time aviation fluctuations based on travel dates.</p>
+      <div class="trend-item-row" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <mat-icon style="color: var(--primary);">flight_takeoff</mat-icon>
+          <div>
+            <span style="font-size: 13px; font-weight: 700; display: block; color: var(--text-primary);">Delhi (DEL) - Munnar (COK)</span>
+            <span style="font-size: 11px; color: var(--text-muted);">Average Economy Fare</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 13.5px; font-weight: 700; display: block; color: var(--text-primary);">₹8,500</span>
+          <span style="font-size: 10.5px; color: var(--success); font-weight: 700;">↓ 15% Low Season</span>
+        </div>
+      </div>
+      <div class="trend-item-row" style="margin-top: 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <mat-icon style="color: var(--primary);">flight_takeoff</mat-icon>
+          <div>
+            <span style="font-size: 13px; font-weight: 700; display: block; color: var(--text-primary);">Mumbai (BOM) - Jaipur (JAI)</span>
+            <span style="font-size: 11px; color: var(--text-muted);">Average Flight Fares</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 13.5px; font-weight: 700; display: block; color: var(--text-primary);">₹3,400</span>
+          <span style="font-size: 10.5px; color: var(--warning); font-weight: 700;">↑ 8% Peak Demand</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Money Saving optimization insights -->
+    <div class="glass-card flex-col-widget" style="display: flex; flex-direction: column;">
+      <h4 class="widget-card-title" style="margin: 0 0 6px 0; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><mat-icon style="color: var(--primary);">savings</mat-icon> AI Budget Optimizer Suggestions</h4>
+      <p class="widget-subtitle" style="margin: 0 0 16px 0; font-size: 12px; color: var(--text-muted);">Smart adjustments compiled by AI budget engine.</p>
+      <ul style="padding-left: 18px; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.4;">
+        <li>Use **local transit links & buses** instead of private airport cabs to save up to ₹1,800/day.</li>
+        <li>Reserve heritage homestays or hosteling lodges rather than core center hotels (save ~30%).</li>
+        <li>Dine at verified local diners & dhabas for authentic regional delicacies (meals under ₹200).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Recent Searches & Trending Places -->
+  <div class="glass-card trending-places-widget" style="margin-bottom: 24px; padding: 20px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px;">
+      <div>
+        <h4 style="margin: 0; font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; color: var(--text-primary);">
+          <mat-icon style="color: var(--primary);">trending_up</mat-icon> Trending Places & Recent Searches
+        </h4>
+        <p style="margin: 2px 0 0 0; font-size: 12px; color: var(--text-secondary);">What travelers are exploring this season in India.</p>
+      </div>
+      <!-- Recent Searches query list -->
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);">
+        <mat-icon style="font-size: 16px; width: 16px; height: 16px; margin-top: 2px;">history</mat-icon>
+        <span>Searches: "Munnar Valley", "Munnar Tea", "Jaipur Forts"</span>
+      </div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <a [routerLink]="['/destinations']" [queryParams]="{ search: 'Goa' }" class="trending-chip-link" style="background: var(--surface-2); border: 1px solid var(--border); color: var(--text-primary); text-decoration: none; padding: 6px 14px; border-radius: var(--radius-full); font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: all 0.2s ease;">
+        🌊 Goa Beaches <span style="font-size: 10px; color: var(--success); font-weight: 700;">+14%</span>
+      </a>
+      <a [routerLink]="['/destinations']" [queryParams]="{ search: 'Manali' }" class="trending-chip-link" style="background: var(--surface-2); border: 1px solid var(--border); color: var(--text-primary); text-decoration: none; padding: 6px 14px; border-radius: var(--radius-full); font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: all 0.2s ease;">
+        🏔️ Manali Peaks <span style="font-size: 10px; color: var(--success); font-weight: 700;">+22%</span>
+      </a>
+      <a [routerLink]="['/destinations']" [queryParams]="{ search: 'Jaipur' }" class="trending-chip-link" style="background: var(--surface-2); border: 1px solid var(--border); color: var(--text-primary); text-decoration: none; padding: 6px 14px; border-radius: var(--radius-full); font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: all 0.2s ease;">
+        🏰 Jaipur Forts <span style="font-size: 10px; color: var(--success); font-weight: 700;">+9%</span>
+      </a>
+      <a [routerLink]="['/destinations']" [queryParams]="{ search: 'Munnar' }" class="trending-chip-link" style="background: var(--surface-2); border: 1px solid var(--border); color: var(--text-primary); text-decoration: none; padding: 6px 14px; border-radius: var(--radius-full); font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: all 0.2s ease;">
+        🌲 Munnar Hills <span style="font-size: 10px; color: var(--success); font-weight: 700;">+30%</span>
+      </a>
     </div>
   </div>
 
@@ -199,6 +283,44 @@
     </mat-paginator>
   </div>
 
+  <!-- AI Destination Recommendation Engine -->
+  <div class="section-header margin-top-lg" *ngIf="aiDestRecs().length > 0">
+    <h2 class="section-heading">
+      <mat-icon style="color: var(--accent-primary); vertical-align: bottom;">auto_awesome</mat-icon> AI Recommended Indian Stays
+    </h2>
+    <p class="section-subheading">Personalized holiday recommendations handpicked by our travel models for July.</p>
+  </div>
+
+  <div class="destinations-grid" *ngIf="aiDestRecs().length > 0">
+    <div class="glass-card dest-card hover-scale pointer" *ngFor="let rec of aiDestRecs()" [routerLink]="['/trip-builder']" [queryParams]="{ destination: rec.name, country: 'India' }">
+      <div class="dest-img-wrapper">
+        <img 
+          [src]="rec.imageUrl" 
+          [alt]="rec.name" 
+          class="dest-img" 
+          loading="lazy"
+        />
+      </div>
+      <div class="dest-info">
+        <div class="dest-header">
+          <h3 class="dest-title">{{ rec.name }}</h3>
+          <span class="dest-country">{{ rec.state }}</span>
+        </div>
+        <p class="dest-desc">{{ rec.description }}</p>
+        
+        <div class="ai-rationale-row">
+          <mat-icon class="rationale-icon">tips_and_updates</mat-icon>
+          <span class="rationale-text"><strong>Why AI recommends:</strong> {{ rec.reason }}</span>
+        </div>
+
+        <div class="dest-actions-row">
+          <span class="best-time-label" style="font-size: 11.5px; color: var(--text-secondary); font-weight: 500;">Best Time: {{ rec.bestTime }}</span>
+          <a mat-raised-button [routerLink]="['/trip-builder']" [queryParams]="{ destination: rec.name, country: 'India' }" (click)="$event.stopPropagation()" class="dest-plan-btn btn-primary">Plan Trip</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Featured Destinations Catalog -->
   <div class="section-header margin-top-lg">
     <h2 class="section-heading">Featured Destinations</h2>
@@ -247,5 +369,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="view-more-container">
+    <a mat-raised-button routerLink="/destinations" class="view-more-dest-btn">
+      <mat-icon>explore</mat-icon> View All Indian Destinations
+    </a>
   </div>
 </div>

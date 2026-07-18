@@ -14,6 +14,7 @@ import { DestinationService } from '../../core/services/destination.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Destination, Review } from '../../models/interfaces';
+import { getDestinationImageUrl, getNextDestinationImageUrl } from '../../shared/constants/destination-images';
 
 @Component({
   selector: 'app-destination-details',
@@ -801,26 +802,12 @@ export class DestinationDetailsComponent implements OnInit {
     this.destService.getDestination(id).subscribe({
       next: (res) => {
         const destData = res.data.destination;
+        const correctImg = getDestinationImageUrl(destData.name);
+        destData.imageUrl = correctImg;
+        destData.gallery = [correctImg];
         this.dest.set(destData);
-        if (destData.gallery && destData.gallery.length > 0) {
-          this.activeGalleryImg.set(destData.gallery[0]);
-        } else if (destData.imageUrl) {
-          this.activeGalleryImg.set(destData.imageUrl);
-        }
-        
-        if (destData.imageUrl) {
-          this.bannerUrl.set(destData.imageUrl);
-          const img = new Image();
-          img.src = destData.imageUrl;
-          img.onerror = () => {
-            const fallback = destData.name.toLowerCase() === 'hyderabad'
-              ? 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=800&q=80'
-              : 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80';
-            this.bannerUrl.set(fallback);
-          };
-        } else {
-          this.bannerUrl.set('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80');
-        }
+        this.activeGalleryImg.set(correctImg);
+        this.bannerUrl.set(correctImg);
         
         // Fetch reviews
         this.loadReviews(id);
@@ -913,10 +900,11 @@ export class DestinationDetailsComponent implements OnInit {
   }
 
   onImgError(event: any, destName?: string): void {
-    if (destName?.toLowerCase() === 'hyderabad') {
-      event.target.src = 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=800&q=80';
-    } else {
-      event.target.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80';
+    const currentUrl = event.target.src;
+    const name = destName || 'Destination';
+    const nextUrl = getNextDestinationImageUrl(currentUrl, name);
+    if (event.target.src !== nextUrl) {
+      event.target.src = nextUrl;
     }
   }
 }

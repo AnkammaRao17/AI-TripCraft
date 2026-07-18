@@ -67,7 +67,7 @@ export class TripBuilderComponent implements OnInit {
   });
 
   filteredDestinations = computed(() => {
-    const input = this.firstFormGroup.get('destination')?.value || '';
+    const input = this.step1FormGroup.get('destination')?.value || '';
     return this.destinations().filter((d) =>
       d.name.toLowerCase().includes(input.toLowerCase())
     );
@@ -85,24 +85,30 @@ export class TripBuilderComponent implements OnInit {
     { name: 'Art & Museums', value: 'Art', selected: false, icon: 'museum' },
   ];
 
-  // Steps
-  firstFormGroup: FormGroup = this.fb.group({
+  // 6-step Wizard Form Groups
+  step1FormGroup: FormGroup = this.fb.group({
     destination: ['', Validators.required],
-    country: ['India', Validators.required],
+    country: ['India', Validators.required]
+  });
+
+  step2FormGroup: FormGroup = this.fb.group({
     startDate: ['', [Validators.required, futureDateValidator()]],
-    numberOfDays: [3, [Validators.required, Validators.min(1), Validators.max(30)]],
+    numberOfDays: [3, [Validators.required, Validators.min(1), Validators.max(30)]]
   });
 
-  secondFormGroup: FormGroup = this.fb.group({
-    budget: ['Moderate', Validators.required],
+  step3FormGroup: FormGroup = this.fb.group({
     numberOfTravelers: [1, [Validators.required, Validators.min(1)]],
-    tripType: ['Solo', Validators.required],
+    tripType: ['Solo', Validators.required]
   });
 
-  thirdFormGroup: FormGroup = this.fb.group({
-    transportPreference: ['Public Transit', Validators.required],
+  step4FormGroup: FormGroup = this.fb.group({
+    budget: ['Moderate', Validators.required],
     hotelPreference: ['Hotel', Validators.required],
-    foodPreference: ['Any', Validators.required],
+    transportPreference: ['Public Transit', Validators.required]
+  });
+
+  step5FormGroup: FormGroup = this.fb.group({
+    foodPreference: ['Any', Validators.required]
   });
 
   ngOnInit(): void {
@@ -115,21 +121,21 @@ export class TripBuilderComponent implements OnInit {
         const paramDest = this.route.snapshot.queryParams['destination'];
         const paramCountry = this.route.snapshot.queryParams['country'];
         if (paramDest) {
-          this.firstFormGroup.patchValue({ destination: paramDest });
+          this.step1FormGroup.patchValue({ destination: paramDest });
         }
         if (paramCountry) {
-          this.firstFormGroup.patchValue({ country: paramCountry });
+          this.step1FormGroup.patchValue({ country: paramCountry });
         }
       }
     });
 
     // Auto-fill country field on destination input match
-    this.firstFormGroup.get('destination')?.valueChanges.subscribe((val) => {
+    this.step1FormGroup.get('destination')?.valueChanges.subscribe((val) => {
       const match = this.destinations().find(
         (d) => d.name.toLowerCase() === val?.trim().toLowerCase()
       );
       if (match) {
-        this.firstFormGroup.patchValue({ country: match.country });
+        this.step1FormGroup.patchValue({ country: match.country });
       }
     });
   }
@@ -138,7 +144,7 @@ export class TripBuilderComponent implements OnInit {
     const val = parseInt((event.target as HTMLInputElement).value);
     this.sliderValue.set(val);
     const budgetMap = ['Budget', 'Moderate', 'Luxury'];
-    this.secondFormGroup.patchValue({ budget: budgetMap[val - 1] });
+    this.step4FormGroup.patchValue({ budget: budgetMap[val - 1] });
   }
 
   toggleInterest(index: number): void {
@@ -146,7 +152,13 @@ export class TripBuilderComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.firstFormGroup.invalid || this.secondFormGroup.invalid || this.thirdFormGroup.invalid) {
+    if (
+      this.step1FormGroup.invalid || 
+      this.step2FormGroup.invalid || 
+      this.step3FormGroup.invalid || 
+      this.step4FormGroup.invalid || 
+      this.step5FormGroup.invalid
+    ) {
       this.notification.warning('Please complete all form fields.');
       return;
     }
@@ -156,9 +168,11 @@ export class TripBuilderComponent implements OnInit {
       .map((i) => i.value);
 
     const tripPayload = {
-      ...this.firstFormGroup.value,
-      ...this.secondFormGroup.value,
-      ...this.thirdFormGroup.value,
+      ...this.step1FormGroup.value,
+      ...this.step2FormGroup.value,
+      ...this.step3FormGroup.value,
+      ...this.step4FormGroup.value,
+      ...this.step5FormGroup.value,
       interests: selectedInterests,
     };
 

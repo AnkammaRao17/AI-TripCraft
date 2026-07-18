@@ -33,6 +33,9 @@ import { ThemeService } from '../../../core/services/theme.service';
           <a routerLink="/dashboard" routerLinkActive="active-link" class="nav-link">
             <mat-icon>dashboard</mat-icon> Dashboard
           </a>
+          <a routerLink="/destinations" routerLinkActive="active-link" class="nav-link">
+            <mat-icon>explore</mat-icon> Destinations
+          </a>
           <a routerLink="/trip-builder" routerLinkActive="active-link" class="nav-link">
             <mat-icon>add_circle</mat-icon> Plan Trip
           </a>

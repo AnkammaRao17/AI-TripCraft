@@ -1,0 +1,523 @@
+<div class="landing-container">
+  <!-- Glowing Background Mesh -->
+  <div class="glow-mesh-wrapper">
+    <div class="glow-sphere glow-sphere-1"></div>
+    <div class="glow-sphere glow-sphere-2"></div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-layout container">
+      <div class="hero-left animate-slide-up">
+        <div class="hero-badge-pill">
+          <mat-icon class="sparkle-icon">auto_awesome</mat-icon>
+          <span>Next-Generation Travel Engine</span>
+        </div>
+        <h1 class="hero-title">
+          Plan your adventure with <span class="gradient-text">AI TripCraft</span>
+        </h1>
+        <p class="hero-subtitle">
+          Generate realistic, hyper-personalized travel itineraries in seconds. Custom day plans, real-time budgets, local secrets, and live weather synced by Google Gemini AI.
+        </p>
+
+        <!-- Glassmorphism Search Bar -->
+        <div class="search-glass-container">
+          <mat-icon class="search-glass-icon">search</mat-icon>
+          <input type="text" placeholder="Where is your next dream destination? (e.g. Munnar, Goa, Jaipur)" class="search-glass-input" readonly (click)="getStarted()" />
+          <button mat-raised-button class="search-glass-btn btn-primary" (click)="getStarted()">
+            <mat-icon>explore</mat-icon> Plan Now
+          </button>
+        </div>
+
+        <!-- Popular Queries Chips -->
+        <div class="popular-queries-row">
+          <span class="queries-label">Trending now:</span>
+          <button class="query-chip" (click)="getStarted()">🌲 Munnar</button>
+          <button class="query-chip" (click)="getStarted()">🌊 Goa</button>
+          <button class="query-chip" (click)="getStarted()">🏰 Jaipur</button>
+          <button class="query-chip" (click)="getStarted()">🏔️ Manali</button>
+        </div>
+
+        <!-- Hero Actions -->
+        <div class="hero-actions-row">
+          <button mat-raised-button class="btn-primary hero-btn-main" (click)="getStarted()">
+            Get Started Free <mat-icon>arrow_forward</mat-icon>
+          </button>
+          <button mat-stroked-button class="btn-outline-main hero-btn-secondary" (click)="getStarted()">
+            <mat-icon>play_circle_outline</mat-icon> Watch Demo
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Right: Interactive Widgets & Stats -->
+      <div class="hero-right animate-fade-in delay-2">
+        <div class="mock-itinerary-preview-card glass-card hover-glow">
+          <div class="preview-header">
+            <div class="preview-avatar-group">
+              <div class="preview-avatar bg-indigo">
+                <mat-icon>auto_awesome</mat-icon>
+              </div>
+              <div>
+                <span class="preview-assistant-name">AI Travel Concierge</span>
+                <span class="preview-assistant-status">Active Recommendations</span>
+              </div>
+            </div>
+            <span class="preview-pulse-badge">LIVE WEATHER</span>
+          </div>
+
+          <div class="preview-body">
+            <div class="preview-destination-badge">
+              <mat-icon>place</mat-icon>
+              <span>Munnar, Kerala</span>
+            </div>
+            <p class="preview-text">
+              "For Day 1, I recommend starting at <strong>Eravikulam National Park</strong> at 8:00 AM to see the Nilgiri Tahr, followed by tea plantation tours."
+            </p>
+
+            <div class="preview-stats-row">
+              <div class="preview-stat-item">
+                <span class="stat-lbl">Weather</span>
+                <span class="stat-val text-cyan">28°C • Sunny</span>
+              </div>
+              <div class="preview-stat-item">
+                <span class="stat-lbl">Daily Budget</span>
+                <span class="stat-val text-emerald">₹4,200/day</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini Stats Stack -->
+        <div class="mini-stats-grid">
+          <div class="mini-stat-card glass-card">
+            <span class="stat-number">100K+</span>
+            <span class="stat-desc">Trips Planned</span>
+          </div>
+          <div class="mini-stat-card glass-card">
+            <span class="stat-number">500+</span>
+            <span class="stat-desc">Destinations</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted By Section -->
+  <section class="trusted-section text-center">
+    <div class="container" style="padding: 24px;">
+      <p class="trusted-heading">POWERED BY DYNAMIC DATA linkages WITH LEADING TRAVEL NETWORKS</p>
+      <div class="trusted-logos-grid">
+        <span class="logo-text">Google Travel</span>
+        <span class="logo-text">Airbnb Experiences</span>
+        <span class="logo-text">Booking.com</span>
+        <span class="logo-text">TripAdvisor</span>
+        <span class="logo-text">Expedia</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Demo Sandbox Widget -->
+  <section class="sandbox-section container">
+    <div class="section-header text-center">
+      <span class="category-badge">Interactive Sandbox</span>
+      <h2 class="section-title">Look Inside Your Next Itinerary</h2>
+      <p class="section-subtitle">Toggle the features below to preview the premium interfaces built for your journey.</p>
+    </div>
+
+    <!-- Toggle Buttons -->
+    <div class="sandbox-tabs-row">
+      <button class="sandbox-tab-btn" [class.active]="activeDemoTab() === 'itinerary'" (click)="setDemoTab('itinerary')">
+        <mat-icon>schedule</mat-icon> Day-by-Day Timeline
+      </button>
+      <button class="sandbox-tab-btn" [class.active]="activeDemoTab() === 'budget'" (click)="setDemoTab('budget')">
+        <mat-icon>payments</mat-icon> Live Cost Calculator
+      </button>
+      <button class="sandbox-tab-btn" [class.active]="activeDemoTab() === 'weather'" (click)="setDemoTab('weather')">
+        <mat-icon>wb_sunny</mat-icon> Weather & Local Secrets
+      </button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="sandbox-display glass-card hover-glow">
+      <!-- 1. Itinerary Timeline Preview -->
+      <div class="demo-timeline-panel animate-fade" *ngIf="activeDemoTab() === 'itinerary'">
+        <div class="demo-day-header">
+          <span class="demo-day-num">Day 1: Exploring Jaipur (Pink City)</span>
+          <span class="demo-day-badge">Solo • Moderate Tier</span>
+        </div>
+        <div class="demo-timeline-steps">
+          <div class="demo-timeline-step">
+            <span class="demo-time">09:00 AM</span>
+            <div class="demo-plan-box">
+              <h4 class="demo-plan-title">Amber Palace & Fort Ramparts</h4>
+              <p class="demo-plan-desc">Explore the majestic halls and capture sweeping sunrise views over Maota Lake. Beat the tourist crowd.</p>
+            </div>
+          </div>
+          <div class="demo-timeline-step">
+            <span class="demo-time">01:00 PM</span>
+            <div class="demo-plan-box">
+              <h4 class="demo-plan-title">Laxmi Mishthan Bhandar (LMB)</h4>
+              <p class="demo-plan-desc">Indulge in an authentic Rajasthani Thali featuring dal-baati-churma and mawa kachoris.</p>
+            </div>
+          </div>
+          <div class="demo-timeline-step">
+            <span class="demo-time">04:30 PM</span>
+            <div class="demo-plan-box">
+              <h4 class="demo-plan-title">Hawa Mahal Palace of Winds</h4>
+              <p class="demo-plan-desc">Photograph the iconic honeycomb facade and explore the interior breeze corridors.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Cost Calculator Preview -->
+      <div class="demo-budget-panel animate-fade" *ngIf="activeDemoTab() === 'budget'">
+        <div class="demo-budget-header">
+          <span>Estimated Trip Budget (3 Days, 1 Traveler)</span>
+          <span class="text-emerald font-bold">₹12,400 Grand Total</span>
+        </div>
+        <div class="demo-budget-items">
+          <div class="demo-budget-row">
+            <span>Accommodation (Boutique Heritage Lodge)</span>
+            <span class="font-bold">₹5,400</span>
+          </div>
+          <div class="demo-budget-row">
+            <span>Local Food & Dining</span>
+            <span class="font-bold">₹3,000</span>
+          </div>
+          <div class="demo-budget-row">
+            <span>Sightseeing Tickets & Activity Passes</span>
+            <span class="font-bold">₹1,800</span>
+          </div>
+          <div class="demo-budget-row">
+            <span>Cab Cabs & Local Auto-rickshaws</span>
+            <span class="font-bold">₹2,200</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Weather & Local Secrets Preview -->
+      <div class="demo-secrets-panel animate-fade" *ngIf="activeDemoTab() === 'weather'">
+        <div class="demo-grid-two-cols">
+          <div class="demo-col-card">
+            <h4 class="demo-col-heading text-cyan"><mat-icon>thermostat</mat-icon> Open-Meteo Weather Analytics</h4>
+            <div class="weather-brief-row">
+              <h2 style="font-size: 36px; margin: 0; font-weight: 800; color: #ffffff;">28°C</h2>
+              <div>
+                <span class="font-bold">Clear Sky Outlook</span>
+                <p style="margin: 0; font-size: 12px; color: var(--text-muted);">Humidity: 65% • Ideal touring climate</p>
+              </div>
+            </div>
+            <p style="font-size: 13.5px; line-height: 1.5; color: var(--text-secondary);">AI Tip: Best Visiting Time is early morning or late evening. Carry lightweight breathable activewear.</p>
+          </div>
+
+          <div class="demo-col-card">
+            <h4 class="demo-col-heading text-pink"><mat-icon>photo_camera</mat-icon> AI Recommended Photography & Hidden Secrets</h4>
+            <ul style="padding-left: 18px; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--text-secondary);">
+              <li><strong>Panna Meena ka Kund:</strong> A gorgeous 16th-century geometric stepwell with yellow plaster arches. Perfect for Instagram backdrops.</li>
+              <li><strong>Galta Ji Water Temple:</strong> High mountain cleft pools surrounded by natural springs. Watch the sunset monkey gatherings.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Redesigned Features Grid Section -->
+  <section class="features-section container">
+    <div class="section-header text-center">
+      <span class="category-badge">Capabilities</span>
+      <h2 class="section-title">Engineered for Premium Journeys</h2>
+      <p class="section-subtitle">Discover the state-of-the-art tools built to plan your trips flawlessly.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="glass-card feature-card hover-glow">
+        <div class="feature-icon bg-indigo">
+          <mat-icon>auto_awesome</mat-icon>
+        </div>
+        <h3 class="feature-title">AI Day-by-Day Timelines</h3>
+        <p class="feature-desc">Tailor hourly day plans using Gemini AI matching your dates, group size, budget tier, and custom interests.</p>
+        <button mat-button class="feature-learn-btn" (click)="getStarted()">Learn More <mat-icon>arrow_right</mat-icon></button>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="glass-card feature-card hover-glow">
+        <div class="feature-icon bg-green">
+          <mat-icon>payments</mat-icon>
+        </div>
+        <h3 class="feature-title">Dynamic Cost Estimator</h3>
+        <p class="feature-desc">Realistic day-by-day estimates across Accommodation, Food, Transportation, and Entry Fees based on actual Indian travel prices.</p>
+        <button mat-button class="feature-learn-btn" (click)="getStarted()">Learn More <mat-icon>arrow_right</mat-icon></button>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="glass-card feature-card hover-glow">
+        <div class="feature-icon bg-blue">
+          <mat-icon>thermostat</mat-icon>
+        </div>
+        <h3 class="feature-title">Weather Insights & Tips</h3>
+        <p class="feature-desc">Real-time weather details and five-day temperature conditions fetched from Open-Meteo for your destination.</p>
+        <button mat-button class="feature-learn-btn" (click)="getStarted()">Learn More <mat-icon>arrow_right</mat-icon></button>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="glass-card feature-card hover-glow">
+        <div class="feature-icon bg-orange">
+          <mat-icon>backpack</mat-icon>
+        </div>
+        <h3 class="feature-title">Packing Checklist Engine</h3>
+        <p class="feature-desc">Intelligent checklist matching the weather conditions, length of stay, and specific activities of your destination.</p>
+        <button mat-button class="feature-learn-btn" (click)="getStarted()">Learn More <mat-icon>arrow_right</mat-icon></button>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="glass-card feature-card hover-glow">
+        <div class="feature-icon bg-purple">
+          <mat-icon>navigation</mat-icon>
+        </div>
+        <h3 class="feature-title">Smart Route Maps</h3>
+        <p class="feature-desc">Google Maps integrations displaying route segments, durations, and transportation styles between tour stops.</p>
+        <button mat-button class="feature-learn-btn" (click)="getStarted()">Learn More <mat-icon>arrow_right</mat-icon></button>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="glass-card feature-card hover-glow">
+        <div class="feature-icon bg-pink">
+          <mat-icon>hotel</mat-icon>
+        </div>
+        <h3 class="feature-title">Real Lodging & Dining</h3>
+        <p class="feature-desc">High-quality hotel and restaurant suggestions categorized by budget tier with amenities, prices, and reviews.</p>
+        <button mat-button class="feature-learn-btn" (click)="getStarted()">Learn More <mat-icon>arrow_right</mat-icon></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why AI TripCraft Section -->
+  <section class="why-us-section container">
+    <div class="section-header text-center">
+      <span class="category-badge">SaaS Comparison</span>
+      <h2 class="section-title">Why Travelers Prefer TripCraft</h2>
+      <p class="section-subtitle">How we compare against traditional planning methods.</p>
+    </div>
+
+    <div class="glass-card why-table-card">
+      <div class="comparison-grid">
+        <div class="comp-header">Features</div>
+        <div class="comp-header text-indigo">AI TripCraft</div>
+        <div class="comp-header text-muted">Traditional Guides</div>
+
+        <div class="comp-row">Itinerary Compilation Time</div>
+        <div class="comp-row text-indigo font-bold"><mat-icon>check_circle</mat-icon> Seconds (Instantaneous)</div>
+        <div class="comp-row text-muted">Days of manual browsing</div>
+
+        <div class="comp-row">Day-by-Day Cost Accuracy</div>
+        <div class="comp-row text-indigo font-bold"><mat-icon>check_circle</mat-icon> Synced by actual Indian pricing</div>
+        <div class="comp-row text-muted">Rough generic estimations</div>
+
+        <div class="comp-row">Weather & Packing Sync</div>
+        <div class="comp-row text-indigo font-bold"><mat-icon>check_circle</mat-icon> Integrated dynamically</div>
+        <div class="comp-row text-muted">Requires separate lookup</div>
+
+        <div class="comp-row">Interactive Route Navigation</div>
+        <div class="comp-row text-indigo font-bold"><mat-icon>check_circle</mat-icon> Dynamic Google maps timelines</div>
+        <div class="comp-row text-muted">Static textual listings</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Indian Destinations Section -->
+  <section class="popular-destinations-section container">
+    <div class="section-header text-center">
+      <span class="category-badge">Inspiration</span>
+      <h2 class="section-title">Explore Premium Destinations</h2>
+      <p class="section-subtitle">Exquisite itineraries ready to be generated for our most beloved travel spots.</p>
+    </div>
+
+    <!-- Airbnb style grid -->
+    <div class="airbnb-grid">
+      <div class="airbnb-card hover-glow pointer" *ngFor="let dest of featuredDestinations" (click)="getStarted()">
+        <div class="airbnb-img-wrapper">
+          <img 
+            [src]="dest.imageUrl" 
+            [alt]="dest.name" 
+            class="airbnb-img" 
+            loading="lazy" 
+            (error)="onImgError($event, dest.name)"
+          />
+          <span class="airbnb-badge">AI RECOMMENDED</span>
+          <span class="airbnb-favorite-btn"><mat-icon>favorite_border</mat-icon></span>
+        </div>
+        <div class="airbnb-info">
+          <div class="airbnb-header-row">
+            <h3 class="airbnb-title">{{ dest.name }}</h3>
+            <span class="airbnb-rating-badge"><mat-icon>star</mat-icon> {{ dest.rating }}</span>
+          </div>
+          <span class="airbnb-location">{{ dest.state }}, India</span>
+          <p class="airbnb-desc-snippet">{{ dest.description }}</p>
+          <div class="airbnb-footer-row">
+            <span class="airbnb-price-tag">Moderate • 5 Days</span>
+            <span class="airbnb-action-link">Plan Trip <mat-icon>chevron_right</mat-icon></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="timeline-section container">
+    <div class="section-header text-center">
+      <span class="category-badge">Process</span>
+      <h2 class="section-title">Crafting Your Next Journey</h2>
+      <p class="section-subtitle">Three simple steps to tailor your next premium travel itinerary.</p>
+    </div>
+
+    <div class="timeline-container">
+      <div class="timeline-item">
+        <div class="timeline-badge">1</div>
+        <div class="timeline-panel glass-card">
+          <h3 class="timeline-title">Input Preferences</h3>
+          <p class="timeline-desc">Supply your target destination, dates, budget category, travelers count, and specific interests.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-badge">2</div>
+        <div class="timeline-panel glass-card">
+          <h3 class="timeline-title">AI Compilation</h3>
+          <p class="timeline-desc">Google Gemini compiles a custom itinerary aligning activities, coordinates, weather forecasts, and route stops.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-badge">3</div>
+        <div class="timeline-panel glass-card">
+          <h3 class="timeline-title">Export & Travel</h3>
+          <p class="timeline-desc">Inspect daily plans, refine your budget breakdown, explore local food guides, and export the output to high-fidelity PDFs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sleek Pricing Section -->
+  <section class="pricing-section container">
+    <div class="section-header text-center">
+      <span class="category-badge">Plans</span>
+      <h2 class="section-title">Simple Transparent Pricing</h2>
+      <p class="section-subtitle">Get started with our free features or unlock maximum power.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free tier -->
+      <div class="glass-card pricing-card hover-glow">
+        <h4 class="pricing-tier-name">Explorer Free</h4>
+        <p class="pricing-tier-desc">Perfect for planning occasional family road trips.</p>
+        <div class="pricing-price-row">
+          <span class="price-val">₹0</span>
+          <span class="price-sub">/ forever</span>
+        </div>
+        <ul class="pricing-features-list">
+          <li><mat-icon>check</mat-icon> Standard AI Itinerary generation</li>
+          <li><mat-icon>check</mat-icon> Live Weather Widgets</li>
+          <li><mat-icon>check</mat-icon> Basic Packing List</li>
+        </ul>
+        <button mat-raised-button class="pricing-btn btn-outline" (click)="getStarted()">Start Planning</button>
+      </div>
+
+      <!-- Pro tier -->
+      <div class="glass-card pricing-card featured hover-glow">
+        <div class="featured-badge">MOST POPULAR</div>
+        <h4 class="pricing-tier-name text-white">Voyager Pro</h4>
+        <p class="pricing-tier-desc text-muted">Ideal for frequent adventurers and group planners.</p>
+        <div class="pricing-price-row">
+          <span class="price-val text-white">₹499</span>
+          <span class="price-sub">/ month</span>
+        </div>
+        <ul class="pricing-features-list">
+          <li class="text-white"><mat-icon>check</mat-icon> High-Fidelity Gemini AI Models</li>
+          <li class="text-white"><mat-icon>check</mat-icon> Unlimited high-resolution PDF exports</li>
+          <li class="text-white"><mat-icon>check</mat-icon> AI Chat Travel Assistant</li>
+          <li class="text-white"><mat-icon>check</mat-icon> Hidden local attractions unlocked</li>
+        </ul>
+        <button mat-raised-button class="pricing-btn btn-primary" (click)="getStarted()">Get Voyager Pro</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion Section -->
+  <section class="faq-section container">
+    <div class="section-header text-center">
+      <span class="category-badge">F.A.Q.</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">Find answers to general questions about AI TripCraft.</p>
+    </div>
+
+    <div class="faq-accordion-list">
+      <div class="glass-card faq-item hover-glow" (click)="toggleFaq(0)">
+        <div class="faq-question-row">
+          <span class="faq-question">How does Gemini AI plan my travel itinerary?</span>
+          <mat-icon class="faq-toggle-icon">{{ activeFaqIndex() === 0 ? 'remove' : 'add' }}</mat-icon>
+        </div>
+        <div class="faq-answer-box" *ngIf="activeFaqIndex() === 0">
+          <p class="faq-answer">
+            AI TripCraft links Google Gemini AI API with local destination coordinates and real-world travel parameters. It dynamically compiles sightseeing spots, restaurants, packing checklists, and budgets that fit your dates and interests perfectly.
+          </p>
+        </div>
+      </div>
+
+      <div class="glass-card faq-item hover-glow" (click)="toggleFaq(1)">
+        <div class="faq-question-row">
+          <span class="faq-question">Are the day cost calculations realistic?</span>
+          <mat-icon class="faq-toggle-icon">{{ activeFaqIndex() === 1 ? 'remove' : 'add' }}</mat-icon>
+        </div>
+        <div class="faq-answer-box" *ngIf="activeFaqIndex() === 1">
+          <p class="faq-answer">
+            Yes, calculations are calculated dynamically based on average Indian travel rates for hostels, luxury resorts, local transport, dining, and tourist ticket entries, tailored to your chosen budget tier.
+          </p>
+        </div>
+      </div>
+
+      <div class="glass-card faq-item hover-glow" (click)="toggleFaq(2)">
+        <div class="faq-question-row">
+          <span class="faq-question">Can I edit my timeline after AI compiles it?</span>
+          <mat-icon class="faq-toggle-icon">{{ activeFaqIndex() === 2 ? 'remove' : 'add' }}</mat-icon>
+        </div>
+        <div class="faq-answer-box" *ngIf="activeFaqIndex() === 2">
+          <p class="faq-answer">
+            Absolutely! You can chat with our AI Travel Assistant to add/remove spots, adjust the budget level, modify duration, or check/uncheck packing items on your list.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand-col">
+        <div class="footer-logo">
+          <mat-icon style="color: var(--primary);">auto_awesome</mat-icon>
+          <span>AI TripCraft</span>
+        </div>
+        <p class="footer-brand-desc">
+          Crafting premium travel experiences across the globe using state-of-the-art AI.
+        </p>
+      </div>
+      <div class="footer-links-col">
+        <h5 class="footer-heading">Product</h5>
+        <a (click)="getStarted()" class="footer-link">Itinerary Builder</a>
+        <a (click)="getStarted()" class="footer-link">Destinations</a>
+        <a (click)="getStarted()" class="footer-link">Pricing</a>
+      </div>
+      <div class="footer-links-col">
+        <h5 class="footer-heading">Company</h5>
+        <a class="footer-link">About Us</a>
+        <a class="footer-link">Careers</a>
+        <a class="footer-link">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom text-center">
+      <p>&copy; 2026 AI TripCraft. Built with love for modern adventurers. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

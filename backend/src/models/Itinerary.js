@@ -38,6 +38,26 @@ const ItinerarySchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    hiddenGems: {
+      type: [String],
+      default: [],
+    },
+    safetyTips: {
+      type: [String],
+      default: [],
+    },
+    photographySpots: {
+      type: [String],
+      default: [],
+    },
+    bestVisitingTime: {
+      type: String,
+      default: '',
+    },
+    budgetOptimization: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,
