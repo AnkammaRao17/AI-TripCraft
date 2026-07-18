@@ -46,6 +46,24 @@ const connectDB = async () => {
     logger.info(`MongoDB Version: ${version}`);
     logger.info(`Collection Count: ${collectionCount}`);
     logger.info(`User Count: ${userCount}`);
+
+    // Auto-seed database if empty
+    try {
+      const Destination = require('../models/Destination');
+      const destinationCount = await Destination.countDocuments({});
+      if (destinationCount === 0) {
+        logger.info('No destinations found in database. Initiating automatic seeding...');
+        const { seedDatabaseInline } = require('./seed');
+        await seedDatabaseInline(false);
+        logger.info('✓ Database auto-seeded successfully!');
+        
+        // Update statistics
+        userCount = await User.countDocuments({});
+        logger.info(`Updated User Count post-seed: ${userCount}`);
+      }
+    } catch (seedError) {
+      logger.error(`Database auto-seeding failed: ${seedError.message}`);
+    }
   } catch (error) {
     console.error('MongoDB connection error:', error);
     logger.error(`MongoDB connection error: ${error.message}`);
