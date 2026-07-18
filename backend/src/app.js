@@ -34,6 +34,9 @@ connectDB();
 
 const app = express();
 
+// Trust reverse proxy (e.g. Render, Vercel) for rate limiting
+app.set('trust proxy', 1);
+
 // Security Middlewares
 app.use(helmet());
 app.use(cors({
