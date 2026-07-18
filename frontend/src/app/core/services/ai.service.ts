@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AiService {
   private http = inject(HttpClient);
-  private aiUrl = 'http://localhost:5000/api/ai';
+  private aiUrl = `${environment.apiUrl}/ai`;
   public itineraryModified$ = new Subject<void>();
 
   chat(message: string, tripId?: string, chatHistory?: any[]): Observable<any> {

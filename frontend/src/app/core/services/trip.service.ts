@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Trip, Itinerary, Favorite, TripDetailResponse, StatsResponse } from '../../models/interfaces';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TripService {
-  private tripsUrl = 'http://localhost:5000/api/trips';
-  private favoritesUrl = 'http://localhost:5000/api/favorites';
+  private tripsUrl = `${environment.apiUrl}/trips`;
+  private favoritesUrl = `${environment.apiUrl}/favorites`;
 
   constructor(private http: HttpClient) {}
 

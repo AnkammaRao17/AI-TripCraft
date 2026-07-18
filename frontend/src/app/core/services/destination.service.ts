@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Destination, Review } from '../../models/interfaces';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DestinationService {
-  private destUrl = 'http://localhost:5000/api/destinations';
-  private reviewsUrl = 'http://localhost:5000/api/reviews';
-  private favoritesUrl = 'http://localhost:5000/api/favorites';
+  private destUrl = `${environment.apiUrl}/destinations`;
+  private reviewsUrl = `${environment.apiUrl}/reviews`;
+  private favoritesUrl = `${environment.apiUrl}/favorites`;
 
   constructor(private http: HttpClient) {}
 

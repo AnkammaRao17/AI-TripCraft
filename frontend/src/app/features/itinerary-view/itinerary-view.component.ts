@@ -19,6 +19,7 @@ import { TripService } from '../../core/services/trip.service';
 import { AiService } from '../../core/services/ai.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Trip, Itinerary } from '../../models/interfaces';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-itinerary-view',
@@ -347,7 +348,7 @@ export class ItineraryViewComponent implements OnInit {
 
     this.notification.info('Compiling your premium PDF brochure on backend...');
 
-    this.http.get(`http://localhost:5000/api/trips/${t._id}/pdf`, { responseType: 'blob' }).subscribe({
+    this.http.get(`${environment.apiUrl}/trips/${t._id}/pdf`, { responseType: 'blob' }).subscribe({
       next: (blob) => {
         const cleanDest = t.destination.replace(/[^a-zA-Z0-9]/g, '_');
         const filename = `AITripCraft_${cleanDest}.pdf`;

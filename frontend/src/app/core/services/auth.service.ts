@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, throwError, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, RefreshResponse, User } from '../../models/interfaces';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   
   // Angular Signal for current user state
   currentUser = signal<User | null>(null);
