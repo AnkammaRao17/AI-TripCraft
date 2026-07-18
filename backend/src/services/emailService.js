@@ -11,6 +11,42 @@ const path = require('path');
  * @returns {Promise<Object>} Send email transport result
  */
 const sendEmail = async ({ to, subject, html }) => {
+  const resendApiKey = process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.trim().replace(/^['"]|['"]$/g, '') : '';
+
+  if (resendApiKey) {
+    logger.info(`SMTP: RESEND_API_KEY detected. Dispatching mail via Resend HTTP REST API to: ${to}`);
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'AI TripCraft <onboarding@resend.dev>',
+          to: [to],
+          subject: subject,
+          html: html,
+        }),
+      });
+
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.message || JSON.stringify(resData));
+      }
+      logger.info(`SMTP: Email successfully sent via Resend API. Response ID: ${resData.id}`);
+      return {
+        messageId: resData.id,
+        accepted: [to],
+        rejected: [],
+        response: '250 OK: Accepted via Resend API',
+      };
+    } catch (apiError) {
+      logger.error(`SMTP: Resend API Send Failure: ${apiError.stack || apiError.message}`);
+      throw new Error(`Resend API dispatch failed: ${apiError.message}`);
+    }
+  }
+
   const absoluteEnvPath = path.resolve(process.cwd(), '.env');
   logger.info(`SMTP: Loading .env configuration from absolute path: ${absoluteEnvPath}`);
 
