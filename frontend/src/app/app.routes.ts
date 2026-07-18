@@ -20,6 +20,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'verify-otp',
+        loadComponent: () =>
+          import('./features/auth/otp-verification/otp-verification.component').then(
+            (m) => m.OtpVerificationComponent
+          ),
+      },
+      {
         path: 'forgot-password',
         loadComponent: () =>
           import('./features/auth/forgot-password/forgot-password.component').then(

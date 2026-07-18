@@ -215,8 +215,14 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        const errMsg = err.error?.message || 'Login failed. Please verify credentials.';
-        this.notification.error(errMsg);
+        if (err.status === 403 && err.error?.unverified) {
+          const email = err.error.email || this.loginForm.value.email;
+          this.notification.warning(err.error?.message || 'Please verify your email first.');
+          this.router.navigate(['/auth/verify-otp'], { queryParams: { email } });
+        } else {
+          const errMsg = err.error?.message || 'Login failed. Please verify credentials.';
+          this.notification.error(errMsg);
+        }
       },
     });
   }

@@ -254,11 +254,12 @@ export class RegisterComponent {
     if (this.registerForm.invalid) return;
 
     this.isLoading.set(true);
+    const email = this.registerForm.value.email;
     this.authService.register(this.registerForm.value).subscribe({
-      next: () => {
+      next: (res) => {
         this.isLoading.set(false);
-        this.notification.success('Registration successful! Welcome to AI TripCraft.');
-        this.router.navigate(['/dashboard']);
+        this.notification.success(res.message || 'Registration successful! Verification code sent.');
+        this.router.navigate(['/auth/verify-otp'], { queryParams: { email } });
       },
       error: (err) => {
         this.isLoading.set(false);

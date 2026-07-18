@@ -10,7 +10,7 @@ const updateItineraryDay = async (req, res, next) => {
     const { morningPlan, afternoonPlan, eveningPlan, recommendedAttractions, restaurants, localFood, transportationTips, estimatedDailyBudget } = req.body;
     const { id, dayNum } = req.params;
 
-    const itinerary = await Itinerary.findOne({ _id: id, user: req.user.id });
+    const itinerary = await Itinerary.findOne({ trip: id, user: req.user.id });
     if (!itinerary) {
       return ApiResponse.error(res, 'Itinerary not found', 404);
     }
@@ -47,7 +47,7 @@ const updateItineraryTips = async (req, res, next) => {
     const { travelTips } = req.body;
     const { id } = req.params;
 
-    const itinerary = await Itinerary.findOne({ _id: id, user: req.user.id });
+    const itinerary = await Itinerary.findOne({ trip: id, user: req.user.id });
     if (!itinerary) {
       return ApiResponse.error(res, 'Itinerary not found', 404);
     }

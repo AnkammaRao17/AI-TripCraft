@@ -35,12 +35,16 @@ export class AuthService {
   }
 
   register(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, userData).pipe(
-      tap((res) => this.handleAuthentication(res.data))
-    );
+    return this.http.post<any>(`${this.apiUrl}/register`, userData);
   }
 
+  verifyOtp(email: string, otp: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/verify-otp`, { email, otp });
+  }
 
+  resendOtp(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/resend-otp`, { email });
+  }
 
   login(credentials: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(

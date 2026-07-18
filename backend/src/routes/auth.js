@@ -7,10 +7,13 @@ const validate = require('../middleware/validationMiddleware');
 
 router.post('/register', registerValidator, validate, authController.registerUser);
 router.post('/login', loginValidator, validate, authController.loginUser);
+router.post('/verify-otp', authController.verifyOtp);
+router.post('/resend-otp', authController.resendOtp);
 router.post('/refresh', authController.refreshAccessToken);
 router.post('/logout', protect, authController.logoutUser);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password/:token', authController.resetPassword);
+router.get('/smtp-test', authController.smtpTest);
 
 router.route('/profile')
   .get(protect, authController.getUserProfile)

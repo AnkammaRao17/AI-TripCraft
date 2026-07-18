@@ -57,6 +57,17 @@ export class ItineraryViewComponent implements OnInit {
   packingItems = signal<{ name: string; checked: boolean }[]>([]);
   customPackingItem = signal<string>('');
 
+  // Inline Editing Day Signals
+  editingDay = signal<number | null>(null);
+  editMorningPlan = signal<string>('');
+  editAfternoonPlan = signal<string>('');
+  editEveningPlan = signal<string>('');
+  editDailyBudget = signal<number>(0);
+  editTransitTips = signal<string>('');
+
+  // Tips Signal
+  newTravelTip = signal<string>('');
+
   // Maps coordinates and active marker category
   activeMapCategory = signal<'attractions' | 'hotels' | 'restaurants' | 'airports'>('attractions');
   mapMarkers = computed(() => {
@@ -321,5 +332,71 @@ export class ItineraryViewComponent implements OnInit {
 
   togglePackingItem(index: number): void {
     this.packingItems.update(prev => prev.map((item, i) => i === index ? { ...item, checked: !item.checked } : item));
+  }
+
+  startEditDay(day: any): void {
+    this.editingDay.set(day.dayNumber);
+    this.editMorningPlan.set(day.morningPlan);
+    this.editAfternoonPlan.set(day.afternoonPlan);
+    this.editEveningPlan.set(day.eveningPlan);
+    this.editDailyBudget.set(day.estimatedDailyBudget);
+    this.editTransitTips.set(day.transportationTips || '');
+  }
+
+  saveEditDay(dayNumber: number): void {
+    const t = this.trip();
+    if (!t) return;
+
+    const dayPlan = {
+      morningPlan: this.editMorningPlan(),
+      afternoonPlan: this.editAfternoonPlan(),
+      eveningPlan: this.editEveningPlan(),
+      estimatedDailyBudget: this.editDailyBudget(),
+      transportationTips: this.editTransitTips(),
+      recommendedAttractions: this.itinerary()?.days.find(d => d.dayNumber === dayNumber)?.recommendedAttractions || [],
+      restaurants: this.itinerary()?.days.find(d => d.dayNumber === dayNumber)?.restaurants || [],
+      localFood: this.itinerary()?.days.find(d => d.dayNumber === dayNumber)?.localFood || [],
+    };
+
+    this.tripService.updateItineraryDay(t._id, dayNumber, dayPlan).subscribe({
+      next: () => {
+        this.notification.success(`Day ${dayNumber} plan updated successfully!`);
+        this.editingDay.set(null);
+        this.loadTripDetails(t._id);
+      },
+      error: () => this.notification.error('Failed to update day plan.')
+    });
+  }
+
+  addTravelTip(): void {
+    const tip = this.newTravelTip().trim();
+    const t = this.trip();
+    const itin = this.itinerary();
+    if (!tip || !t || !itin) return;
+
+    const updatedTips = [...(itin.travelTips || []), tip];
+    this.tripService.updateItineraryTips(t._id, updatedTips).subscribe({
+      next: () => {
+        this.newTravelTip.set('');
+        this.notification.success('Travel tip added successfully!');
+        this.loadTripDetails(t._id);
+      },
+      error: () => this.notification.error('Failed to add travel tip.')
+    });
+  }
+
+  removeTravelTip(index: number): void {
+    const t = this.trip();
+    const itin = this.itinerary();
+    if (!t || !itin) return;
+
+    const updatedTips = (itin.travelTips || []).filter((_, i) => i !== index);
+    this.tripService.updateItineraryTips(t._id, updatedTips).subscribe({
+      next: () => {
+        this.notification.success('Travel tip removed successfully.');
+        this.loadTripDetails(t._id);
+      },
+      error: () => this.notification.error('Failed to remove travel tip.')
+    });
   }
 }

@@ -69,6 +69,21 @@ import { Destination, Review } from '../../models/interfaces';
         
         <!-- Left Side: Information Modules -->
         <div class="info-column">
+
+          <!-- History & Culture -->
+          <mat-card class="glass-card module-card" *ngIf="dest()?.history || dest()?.culture">
+            <h3 class="module-title"><mat-icon>history_edu</mat-icon> History & Culture</h3>
+            <div class="history-culture-content" style="display: flex; flex-direction: column; gap: 16px;">
+              <div *ngIf="dest()?.history">
+                <h4 style="font-weight: 700; margin-bottom: 6px; color: var(--accent-primary);">Historical Background</h4>
+                <p style="color: var(--text-secondary); line-height: 1.5; font-size: 14px; margin: 0;">{{ dest()?.history }}</p>
+              </div>
+              <div *ngIf="dest()?.culture">
+                <h4 style="font-weight: 700; margin-bottom: 6px; color: var(--accent-primary);">Cultural Heritage</h4>
+                <p style="color: var(--text-secondary); line-height: 1.5; font-size: 14px; margin: 0;">{{ dest()?.culture }}</p>
+              </div>
+            </div>
+          </mat-card>
           
           <!-- Image Gallery Carousel Mockup -->
           <mat-card class="glass-card module-card">
@@ -82,6 +97,27 @@ import { Destination, Review } from '../../models/interfaces';
               <img [src]="activeGalleryImg()" alt="Active Preview" loading="lazy" (error)="onImgError($event, dest()?.name)" />
             </div>
           </mat-card>
+
+          <!-- Weather and Practical Info Row -->
+          <div class="two-column-row">
+            <mat-card class="glass-card module-card">
+              <h3 class="module-title"><mat-icon>thermostat</mat-icon> Climate & Weather</h3>
+              <div class="weather-details" style="font-size: 14px; line-height: 1.8; color: var(--text-secondary);">
+                <div><strong>Climate:</strong> {{ dest()?.climate }}</div>
+                <div><strong>Current Weather:</strong> {{ dest()?.weather }}</div>
+                <div><strong>Average Temp:</strong> {{ dest()?.avgTemperature }}</div>
+              </div>
+            </mat-card>
+
+            <mat-card class="glass-card module-card">
+              <h3 class="module-title"><mat-icon>info</mat-icon> Practical Info</h3>
+              <div class="practical-details" style="font-size: 14px; line-height: 1.8; color: var(--text-secondary);">
+                <div><strong>Language:</strong> {{ dest()?.language }}</div>
+                <div><strong>Currency:</strong> {{ dest()?.currency }}</div>
+                <div><strong>Airport:</strong> {{ dest()?.nearbyAirport }}</div>
+              </div>
+            </mat-card>
+          </div>
 
           <!-- Core Details Lists -->
           <mat-card class="glass-card module-card">
@@ -121,6 +157,35 @@ import { Destination, Review } from '../../models/interfaces';
               <span class="food-chip hover-scale" *ngFor="let food of dest()?.localFoods">
                 🍕 {{ food }}
               </span>
+            </div>
+          </mat-card>
+
+          <!-- Nearby Places to Visit -->
+          <mat-card class="glass-card module-card" *ngIf="dest()?.nearbyPlaces?.length">
+            <h3 class="module-title"><mat-icon>near_me</mat-icon> Nearby Excursions</h3>
+            <div class="nearby-places-row" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+              <span class="food-chip hover-scale" *ngFor="let place of dest()?.nearbyPlaces" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.2); color: #a855f7; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">
+                📍 {{ place }}
+              </span>
+            </div>
+          </mat-card>
+
+          <!-- Sample Itinerary Preview -->
+          <mat-card class="glass-card module-card" *ngIf="dest()?.sampleItinerary?.length">
+            <h3 class="module-title"><mat-icon>schedule</mat-icon> Highlight Sample Itinerary</h3>
+            <div class="sample-itinerary-timeline" style="display: flex; flex-direction: column; gap: 16px; margin-top: 12px;">
+              <div class="timeline-day" *ngFor="let day of dest()?.sampleItinerary" style="border-left: 2px solid var(--accent-primary); padding-left: 16px; position: relative;">
+                <div style="position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-primary);"></div>
+                <h4 style="font-weight: 700; color: var(--text-primary); font-size: 14px; margin: 0 0 4px 0;">Day {{ day.dayNumber }}: {{ day.morningPlan ? 'Day Schedule' : day.title }}</h4>
+                <p style="color: var(--text-secondary); font-size: 13px; margin: 0; line-height: 1.5;" *ngIf="day.morningPlan">
+                  <strong>Morning:</strong> {{ day.morningPlan }}<br/>
+                  <strong>Afternoon:</strong> {{ day.afternoonPlan }}<br/>
+                  <strong>Evening:</strong> {{ day.eveningPlan }}
+                </p>
+                <p style="color: var(--text-secondary); font-size: 13px; margin: 0; line-height: 1.5;" *ngIf="day.plan">
+                  {{ day.plan }}
+                </p>
+              </div>
             </div>
           </mat-card>
 

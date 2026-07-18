@@ -6,6 +6,8 @@ const Itinerary = require('../models/Itinerary');
 const Favorite = require('../models/Favorite');
 const Review = require('../models/Review');
 require('dotenv').config();
+const { supplementaryDestinations } = require('./supplementarySeed');
+
 
 const users = [
   {
@@ -2919,25 +2921,52 @@ const destinations = [
 
 const seedDatabaseInline = async (shouldExit = false) => {
   try {
-    console.log('🗑️  Clearing existing data...');
-    await User.deleteMany({});
-    await Destination.deleteMany({});
-    await Trip.deleteMany({});
-    await Itinerary.deleteMany({});
-    await Favorite.deleteMany({});
-    await Review.deleteMany({});
-
-    console.log('👤 Seeding Users...');
-    for (const u of users) {
-      await User.create(u);
+    console.log('🔍 Checking database collections status...');
+    
+    const userCount = await User.countDocuments({});
+    if (userCount === 0) {
+      console.log('👤 Seeding Users...');
+      for (const u of users) {
+        // Enforce hashed passwords during registration/seeding for production readiness
+        const bcrypt = require('bcryptjs');
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(u.password, salt);
+        await User.create({
+          ...u,
+          password: hashedPassword,
+          otpVerified: true,
+          emailVerified: true
+        });
+      }
+    } else {
+      console.log('👤 User database already contains data. Skipping user seeding.');
     }
 
-    console.log(`🌍 Seeding ${destinations.length} Destinations...`);
-    for (const d of destinations) {
-      await Destination.create(d);
+    const allDestinations = [...destinations, ...supplementaryDestinations];
+    const destCount = await Destination.countDocuments({});
+    if (destCount === 0) {
+      console.log(`🌍 Seeding ${allDestinations.length} Destinations...`);
+      for (const d of allDestinations) {
+        await Destination.create(d);
+      }
+      console.log(`✅ Database seeded successfully with ${allDestinations.length} destinations!`);
+    } else {
+      console.log('🌍 Destinations are already seeded. Checking for missing destinations...');
+      let added = 0;
+      for (const d of allDestinations) {
+        const exists = await Destination.findOne({ name: d.name });
+        if (!exists) {
+          await Destination.create(d);
+          added++;
+        }
+      }
+      if (added > 0) {
+        console.log(`✅ Seeded ${added} missing destinations.`);
+      } else {
+        console.log('🌍 All seeded destinations are already present.');
+      }
     }
 
-    console.log(`✅ Database seeded successfully with ${destinations.length} destinations!`);
     if (shouldExit) process.exit(0);
   } catch (error) {
     console.error('❌ Error seeding database:', error);

@@ -7,9 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RouterModule } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { TripService } from '../../core/services/trip.service';
+import { DestinationService } from '../../core/services/destination.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Trip } from '../../models/interfaces';
 
@@ -19,6 +21,7 @@ import { Trip } from '../../models/interfaces';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -110,6 +113,26 @@ import { Trip } from '../../models/interfaces';
               <div class="detail-row">
                 <span class="detail-label">Member Since</span>
                 <span class="detail-value">{{ authService.currentUser()?.createdAt | date:'mediumDate' }}</span>
+              </div>
+            </div>
+          </mat-card>
+
+          <!-- Favorite Places Section -->
+          <mat-card class="glass-card info-card margin-top-md">
+            <h3 class="card-title"><mat-icon>favorite</mat-icon> Favorite Places</h3>
+            
+            <div class="no-favorites" *ngIf="favoritePlaces().length === 0">
+              <p>You haven't bookmarked any places yet. Explore destinations to add favorites!</p>
+            </div>
+            
+            <div class="fav-places-list" *ngIf="favoritePlaces().length > 0">
+              <div class="fav-place-item hover-scale" *ngFor="let fav of favoritePlaces()" [routerLink]="['/destination', fav.destination?._id]">
+                <img [src]="fav.destination?.imageUrl" class="fav-place-thumb" alt="Thumb" (error)="onImgError($event, fav.destination?.name)"/>
+                <div class="fav-place-info">
+                  <span class="fav-place-name">{{ fav.destination?.name }}</span>
+                  <span class="fav-place-state">{{ fav.destination?.state }}</span>
+                </div>
+                <mat-icon class="arrow-icon">chevron_right</mat-icon>
               </div>
             </div>
           </mat-card>
@@ -210,6 +233,9 @@ import { Trip } from '../../models/interfaces';
     .info-card {
       margin-bottom: 0;
     }
+    .margin-top-md {
+      margin-top: 20px;
+    }
     .stats-summary {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -269,11 +295,61 @@ import { Trip } from '../../models/interfaces';
     .font-sm {
       font-size: 12px;
     }
+
+    // Favorites Styles
+    .no-favorites {
+      text-align: center;
+      padding: 16px;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+    .fav-places-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .fav-place-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .fav-place-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--bg-secondary);
+    }
+    .fav-place-info {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .fav-place-name {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .fav-place-state {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .arrow-icon {
+      color: var(--text-muted);
+    }
   `],
 })
 export class ProfileComponent implements OnInit {
   authService = inject(AuthService);
   private tripService = inject(TripService);
+  private destService = inject(DestinationService);
   private fb = inject(FormBuilder);
   private notification = inject(NotificationService);
 
@@ -282,6 +358,7 @@ export class ProfileComponent implements OnInit {
 
   // Travel Stats
   tripStats = signal<{ totalTrips: number; totalDays: number } | null>(null);
+  favoritePlaces = signal<any[]>([]);
 
   ngOnInit(): void {
     const user = this.authService.currentUser();
@@ -295,6 +372,7 @@ export class ProfileComponent implements OnInit {
     });
 
     this.loadPersonalStats();
+    this.loadFavorites();
   }
 
   loadPersonalStats(): void {
@@ -311,10 +389,23 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  loadFavorites(): void {
+    this.destService.getFavoriteDestinations().subscribe({
+      next: (res) => {
+        this.favoritePlaces.set(res.data.favorites || []);
+      },
+      error: () => {}
+    });
+  }
+
   regenerateAvatar(): void {
     const seed = Math.random().toString(36).substring(7);
     const newAvatar = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
     this.profileForm.patchValue({ avatarUrl: newAvatar });
+  }
+
+  onImgError(event: any, destName?: string): void {
+    event.target.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80';
   }
 
   onSubmit(): void {

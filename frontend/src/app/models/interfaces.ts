@@ -124,6 +124,8 @@ export interface Destination {
   totalReviews: number;
   createdAt?: string;
   updatedAt?: string;
+  nearbyPlaces?: string[];
+  sampleItinerary?: any[];
 }
 
 export interface Review {

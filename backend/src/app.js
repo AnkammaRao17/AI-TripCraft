@@ -1,15 +1,22 @@
+const path = require('path');
+const dotenvPath = path.resolve(__dirname, '../.env'); // Load configurations - reload trigger
+require('dotenv').config({ path: dotenvPath });
+
+const logger = require('./utils/logger');
+logger.info(`Process CWD: ${process.cwd()}`);
+logger.info(`App __dirname: ${__dirname}`);
+logger.info(`Dotenv loaded configuration from absolute path: ${dotenvPath}`);
+logger.info(`EMAIL_USER Loaded: ${!!process.env.EMAIL_USER}`);
+logger.info(`EMAIL_PASS Loaded: ${!!process.env.EMAIL_PASS}`);
+logger.info(`✓ Environment Loaded`);
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const swaggerUi = require('swagger-ui-express');
-const path = require('path');
-
-// Load configurations
-require('dotenv').config();
 const connectDB = require('./config/db');
-const logger = require('./utils/logger');
 const errorHandler = require('./middleware/errorMiddleware');
 const swaggerDocument = require('../swagger.json');
 
@@ -81,6 +88,29 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+
+  // Verify Gmail SMTP Connection on startup
+  const nodemailer = require('nodemailer');
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.EMAIL_USER !== 'your_gmail_address@gmail.com') {
+    const host = process.env.EMAIL_HOST || 'smtp.gmail.com';
+    const port = parseInt(process.env.EMAIL_PORT) || 587;
+    const secure = process.env.EMAIL_SECURE === 'true';
+    const user = process.env.EMAIL_USER.trim().replace(/^['"]|['"]$/g, '');
+    const pass = process.env.EMAIL_PASS.trim().replace(/^['"]|['"]$/g, '');
+    
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure,
+      auth: { user, pass },
+      tls: { rejectUnauthorized: false }
+    });
+    transporter.verify()
+      .then(() => logger.info('✓ Gmail SMTP Ready'))
+      .catch((err) => logger.error(`✗ Gmail SMTP Connection Failed: ${err.message}`));
+  } else {
+    logger.warn('✗ Gmail SMTP not configured in .env (using placeholders or missing).');
+  }
 });
 
 // Handle unhandled promise rejections

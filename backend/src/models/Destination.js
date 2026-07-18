@@ -53,6 +53,9 @@ const DestinationSchema = new mongoose.Schema(
     coupleActivities: { type: [String], default: [] },
     soloTravelTips:   { type: String, default: '' },
 
+    nearbyPlaces:    { type: [String], default: [] },
+    sampleItinerary: { type: Array, default: [] },
+
     safetyScore: { type: Number, default: 7, min: 0, max: 10 },
 
     averageRating: { type: Number, default: 0, min: 0, max: 5 },

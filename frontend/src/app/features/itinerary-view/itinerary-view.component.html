@@ -73,6 +73,21 @@
         <mat-tab-group class="days-tab-group" animationDuration="250ms">
           <mat-tab *ngFor="let day of itinerary()?.days" [label]="'Day ' + day.dayNumber">
             <div class="day-plan-content">
+              <!-- Day Editing Actions -->
+              <div class="day-edit-action-row">
+                <button mat-button class="btn-secondary font-sm" *ngIf="editingDay() !== day.dayNumber" (click)="startEditDay(day)">
+                  <mat-icon>edit</mat-icon> Edit Day {{ day.dayNumber }} Plan
+                </button>
+                <div class="edit-buttons-group" *ngIf="editingDay() === day.dayNumber">
+                  <button mat-raised-button class="btn-primary font-sm" (click)="saveEditDay(day.dayNumber)">
+                    <mat-icon>save</mat-icon> Save Changes
+                  </button>
+                  <button mat-button class="btn-secondary font-sm" (click)="editingDay.set(null)">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
               <!-- Morning Plan -->
               <div class="plan-block morning">
                 <div class="block-icon bg-amber">
@@ -80,7 +95,10 @@
                 </div>
                 <div class="block-details">
                   <h4 class="block-title">Morning</h4>
-                  <p class="block-desc">{{ day.morningPlan }}</p>
+                  <p class="block-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.morningPlan }}</p>
+                  <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
+                    <textarea matInput rows="3" [(ngModel)]="editMorningPlan" name="editMorning"></textarea>
+                  </mat-form-field>
                 </div>
               </div>
 
@@ -91,7 +109,10 @@
                 </div>
                 <div class="block-details">
                   <h4 class="block-title">Afternoon</h4>
-                  <p class="block-desc">{{ day.afternoonPlan }}</p>
+                  <p class="block-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.afternoonPlan }}</p>
+                  <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
+                    <textarea matInput rows="3" [(ngModel)]="editAfternoonPlan" name="editAfternoon"></textarea>
+                  </mat-form-field>
                 </div>
               </div>
 
@@ -102,7 +123,10 @@
                 </div>
                 <div class="block-details">
                   <h4 class="block-title">Evening</h4>
-                  <p class="block-desc">{{ day.eveningPlan }}</p>
+                  <p class="block-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.eveningPlan }}</p>
+                  <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
+                    <textarea matInput rows="3" [(ngModel)]="editEveningPlan" name="editEvening"></textarea>
+                  </mat-form-field>
                 </div>
               </div>
 
@@ -124,18 +148,25 @@
               </div>
 
               <!-- Daily Transportation Tips -->
-              <div class="plan-footer-notes" *ngIf="day.transportationTips">
+              <div class="plan-footer-notes" *ngIf="day.transportationTips || editingDay() === day.dayNumber">
                 <mat-icon>commute</mat-icon>
-                <div>
+                <div class="full-width">
                   <span class="note-label">Transit Note:</span>
-                  <p class="note-desc">{{ day.transportationTips }}</p>
+                  <p class="note-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.transportationTips }}</p>
+                  <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
+                    <input matInput [(ngModel)]="editTransitTips" name="editTransit" />
+                  </mat-form-field>
                 </div>
               </div>
 
               <!-- Daily Estimated Budget -->
               <div class="day-cost-badge">
                 <span>Estimated Daily Budget:</span>
-                <strong>₹{{ day.estimatedDailyBudget | number }}</strong>
+                <strong *ngIf="editingDay() !== day.dayNumber">₹{{ day.estimatedDailyBudget | number }}</strong>
+                <mat-form-field appearance="outline" *ngIf="editingDay() === day.dayNumber" class="budget-input">
+                  <input matInput type="number" [(ngModel)]="editDailyBudget" name="editBudget" />
+                  <span matPrefix>₹&nbsp;</span>
+                </mat-form-field>
               </div>
             </div>
           </mat-tab>
@@ -203,14 +234,37 @@
       </div>
 
       <!-- General AI Travel Tips Tab -->
-      <div class="glass-card travel-tips-card animate-fade" *ngIf="activeTab() === 'tips' && itinerary()?.travelTips?.length">
-        <h3 class="card-heading"><mat-icon>tips_and_updates</mat-icon> AI Travel Recommendations</h3>
-        <ul class="tips-list">
-          <li class="tip-item" *ngFor="let tip of itinerary()?.travelTips">
-            <mat-icon>check_circle</mat-icon>
-            <span>{{ tip }}</span>
+      <div class="glass-card travel-tips-card animate-fade" *ngIf="activeTab() === 'tips'">
+        <h3 class="card-heading"><mat-icon>tips_and_updates</mat-icon> Travel Recommendations</h3>
+        
+        <!-- Add Custom Tip Form -->
+        <div class="add-tip-form" style="display: flex; gap: 12px; margin-bottom: 20px; align-items: center;">
+          <mat-form-field appearance="outline" style="flex-grow: 1; margin-bottom: -1.25em;">
+            <mat-label>Add Custom Recommendation</mat-label>
+            <input matInput [(ngModel)]="newTravelTip" name="newTip" placeholder="e.g. Carry cash for small vendors" />
+          </mat-form-field>
+          <button mat-raised-button class="btn-primary" style="height: 48px;" (click)="addTravelTip()" [disabled]="!newTravelTip().trim()">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+
+        <mat-divider style="margin: 16px 0;"></mat-divider>
+
+        <ul class="tips-list" style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+          <li class="tip-item-edit" *ngFor="let tip of itinerary()?.travelTips; let idx = index" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <mat-icon style="color: var(--accent-primary);">check_circle</mat-icon>
+              <span>{{ tip }}</span>
+            </div>
+            <button mat-icon-button (click)="removeTravelTip(idx)" class="remove-tip-btn" style="color: var(--error-color, #ef4444);">
+              <mat-icon>delete</mat-icon>
+            </button>
           </li>
         </ul>
+        
+        <div class="no-tips-placeholder" *ngIf="!itinerary()?.travelTips || itinerary()?.travelTips?.length === 0" style="text-align: center; color: var(--text-secondary); padding: 24px 0;">
+          <p>No travel recommendations yet. Type a tip above and click Add!</p>
+        </div>
       </div>
     </div>
 

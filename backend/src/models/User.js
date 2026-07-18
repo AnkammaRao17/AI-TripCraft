@@ -43,9 +43,12 @@ const UserSchema = new mongoose.Schema(
     },
     firstName: { type: String, default: '' },
     lastName: { type: String, default: '' },
+    fullName: { type: String, default: '' },
     phone: { type: String, default: '' },
     avatar: { type: String, default: '' },
     emailVerified: { type: Boolean, default: false },
+    otpVerified: { type: Boolean, default: false },
+    lastLogin: { type: Date, default: Date.now },
   },
   {
     timestamps: true,
@@ -59,6 +62,10 @@ UserSchema.pre('save', function (next) {
   
   if (this.lastName) this.profile.lastName = this.lastName;
   if (this.profile.lastName) this.lastName = this.profile.lastName;
+  
+  if (this.firstName || this.lastName) {
+    this.fullName = `${this.firstName || ''} ${this.lastName || ''}`.trim();
+  }
   
   if (this.phone) this.profile.phone = this.phone;
   if (this.profile.phone) this.phone = this.profile.phone;
