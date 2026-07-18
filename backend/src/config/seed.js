@@ -2673,7 +2673,10 @@ const seedDatabaseInline = async (shouldExit = false) => {
 
 const runStandalone = async () => {
   try {
-    const connString = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/aitripcraft';
+    const connString = process.env.MONGODB_URI;
+    if (!connString) {
+      throw new Error('MONGODB_URI environment variable is not defined');
+    }
     console.log('Connecting to database for seeding...');
     await mongoose.connect(connString);
     await seedDatabaseInline(true);

@@ -9,7 +9,10 @@ const cleanAdminUsers = async () => {
 
 const connectDB = async () => {
   try {
-    const connString = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/aitripcraft';
+    const connString = process.env.MONGODB_URI;
+    if (!connString) {
+      throw new Error('MONGODB_URI environment variable is not defined');
+    }
     logger.info(`Checking MongoDB connection at: ${connString.replace(/:([^@]+)@/, ':****@')}`);
     
     await mongoose.connect(connString, {
@@ -18,6 +21,7 @@ const connectDB = async () => {
       socketTimeoutMS: 45000,
       family: 4
     });
+    console.log('MongoDB Connected Successfully');
     logger.info('✓ Connected to MongoDB');
 
     let dbName = 'Unknown';
@@ -43,6 +47,7 @@ const connectDB = async () => {
     logger.info(`Collection Count: ${collectionCount}`);
     logger.info(`User Count: ${userCount}`);
   } catch (error) {
+    console.error('MongoDB connection error:', error);
     logger.error(`MongoDB connection error: ${error.message}`);
     process.exit(1);
   }

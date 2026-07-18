@@ -99,7 +99,7 @@ app.get('/debug/db', async (req, res, next) => {
     };
     const connectionState = states[conn.readyState] || 'unknown';
 
-    const connString = process.env.MONGO_URI || '';
+    const connString = process.env.MONGODB_URI || '';
     let databaseType = 'Local MongoDB';
     if (connString.includes('.mongodb.net')) {
       databaseType = 'MongoDB Atlas';
