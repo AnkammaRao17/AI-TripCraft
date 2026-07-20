@@ -165,7 +165,7 @@ import { getDestinationImageUrl, getNextDestinationImageUrl } from '../../shared
           <mat-card class="glass-card module-card" *ngIf="dest()?.nearbyPlaces?.length">
             <h3 class="module-title"><mat-icon>near_me</mat-icon> Nearby Excursions</h3>
             <div class="nearby-places-row" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
-              <span class="food-chip hover-scale" *ngFor="let place of dest()?.nearbyPlaces" style="background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.2); color: #a855f7; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">
+              <span class="food-chip hover-scale" *ngFor="let place of dest()?.nearbyPlaces" style="background: rgba(249, 115, 22, 0.08); border: 1px solid rgba(249, 115, 22, 0.2); color: #F97316; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">
                 📍 {{ place }}
               </span>
             </div>
@@ -551,7 +551,7 @@ import { getDestinationImageUrl, getNextDestinationImageUrl } from '../../shared
 
     // Sidebar Booking Actions
     .action-card {
-      background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(99, 102, 241, 0.05) 100%);
+      background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(249, 115, 22, 0.05) 100%);
       border: 1.5px solid var(--accent-primary);
     }
     .action-card-title {

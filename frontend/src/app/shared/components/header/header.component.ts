@@ -138,10 +138,11 @@ import { ThemeService } from '../../../core/services/theme.service';
       font-size: 14px;
       font-weight: 500;
       padding: 6px 12px;
+      border: 1px solid transparent;
       border-radius: 8px;
       transition: all 0.2s ease;
       &:hover {
-        background: var(--bg-tertiary);
+        background: #FFF7ED !important;
         color: var(--text-primary);
       }
       mat-icon {
@@ -151,12 +152,13 @@ import { ThemeService } from '../../../core/services/theme.service';
       }
     }
     .active-link {
-      background: rgba(99, 102, 241, 0.1);
-      color: var(--accent-primary);
+      background: #FFEDD5 !important;
+      color: #F97316 !important;
+      border-color: #FDBA74 !important;
       font-weight: 600;
       &:hover {
-        background: rgba(99, 102, 241, 0.15);
-        color: var(--accent-primary);
+        background: #FFF7ED !important;
+        color: #F97316 !important;
       }
     }
     .spacer {

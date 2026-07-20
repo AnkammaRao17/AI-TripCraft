@@ -137,7 +137,7 @@
   margin-bottom: 20px;
   color: #ffffff;
   mat-icon {
-    color: var(--accent-primary, #6366f1);
+    color: var(--accent-primary, #F97316);
   }
 }
 
@@ -169,9 +169,9 @@
   }
 
   &.active {
-    background: #6366f1 !important;
+    background: #F97316 !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
   }
 }
 
@@ -183,9 +183,9 @@
 }
 
 .days-tab-group {
-  --mdc-tab-indicator-active-indicator-color: #6366f1;
-  --mat-tab-header-active-label-text-color: #6366f1;
-  --mat-tab-header-active-hover-label-text-color: #818cf8;
+  --mdc-tab-indicator-active-indicator-color: #F97316;
+  --mat-tab-header-active-label-text-color: #F97316;
+  --mat-tab-header-active-hover-label-text-color: #F97316;
 }
 
 .day-plan-content {
@@ -205,7 +205,7 @@
     bottom: 10px;
     left: 17px;
     width: 2px;
-    background: linear-gradient(180deg, #6366f1 0%, rgba(99, 102, 241, 0.1) 100%);
+    background: linear-gradient(180deg, #F97316 0%, rgba(249, 115, 22, 0.1) 100%);
   }
 }
 
@@ -225,7 +225,7 @@
     justify-content: center;
     color: white;
     z-index: 2;
-    box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.35);
 
     mat-icon {
       font-size: 16px;
@@ -233,10 +233,10 @@
       height: 16px;
     }
 
-    &.bg-indigo { background: #6366f1; }
+    &.bg-indigo { background: #F97316; }
     &.bg-amber { background: #fbbf24; }
     &.bg-orange { background: #f97316; }
-    &.bg-purple { background: #c084fc; }
+    &.bg-purple { background: #FB923C; }
   }
 
   .timeline-details {
@@ -248,15 +248,15 @@
 
     &:hover {
       background: rgba(30, 41, 59, 0.45);
-      border-color: rgba(99, 102, 241, 0.15);
+      border-color: rgba(249, 115, 22, 0.15);
     }
   }
 
   .timeline-time {
     font-size: 12px;
     font-weight: 700;
-    color: #818cf8;
-    background: rgba(99, 102, 241, 0.1);
+    color: #F97316;
+    background: rgba(249, 115, 22, 0.1);
     padding: 2px 8px;
     border-radius: 100px;
     display: inline-block;
@@ -296,18 +296,18 @@
         font-size: 15px;
         width: 15px;
         height: 15px;
-        color: #818cf8;
+        color: #F97316;
       }
     }
 
     .btn-text {
-      color: #818cf8 !important;
+      color: #F97316 !important;
       font-size: 12px !important;
       font-weight: 700 !important;
       padding: 0 6px !important;
       
       &:hover {
-        background: rgba(99, 102, 241, 0.08) !important;
+        background: rgba(249, 115, 22, 0.08) !important;
       }
     }
   }
@@ -324,7 +324,7 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    border-left: 2px dashed rgba(99, 102, 241, 0.3);
+    border-left: 2px dashed rgba(249, 115, 22, 0.3);
   }
 
   .segment-card {
@@ -404,7 +404,7 @@
       font-size: 16px;
       width: 16px;
       height: 16px;
-      color: #818cf8;
+      color: #F97316;
     }
   }
 }
@@ -527,8 +527,8 @@
 
     .hotel-dist {
       font-size: 12px;
-      color: #818cf8;
-      background: rgba(99, 102, 241, 0.1);
+      color: #F97316;
+      background: rgba(249, 115, 22, 0.1);
       padding: 2px 10px;
       border-radius: 100px;
     }
@@ -584,8 +584,8 @@
   }
 
   &:hover {
-    border-color: rgba(99, 102, 241, 0.25) !important;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.05);
+    border-color: rgba(249, 115, 22, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(249, 115, 22, 0.05);
     
     .hotel-room-img {
       transform: scale(1.05);
@@ -727,7 +727,7 @@
   }
 
   &:hover {
-    border-color: rgba(99, 102, 241, 0.2) !important;
+    border-color: rgba(249, 115, 22, 0.2) !important;
     .rest-img {
       transform: scale(1.06);
     }
@@ -780,7 +780,7 @@
       border-radius: 8px;
       font-size: 11px;
       font-weight: 700;
-      color: #818cf8;
+      color: #F97316;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -851,7 +851,7 @@
   }
 
   &:hover {
-    border-color: rgba(99, 102, 241, 0.2) !important;
+    border-color: rgba(249, 115, 22, 0.2) !important;
     .attr-img {
       transform: scale(1.05);
     }
@@ -945,7 +945,7 @@
   gap: 10px;
   
   mat-icon {
-    color: #818cf8;
+    color: #F97316;
     font-size: 18px;
     width: 18px;
     height: 18px;
@@ -970,7 +970,7 @@
   align-items: flex-start;
   padding-left: 8px;
   margin: 2px 0;
-  border-left: 2px dashed rgba(99, 102, 241, 0.3);
+  border-left: 2px dashed rgba(249, 115, 22, 0.3);
 
   .route-mode-text {
     font-size: 11px;
@@ -982,7 +982,7 @@
     font-size: 14px;
     width: 14px;
     height: 14px;
-    color: #6366f1;
+    color: #F97316;
     margin-left: 8px;
     margin-top: 4px;
   }
@@ -1041,8 +1041,8 @@
     font-size: 20px;
     font-weight: 800;
     
-    &.text-indigo {
-      color: #818cf8;
+    &.text-accent {
+      color: #F97316;
     }
   }
 }

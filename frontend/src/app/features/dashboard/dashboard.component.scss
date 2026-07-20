@@ -72,8 +72,8 @@
   }
 }
 
-.bg-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-.bg-purple { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+.bg-indigo { background: linear-gradient(135deg, #F97316, #EA580C); }
+.bg-purple { background: linear-gradient(135deg, #F97316, #EA580C); }
 .bg-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
 
 .kpi-label {
@@ -205,7 +205,7 @@
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(37, 99, 235, 0.85) 100%);
 }
 .banner-moderate {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.8) 0%, rgba(124, 58, 237, 0.85) 100%);
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.8) 0%, rgba(234, 88, 12, 0.85) 100%);
 }
 .banner-luxury {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.8) 0%, rgba(219, 39, 119, 0.85) 100%);
@@ -606,7 +606,7 @@
 }
 
 .bg-advisor-gradient {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #EA580C 0%, #EA580C 100%);
   color: white;
 }
 
@@ -717,9 +717,9 @@
     font-size: 15px;
     font-weight: 700;
     letter-spacing: -0.2px;
-    background: #6366f1 !important;
+    background: #F97316 !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.35);
     transition: all 0.2s ease;
     
     mat-icon {
@@ -727,9 +727,9 @@
     }
     
     &:hover {
-      background: #4f46e5 !important;
+      background: #EA580C !important;
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+      box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
     }
   }
 }
@@ -738,8 +738,8 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background: rgba(99, 102, 241, 0.06);
-  border: 1px solid rgba(99, 102, 241, 0.15);
+  background: rgba(249, 115, 22, 0.06);
+  border: 1px solid rgba(249, 115, 22, 0.15);
   border-radius: 12px;
   padding: 10px 12px;
   margin-top: 12px;
@@ -749,7 +749,7 @@
     font-size: 16px;
     width: 16px;
     height: 16px;
-    color: #6366f1;
+    color: #F97316;
     margin-top: 2px;
     flex-shrink: 0;
   }

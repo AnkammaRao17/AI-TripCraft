@@ -8,9 +8,9 @@
 
 // Launcher FAB Button
 .assistant-launcher {
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+  background: linear-gradient(135deg, #F97316 0%, #FB923C 100%) !important;
   color: #ffffff !important;
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.4) !important;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -29,7 +29,7 @@
 
   &:hover {
     transform: scale(1.08) translateY(-2px);
-    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6) !important;
+    box-shadow: 0 12px 30px rgba(249, 115, 22, 0.6) !important;
   }
 }
 
@@ -97,7 +97,7 @@
     width: 38px;
     height: 38px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -231,7 +231,7 @@
     flex-direction: row-reverse;
     
     .bubble-text {
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
       color: #ffffff;
       border-bottom-right-radius: 4px;
       
@@ -291,24 +291,24 @@
     white-space: nowrap;
     padding: 6px 14px;
     border-radius: 100px;
-    background: rgba(99, 102, 241, 0.08);
-    border: 1px solid rgba(99, 102, 241, 0.15);
-    color: #6366f1;
+    background: #FFF7ED;
+    border: 1px solid #FED7AA;
+    color: #F97316;
     font-size: 11.5px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 
     [data-theme="dark"] & {
-      color: #818cf8;
-      background: rgba(129, 140, 248, 0.08);
-      border-color: rgba(129, 140, 248, 0.15);
+      color: #F97316;
+      background: rgba(249, 115, 22, 0.08);
+      border-color: rgba(249, 115, 22, 0.15);
     }
 
     &:hover {
-      background: #6366f1;
+      background: #EA580C;
       color: white;
-      border-color: #6366f1;
+      border-color: #EA580C;
     }
   }
 }
@@ -334,7 +334,7 @@
     
     &:focus-within {
       border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
     }
   }
 

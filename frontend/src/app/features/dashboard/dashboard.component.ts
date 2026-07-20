@@ -270,8 +270,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         datasets: [{
           label: 'Trips Plotted',
           data: counts,
-          borderColor: '#6366f1',
-          backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          borderColor: '#F97316',
+          backgroundColor: 'rgba(249, 115, 22, 0.1)',
           borderWidth: 3,
           fill: true,
           tension: 0.4
@@ -302,7 +302,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     const hasData = dist.Budget > 0 || dist.Moderate > 0 || dist.Luxury > 0;
     const data = hasData ? [dist.Budget, dist.Moderate, dist.Luxury] : [1, 1, 1];
-    const bgColors = hasData ? ['#3b82f6', '#8b5cf6', '#ec4899'] : ['#cbd5e1', '#e2e8f0', '#f1f5f9'];
+    const bgColors = hasData ? ['#3b82f6', '#FB923C', '#ec4899'] : ['#cbd5e1', '#e2e8f0', '#f1f5f9'];
 
     this.budgetChartInstance = new Chart(ctx, {
       type: 'doughnut',

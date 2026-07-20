@@ -469,7 +469,7 @@ export class ItineraryViewComponent implements OnInit {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const colors = ['#6366f1', '#a855f7', '#ec4899', '#10b981', '#f59e0b'];
+    const colors = ['#F97316', '#FB923C', '#EA580C', '#FFEDD5', '#FED7AA'];
     const particles: any[] = [];
 
     for (let i = 0; i < 150; i++) {

@@ -7,31 +7,31 @@
 // GLOBAL THEME VARIABLES
 // ============================================================
 :root, [data-theme="light"] {
-  --background: #F8FAFC;
+  --background: #FFF7ED;
   --surface: #FFFFFF;
-  --surface-2: #F1F5F9;
+  --surface-2: #FFEDD5;
 
-  --text-primary: #111827;
-  --text-secondary: #475569;
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
   --text-muted: #94A3B8;
 
-  --primary: #6D5DF6;
-  --primary-hover: #5A4AF4;
-  --secondary: #8B5CF6;
-  --accent: #14B8A6;
+  --primary: #F97316;
+  --primary-hover: #EA580C;
+  --secondary: #FB923C;
+  --accent: #FFEDD5;
   
   --success: #10B981;
   --warning: #F59E0B;
   --danger: #EF4444;
 
-  --title: #111827;
-  --subtitle: #475569;
-  --body: #64748B;
+  --title: #1F2937;
+  --subtitle: #6B7280;
+  --body: #6B7280;
   --muted: #94A3B8;
 
-  --border: #E5E7EB;
+  --border: #FED7AA;
   --card: #FFFFFF;
-  --primary-gradient: linear-gradient(135deg, #6D5DF6 0%, #8B5CF6 100%);
+  --primary-gradient: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
 
   // Backward compatibility mappings
   --bg-primary: var(--background);
@@ -103,10 +103,10 @@
   --body: #CBD5E1;
   --muted: #94A3B8;
 
-  --primary: #7C5CFF;
-  --secondary: #8B5CF6;
-  --accent: #14B8A6;
-  --primary-gradient: linear-gradient(135deg, #7C5CFF 0%, #8B5CF6 100%);
+  --primary: #F97316;
+  --secondary: #FB923C;
+  --accent: #FFEDD5;
+  --primary-gradient: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
 
   --border: rgba(255, 255, 255, 0.08);
   --card: #111827;
@@ -138,32 +138,32 @@
   --mdc-outlined-text-field-label-text-color: #94a3b8;
   --mdc-outlined-text-field-input-text-color: #f8fafc;
   --mdc-outlined-text-field-outline-color: #334155;
-  --mdc-outlined-text-field-hover-outline-color: #818cf8;
-  --mdc-outlined-text-field-focus-outline-color: #818cf8;
-  --mdc-outlined-text-field-focus-label-text-color: #818cf8;
+  --mdc-outlined-text-field-hover-outline-color: #F97316;
+  --mdc-outlined-text-field-focus-outline-color: #F97316;
+  --mdc-outlined-text-field-focus-label-text-color: #F97316;
   --mdc-outlined-text-field-hover-label-text-color: #cbd5e1;
   --mdc-outlined-text-field-error-label-text-color: #f87171;
   --mdc-outlined-text-field-error-outline-color: #f87171;
-  --mdc-outlined-text-field-caret-color: #818cf8;
+  --mdc-outlined-text-field-caret-color: #F97316;
   --mat-select-trigger-text-color: #f8fafc;
   --mat-select-placeholder-text-color: #64748b;
   --mat-option-label-text-color: #f8fafc;
-  --mat-option-selected-state-label-text-color: #818cf8;
-  --mat-option-hover-state-layer-color: rgba(129, 140, 248, 0.1);
+  --mat-option-selected-state-label-text-color: #F97316;
+  --mat-option-hover-state-layer-color: rgba(249, 115, 22, 0.1);
   --mat-stepper-header-label-text-color: #cbd5e1;
-  --mat-stepper-header-selected-state-label-text-color: #818cf8;
-  --mat-stepper-header-edit-state-label-text-color: #818cf8;
+  --mat-stepper-header-selected-state-label-text-color: #F97316;
+  --mat-stepper-header-edit-state-label-text-color: #F97316;
   --mat-stepper-header-done-state-label-text-color: #34d399;
   --mat-stepper-header-icon-background-color: #334155;
-  --mat-stepper-header-selected-state-icon-background-color: #818cf8;
+  --mat-stepper-header-selected-state-icon-background-color: #F97316;
   --mat-stepper-header-done-state-icon-background-color: #34d399;
   --mat-stepper-header-error-state-icon-background-color: #f87171;
   --mat-stepper-line-color: #334155;
   --mat-tab-header-label-text-color: #94a3b8;
-  --mat-tab-header-active-label-text-color: #818cf8;
-  --mdc-tab-indicator-active-indicator-color: #818cf8;
-  --mat-tab-header-active-hover-label-text-color: #818cf8;
-  --mat-tab-header-active-focus-label-text-color: #818cf8;
+  --mat-tab-header-active-label-text-color: #F97316;
+  --mdc-tab-indicator-active-indicator-color: #F97316;
+  --mat-tab-header-active-hover-label-text-color: #F97316;
+  --mat-tab-header-active-focus-label-text-color: #F97316;
   --mat-menu-item-label-text-color: #f8fafc;
   --mat-menu-container-color: #1e293b;
   --mat-card-title-text-color: #f8fafc;
@@ -173,7 +173,7 @@
   --mat-paginator-enabled-icon-color: #94a3b8;
   --mat-paginator-select-trigger-text-size: 14px;
   --mat-divider-color: #334155;
-  --mdc-checkbox-selected-icon-color: #818cf8;
+  --mdc-checkbox-selected-icon-color: #F97316;
   --mat-checkbox-label-text-color: #f8fafc;
 }
 
@@ -279,11 +279,11 @@ a {
   border-radius: 9999px !important;
   padding: 0 24px !important;
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 14px 0 rgba(249, 115, 22, 0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px 0 rgba(99, 102, 241, 0.5);
+    box-shadow: 0 6px 20px 0 rgba(249, 115, 22, 0.5);
   }
   &:disabled {
     background: var(--text-muted) !important;
@@ -410,7 +410,7 @@ a {
   color: var(--text-primary) !important;
   &.mdc-list-item--selected {
     color: var(--accent-primary) !important;
-    background-color: rgba(99, 102, 241, 0.08) !important;
+    background-color: rgba(249, 115, 22, 0.08) !important;
   }
   &:hover {
     background-color: var(--bg-tertiary) !important;
@@ -456,14 +456,14 @@ a {
       }
     }
     &:hover {
-      background-color: rgba(99, 102, 241, 0.05) !important;
+      background-color: rgba(249, 115, 22, 0.05) !important;
     }
     &[aria-selected="true"] {
-      background-color: rgba(99, 102, 241, 0.08) !important;
+      background-color: rgba(249, 115, 22, 0.08) !important;
     }
     // Fix for the ripple area in dark mode
     .mat-ripple-element {
-      background-color: rgba(99, 102, 241, 0.1) !important;
+      background-color: rgba(249, 115, 22, 0.1) !important;
     }
   }
   .mat-stepper-horizontal-line {
@@ -591,7 +591,7 @@ a {
 .mat-mdc-icon-button {
   color: var(--text-secondary) !important;
   &:hover {
-    background-color: rgba(99, 102, 241, 0.08) !important;
+    background-color: rgba(249, 115, 22, 0.08) !important;
   }
 }
 
@@ -709,7 +709,7 @@ a {
     background-color: var(--surface-2) !important;
   }
   &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-    background-color: rgba(99, 102, 241, 0.08) !important;
+    background-color: rgba(249, 115, 22, 0.08) !important;
     .mdc-list-item__primary-text {
       color: var(--primary) !important;
     }

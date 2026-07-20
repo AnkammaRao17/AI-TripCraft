@@ -584,12 +584,12 @@
           <!-- Total -->
           <div class="budget-total-row">
             <span>Grand Total Budget</span>
-            <span class="total-cost text-indigo">₹{{ budget.grandTotal | number }}</span>
+            <span class="total-cost text-accent">₹{{ budget.grandTotal | number }}</span>
           </div>
         </div>
 
         <!-- AI Budget Optimization text -->
-        <div class="ai-budget-opt-box" *ngIf="itinerary()?.budgetOptimization" style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.12); border-radius: var(--radius-sm); padding: 14px; margin-top: 16px;">
+        <div class="ai-budget-opt-box" *ngIf="itinerary()?.budgetOptimization" style="background: rgba(249, 115, 22, 0.05); border: 1px solid rgba(249, 115, 22, 0.12); border-radius: var(--radius-sm); padding: 14px; margin-top: 16px;">
           <p style="margin: 0; font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--primary); letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
             <mat-icon style="font-size: 14px; width: 14px; height: 14px;">auto_awesome</mat-icon> AI Budget Optimizer Advice
           </p>
