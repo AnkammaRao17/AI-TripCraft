@@ -98,14 +98,14 @@
               <div class="timeline-v-container">
                 
                 <!-- START NODE: Hotel -->
-                <div class="timeline-v-item hotel-start">
+                <div class="timeline-v-item hotel-start" *ngIf="getBreakfastNode(dayIdx) as bf">
                   <div class="timeline-marker bg-indigo">
                     <mat-icon>hotel</mat-icon>
                   </div>
                   <div class="timeline-details">
-                    <span class="timeline-time">08:00 AM</span>
-                    <h4 class="timeline-title">Breakfast at Stay</h4>
-                    <p class="timeline-desc">Prepare for the day. Head out after breakfast.</p>
+                    <span class="timeline-time">{{ bf.time }}</span>
+                    <h4 class="timeline-title">{{ bf.title }}</h4>
+                    <p class="timeline-desc">{{ bf.desc }}</p>
                   </div>
                 </div>
 
@@ -122,14 +122,14 @@
                 </div>
 
                 <!-- MORNING PLAN -->
-                <div class="timeline-v-item morning-plan">
+                <div class="timeline-v-item morning-plan" *ngIf="parsePlan(day.morningPlan, '09:30 AM', 'Morning Tour Stop') as plan">
                   <div class="timeline-marker bg-amber">
                     <mat-icon>light_mode</mat-icon>
                   </div>
                   <div class="timeline-details">
-                    <span class="timeline-time">09:30 AM</span>
-                    <h4 class="timeline-title">Morning Tour Stop</h4>
-                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.morningPlan }}</p>
+                    <span class="timeline-time">{{ plan.time }}</span>
+                    <h4 class="timeline-title">{{ plan.title }}</h4>
+                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ plan.desc }}</p>
                     <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
                       <textarea matInput rows="3" [(ngModel)]="editMorningPlan" name="editMorning"></textarea>
                     </mat-form-field>
@@ -137,7 +137,7 @@
                     <div class="activity-meta" *ngIf="day.recommendedAttractions[0] as firstAttr">
                       <span class="badge"><mat-icon>explore</mat-icon> Visit: {{ firstAttr }}</span>
                       <button mat-button class="btn-text" (click)="openNavigation(trip()?.destination || '', firstAttr)">
-                        Open Maps
+                        Navigate to {{ firstAttr }}
                       </button>
                     </div>
                   </div>
@@ -156,14 +156,14 @@
                 </div>
 
                 <!-- AFTERNOON PLAN -->
-                <div class="timeline-v-item afternoon-plan">
+                <div class="timeline-v-item afternoon-plan" *ngIf="parsePlan(day.afternoonPlan, '01:30 PM', 'Lunch & Afternoon Sights') as plan">
                   <div class="timeline-marker bg-orange">
                     <mat-icon>wb_twilight</mat-icon>
                   </div>
                   <div class="timeline-details">
-                    <span class="timeline-time">01:30 PM</span>
-                    <h4 class="timeline-title">Lunch & Afternoon Sights</h4>
-                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.afternoonPlan }}</p>
+                    <span class="timeline-time">{{ plan.time }}</span>
+                    <h4 class="timeline-title">{{ plan.title }}</h4>
+                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ plan.desc }}</p>
                     <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
                       <textarea matInput rows="3" [(ngModel)]="editAfternoonPlan" name="editAfternoon"></textarea>
                     </mat-form-field>
@@ -171,7 +171,7 @@
                     <div class="activity-meta" *ngIf="day.restaurants[0] as firstRest">
                       <span class="badge"><mat-icon>restaurant</mat-icon> Dine: {{ firstRest }}</span>
                       <button mat-button class="btn-text" (click)="openNavigation(day.recommendedAttractions[0] || '', firstRest)">
-                        Open Maps
+                        Dine at {{ firstRest }}
                       </button>
                     </div>
                   </div>
@@ -190,14 +190,14 @@
                 </div>
 
                 <!-- EVENING PLAN -->
-                <div class="timeline-v-item evening-plan">
+                <div class="timeline-v-item evening-plan" *ngIf="parsePlan(day.eveningPlan, '06:00 PM', 'Evening Entertainment') as plan">
                   <div class="timeline-marker bg-purple">
                     <mat-icon>bedtime</mat-icon>
                   </div>
                   <div class="timeline-details">
-                    <span class="timeline-time">06:00 PM</span>
-                    <h4 class="timeline-title">Evening Entertainment</h4>
-                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ day.eveningPlan }}</p>
+                    <span class="timeline-time">{{ plan.time }}</span>
+                    <h4 class="timeline-title">{{ plan.title }}</h4>
+                    <p class="timeline-desc" *ngIf="editingDay() !== day.dayNumber">{{ plan.desc }}</p>
                     <mat-form-field appearance="outline" class="full-width" *ngIf="editingDay() === day.dayNumber">
                       <textarea matInput rows="3" [(ngModel)]="editEveningPlan" name="editEvening"></textarea>
                     </mat-form-field>
@@ -205,7 +205,7 @@
                     <div class="activity-meta" *ngIf="day.recommendedAttractions[1] as secondAttr">
                       <span class="badge"><mat-icon>local_activity</mat-icon> Spot: {{ secondAttr }}</span>
                       <button mat-button class="btn-text" (click)="openNavigation(day.restaurants[0] || '', secondAttr)">
-                        Open Maps
+                        Explore {{ secondAttr }}
                       </button>
                     </div>
                   </div>

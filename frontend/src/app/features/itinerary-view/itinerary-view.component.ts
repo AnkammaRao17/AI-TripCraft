@@ -21,6 +21,203 @@ import { NotificationService } from '../../core/services/notification.service';
 import { Trip, Itinerary } from '../../models/interfaces';
 import { environment } from '../../../environments/environment';
 
+interface DestinationImageSet {
+  hotels: string[];
+  restaurants: string[];
+  attractions: string[];
+}
+
+const DESTINATION_SPECIFIC_IMAGES: Record<string, DestinationImageSet> = {
+  goa: {
+    hotels: [
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1534080391095-71b14fa6b7ec?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  manali: {
+    hotels: [
+      'https://images.unsplash.com/photo-1546548970-71785318a17b?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1482192505345-5655af888cc4?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1542401886-65d6c61db217?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  jaipur: {
+    hotels: [
+      'https://images.unsplash.com/photo-1585983224974-084a8e065e76?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1598977123418-45f04b01f4ac?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  mumbai: {
+    hotels: [
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1558431382-27e303142255?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  delhi: {
+    hotels: [
+      'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1585128792020-803d29415281?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1506461883276-594a12b11db3?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  kerala: {
+    hotels: [
+      'https://images.unsplash.com/photo-1595928642581-f50f4f3453a5?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1534080391095-71b14fa6b7ec?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  ladakh: {
+    hotels: [
+      'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1621252179027-94459d278660?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  hampi: {
+    hotels: [
+      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1546548970-71785318a17b?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1507133750040-4a8f57021571?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1600100397607-ec4b8dfc62f5?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  varanasi: {
+    hotels: [
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1598977123418-45f04b01f4ac?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1561361058-c24cecae35ca?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1542856391-010fb87dcfed?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80'
+    ]
+  },
+  andaman: {
+    hotels: [
+      'https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=600&q=80'
+    ],
+    restaurants: [
+      'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1551248429-40975aa4de74?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80'
+    ],
+    attractions: [
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=600&q=80'
+    ]
+  }
+};
+
+const FALLBACK_SPECIFIC_IMAGES: DestinationImageSet = {
+  hotels: [
+    'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=600&q=80'
+  ],
+  restaurants: [
+    'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'
+  ],
+  attractions: [
+    'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?auto=format&fit=crop&w=600&q=80'
+  ]
+};
+
 @Component({
   selector: 'app-itinerary-view',
   standalone: true,
@@ -102,13 +299,16 @@ export class ItineraryViewComponent implements OnInit {
 
   enrichedHotels = computed(() => {
     const list = this.itinerary()?.hotels || [];
-    const destination = this.trip()?.destination || 'Destination';
+    const destination = (this.trip()?.destination || '').toLowerCase().trim();
     
-    const hotelImages = [
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=600&q=80'
-    ];
+    let imgSet = FALLBACK_SPECIFIC_IMAGES;
+    for (const key of Object.keys(DESTINATION_SPECIFIC_IMAGES)) {
+      if (destination.includes(key)) {
+        imgSet = DESTINATION_SPECIFIC_IMAGES[key];
+        break;
+      }
+    }
+    const hotelImages = imgSet.hotels;
     
     const fallbackNames = [
       `Grand Hyatt Luxury Suites`,
@@ -144,12 +344,16 @@ export class ItineraryViewComponent implements OnInit {
   enrichedRestaurants = computed(() => {
     const itin = this.itinerary();
     if (!itin) return [];
+    const destination = (this.trip()?.destination || '').toLowerCase().trim();
 
-    const foodImages = [
-      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'
-    ];
+    let imgSet = FALLBACK_SPECIFIC_IMAGES;
+    for (const key of Object.keys(DESTINATION_SPECIFIC_IMAGES)) {
+      if (destination.includes(key)) {
+        imgSet = DESTINATION_SPECIFIC_IMAGES[key];
+        break;
+      }
+    }
+    const foodImages = imgSet.restaurants;
 
     const allNames: string[] = [];
     itin.days.forEach(day => {
@@ -183,12 +387,16 @@ export class ItineraryViewComponent implements OnInit {
   enrichedAttractions = computed(() => {
     const itin = this.itinerary();
     if (!itin) return [];
+    const destination = (this.trip()?.destination || '').toLowerCase().trim();
 
-    const attrImages = [
-      'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?auto=format&fit=crop&w=600&q=80'
-    ];
+    let imgSet = FALLBACK_SPECIFIC_IMAGES;
+    for (const key of Object.keys(DESTINATION_SPECIFIC_IMAGES)) {
+      if (destination.includes(key)) {
+        imgSet = DESTINATION_SPECIFIC_IMAGES[key];
+        break;
+      }
+    }
+    const attrImages = imgSet.attractions;
 
     const allNames: string[] = [];
     itin.days.forEach(day => {
@@ -218,20 +426,149 @@ export class ItineraryViewComponent implements OnInit {
   routeSegments = computed(() => {
     const itin = this.itinerary();
     if (!itin) return [];
+    const destination = (this.trip()?.destination || '').toLowerCase();
 
-    return itin.days.map((day) => {
-      const hotel = 'Hotel Stay';
+    // Map transportation options based on destination
+    let mode1 = 'Auto Rickshaw';
+    let mode2 = 'Walk';
+    let mode3 = 'Cab Ride';
+    let distMultiplier = 1.0;
+
+    if (destination.includes('goa') || destination.includes('andaman')) {
+      mode1 = 'Scooter Ride';
+      mode2 = 'Walk on Beach';
+      mode3 = 'Scooter Ride';
+      distMultiplier = 2.0;
+    } else if (destination.includes('ladakh')) {
+      mode1 = 'SUV Drive';
+      mode2 = 'Walk/Trek';
+      mode3 = 'SUV Drive';
+      distMultiplier = 12.0;
+    } else if (destination.includes('manali')) {
+      mode1 = 'Taxi Cab';
+      mode2 = 'Walk';
+      mode3 = 'Taxi Cab';
+      distMultiplier = 4.0;
+    } else if (destination.includes('delhi')) {
+      mode1 = 'Metro Ride';
+      mode2 = 'Rickshaw Walk';
+      mode3 = 'Cab';
+      distMultiplier = 3.5;
+    } else if (destination.includes('mumbai')) {
+      mode1 = 'Local Train';
+      mode2 = 'Walk';
+      mode3 = 'Taxi Cab';
+      distMultiplier = 3.0;
+    } else if (destination.includes('hampi')) {
+      mode1 = 'Bicycle Ride';
+      mode2 = 'Walk';
+      mode3 = 'Bicycle Ride';
+      distMultiplier = 0.8;
+    } else if (destination.includes('varanasi')) {
+      mode1 = 'Cycle Rickshaw';
+      mode2 = 'Walk';
+      mode3 = 'Boat Ride';
+      distMultiplier = 0.9;
+    }
+
+    return itin.days.map((day, idx) => {
+      const hotel = itin.hotels && itin.hotels[0] ? itin.hotels[0].split('(')[0].trim() : 'Hotel Stay';
       const attraction1 = day.recommendedAttractions[0] || 'Local Landmark';
-      const lunch = day.restaurants[0] || 'Spice Villa Bistro';
-      const attraction2 = day.recommendedAttractions[1] || 'Sunset Garden';
+      const lunch = day.restaurants[0] ? day.restaurants[0].split('(')[0].trim() : 'Local Diner';
+      const attraction2 = day.recommendedAttractions[1] || 'Scenic Overlook';
       
+      const d1 = (1.5 * distMultiplier + (idx * 0.4) % 1.2).toFixed(1);
+      const d2 = (0.5 * distMultiplier + (idx * 0.1) % 0.4).toFixed(1);
+      const d3 = (2.2 * distMultiplier + (idx * 0.7) % 2.1).toFixed(1);
+
+      const getDuration = (distStr: string, mode: string) => {
+        const dVal = parseFloat(distStr);
+        if (mode.toLowerCase().includes('walk')) {
+          return `${Math.round(dVal * 12)} mins`;
+        } else if (mode.toLowerCase().includes('bicycle')) {
+          return `${Math.round(dVal * 6)} mins`;
+        } else if (mode.toLowerCase().includes('metro') || mode.toLowerCase().includes('train')) {
+          return `${Math.round(dVal * 2 + 5)} mins`;
+        }
+        return `${Math.round(dVal * 3 + 2)} mins`;
+      };
+
       return [
-        { from: hotel, to: attraction1, distance: '2.4 km', duration: '8 mins', mode: 'Auto Rickshaw' },
-        { from: attraction1, to: lunch, distance: '1.1 km', duration: '5 mins', mode: 'Walk' },
-        { from: lunch, to: attraction2, distance: '3.8 km', duration: '12 mins', mode: 'Cab Ride' }
+        { from: hotel, to: attraction1, distance: `${d1} km`, duration: getDuration(d1, mode1), mode: mode1 },
+        { from: attraction1, to: lunch, distance: `${d2} km`, duration: getDuration(d2, mode2), mode: mode2 },
+        { from: lunch, to: attraction2, distance: `${d3} km`, duration: getDuration(d3, mode3), mode: mode3 }
       ];
     });
   });
+
+  parsePlan(planText: string, defaultTime: string, defaultTitle: string) {
+    if (!planText) {
+      return { time: defaultTime, title: defaultTitle, desc: '' };
+    }
+    
+    const timeRegex = /^(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm))\s*[:\-]?\s*(.*)$/;
+    const match = planText.match(timeRegex);
+    if (match) {
+      const time = match[1].trim();
+      const rest = match[2].trim();
+      
+      const titleRegex = /^([^:\-\.]+)\s*[:\-]\s*(.*)$/;
+      const titleMatch = rest.match(titleRegex);
+      if (titleMatch) {
+        return {
+          time,
+          title: titleMatch[1].trim(),
+          desc: titleMatch[2].trim()
+        };
+      }
+      return {
+        time,
+        title: defaultTitle,
+        desc: rest
+      };
+    }
+    
+    return {
+      time: defaultTime,
+      title: defaultTitle,
+      desc: planText
+    };
+  }
+
+  getBreakfastNode(dayIdx: number) {
+    const dest = (this.trip()?.destination || '').toLowerCase();
+    let time = '08:00 AM';
+    let title = 'Breakfast at Stay';
+    let desc = 'Prepare for the day. Head out after breakfast.';
+    
+    if (dest.includes('goa') || dest.includes('andaman')) {
+      time = '08:00 AM';
+      title = 'Local Breakfast & Scooter Prep';
+      desc = 'Enjoy a fresh breakfast at your stay or beachside cafe. Rent/check your scooter for the day.';
+    } else if (dest.includes('ladakh')) {
+      time = '07:00 AM';
+      title = 'Early Altitude Breakfast';
+      desc = 'Have a heavy breakfast to keep energy high. Keep drinking water/ORSL for altitude acclimatization. Check SUV/bike fuel.';
+    } else if (dest.includes('manali')) {
+      time = '08:00 AM';
+      title = 'Himalayan Morning Tea & Breakfast';
+      desc = 'Enjoy hot tea and Siddu or Paranthas. Put on layers and snow boots before heading out.';
+    } else if (dest.includes('jaipur')) {
+      time = '08:00 AM';
+      title = 'Chai & Rajasthani Breakfast';
+      desc = 'Have delicious Pyaaz Kachori and masala tea before stepping out into the pink city.';
+    } else if (dest.includes('mumbai') || dest.includes('delhi')) {
+      time = '08:00 AM';
+      title = 'Breakfast at Stay';
+      desc = 'Enjoy breakfast at your hotel. Check metro cards or local train schedules.';
+    }
+    
+    if (dayIdx % 2 === 1) {
+      time = time === '08:00 AM' ? '07:45 AM' : '07:30 AM';
+    }
+    
+    return { time, title, desc };
+  }
 
   openNavigation(from: string, to: string): void {
     const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(from)}&destination=${encodeURIComponent(to)}&travelmode=driving`;

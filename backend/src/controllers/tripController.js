@@ -10,7 +10,8 @@ const ApiResponse = require('../utils/apiResponse');
 const logger = require('../utils/logger');
 
 // Auto calculate budget based on preferences and budget tier
-const calculateEstimatedBudget = (days, budgetTier, travelers, transportPref, hotelPref) => {
+// Auto calculate budget based on preferences and budget tier, scaled by destination and season
+const calculateEstimatedBudget = (days, budgetTier, travelers, transportPref, hotelPref, destination = '', startDate = null) => {
   // Rates per day per traveler in INR
   const rates = {
     Budget: { hotel: 1500, food: 600, transport: 400, attractions: 300 },
@@ -18,7 +19,84 @@ const calculateEstimatedBudget = (days, budgetTier, travelers, transportPref, ho
     Luxury: { hotel: 15000, food: 4500, transport: 3000, attractions: 2000 }
   };
 
-  const selectedRate = rates[budgetTier] || rates.Moderate;
+  const selectedRate = { ...(rates[budgetTier] || rates.Moderate) };
+
+  // 1. Destination base multipliers
+  let destMultiplier = 1.0;
+  let transportDestMultiplier = 1.0;
+  
+  if (destination) {
+    const destLower = destination.toLowerCase();
+    if (destLower.includes('goa')) {
+      destMultiplier = 1.25;
+      transportDestMultiplier = 0.8;
+    } else if (destLower.includes('manali')) {
+      destMultiplier = 1.1;
+      transportDestMultiplier = 1.25;
+    } else if (destLower.includes('jaipur')) {
+      destMultiplier = 1.0;
+      transportDestMultiplier = 0.9;
+    } else if (destLower.includes('mumbai')) {
+      destMultiplier = 1.35;
+      transportDestMultiplier = 0.95;
+    } else if (destLower.includes('delhi')) {
+      destMultiplier = 0.95;
+      transportDestMultiplier = 0.9;
+    } else if (destLower.includes('kerala')) {
+      destMultiplier = 1.15;
+      transportDestMultiplier = 1.1;
+    } else if (destLower.includes('ladakh')) {
+      destMultiplier = 1.3;
+      transportDestMultiplier = 1.8;
+    } else if (destLower.includes('hampi')) {
+      destMultiplier = 0.8;
+      transportDestMultiplier = 0.7;
+    } else if (destLower.includes('varanasi')) {
+      destMultiplier = 0.85;
+      transportDestMultiplier = 0.75;
+    } else if (destLower.includes('andaman')) {
+      destMultiplier = 1.45;
+      transportDestMultiplier = 1.7;
+    }
+  }
+
+  // Apply destination multipliers
+  selectedRate.hotel = Math.round(selectedRate.hotel * destMultiplier);
+  selectedRate.food = Math.round(selectedRate.food * destMultiplier);
+  selectedRate.transport = Math.round(selectedRate.transport * transportDestMultiplier);
+  selectedRate.attractions = Math.round(selectedRate.attractions * destMultiplier);
+
+  // 2. Seasonal modifiers based on start month
+  let seasonMultiplier = 1.0;
+  if (startDate && destination) {
+    try {
+      const month = new Date(startDate).getMonth(); // 0-11
+      const destLower = destination.toLowerCase();
+      
+      if (destLower.includes('goa') || destLower.includes('andaman')) {
+        if ([10, 11, 0, 1].includes(month)) seasonMultiplier = 1.4;
+        else if ([5, 6, 7, 8].includes(month)) seasonMultiplier = 0.7;
+      } else if (destLower.includes('ladakh')) {
+        if ([5, 6, 7, 8].includes(month)) seasonMultiplier = 1.3;
+        else seasonMultiplier = 0.6;
+      } else if (destLower.includes('manali')) {
+        if ([11, 0, 1, 4, 5].includes(month)) seasonMultiplier = 1.35;
+        else if ([6, 7].includes(month)) seasonMultiplier = 0.85;
+      } else if (destLower.includes('jaipur')) {
+        if ([9, 10, 11, 0, 1, 2].includes(month)) seasonMultiplier = 1.3;
+        else if ([3, 4, 5, 6].includes(month)) seasonMultiplier = 0.7;
+      } else if (destLower.includes('kerala') || destLower.includes('hampi') || destLower.includes('varanasi')) {
+        if ([9, 10, 11, 0, 1, 2].includes(month)) seasonMultiplier = 1.2;
+        else if ([3, 4, 5].includes(month)) seasonMultiplier = 0.8;
+      }
+    } catch (e) {
+      logger.warn(`Failed to calculate seasonal multiplier: ${e.message}`);
+    }
+  }
+
+  // Apply seasonal multiplier to hotel and food
+  selectedRate.hotel = Math.round(selectedRate.hotel * seasonMultiplier);
+  selectedRate.food = Math.round(selectedRate.food * seasonMultiplier);
 
   // Modifiers based on preferences
   let hotelModifier = 1.0;
@@ -74,7 +152,9 @@ const createTrip = async (req, res, next) => {
       budget,
       parseInt(numberOfTravelers || 1),
       transportPreference,
-      hotelPreference
+      hotelPreference,
+      destination,
+      startDate
     );
 
     // Create Trip configuration
@@ -261,7 +341,9 @@ const updateTrip = async (req, res, next) => {
       trip.budget,
       trip.numberOfTravelers,
       trip.transportPreference,
-      trip.hotelPreference
+      trip.hotelPreference,
+      trip.destination,
+      trip.startDate
     );
 
     await trip.save();
